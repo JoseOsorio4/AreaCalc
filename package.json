@@ -1,0 +1,14 @@
+{
+  "name": "areacalc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ÁreaCalc: áreas bajo curvas, valor promedio y estimación teórica de materiales (proyecto de Cálculo Integral).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "verificar-dist": "node scripts/verificar-dist.js"
+  }
+}
