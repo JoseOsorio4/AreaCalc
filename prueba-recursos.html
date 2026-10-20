@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ÁreaCalc · prueba de recursos (temporal)</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 1.5rem; color: #1a1a1a; background: #ffffff; line-height: 1.5; }
+      #grafica { width: 100%; max-width: 720px; height: 380px; border: 1px solid #767676; }
+      #formula { font-size: 1.4rem; margin: 1rem 0; }
+      .correcto { color: #0b6b2b; }
+      .fallo { color: #a4161a; font-weight: bold; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Prueba de recursos locales (temporal, T-01)</h1>
+      <p>Esta página no forma parte de ÁreaCalc. Comprueba que Plotly y KaTeX funcionan desde la versión construida, sin internet.</p>
+
+      <h2>Resultados automáticos</h2>
+      <ul id="estado" aria-live="polite"></ul>
+
+      <h2>Fórmula (KaTeX)</h2>
+      <div id="formula">Integral de 1 a 4 de (x³ − 1) dx = 243/4 (texto de respaldo)</div>
+
+      <h2>Gráfica (Plotly)</h2>
+      <div id="grafica" role="img" aria-label="Gráfica de prueba de f(x) = 2 + x²/4 en [0, 4]"></div>
+
+      <h2>Comprobación visual</h2>
+      <ol>
+        <li>La fórmula se ve con tipografía matemática (integral con límites y fracción), no como el texto de respaldo.</li>
+        <li>El área bajo la curva está sombreada.</li>
+        <li>Hay un rectángulo de contorno discontinuo de base 4 y altura 10/3.</li>
+        <li>Hay una línea horizontal punteada en y = 10/3 y la anotación «f_prom = 10/3 m».</li>
+        <li>Con el Wi-Fi apagado (T-R5), todo lo anterior sigue igual y la pestaña Red no muestra recursos externos.</li>
+      </ol>
+      <p><a href="./index.html">Volver a ÁreaCalc</a></p>
+    </main>
+    <noscript>JavaScript está desactivado: no se puede hacer la prueba.</noscript>
+    <script type="module" src="./src/prueba-recursos.js"></script>
+  </body>
+</html>
