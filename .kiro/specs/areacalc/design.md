@@ -185,7 +185,7 @@ Usuario ─► vistaPerfil (envío del formulario) ─► estado.calcularPerfil(
 | Texto de la función → polinomio validado | `expresiones/` | `interpretarFuncion(texto)` |
 | Antiderivada, F(b), F(a) e I | `nucleo/integral.js` | `integrarDefinida(polinomio, a, b)` |
 | Ceros, multiplicidades y tramos | `nucleo/ceros.js` | `analizarSigno(polinomio, a, b)` |
-| A_geo y su cota | `nucleo/area.js` | `areaGeometrica(antiderivada, analisis)` |
+| A_geo y su cota | `nucleo/area.js` | `areaGeometrica(integral, analisis)` |
 | f_prom y rectángulo equivalente | `nucleo/promedio.js` | `valorPromedio(I, a, b)`, `rectanguloEquivalente(…)` |
 | Áreas de figuras | `nucleo/geometria.js` | `areaRectangulo`, `areaTriangulo`, `areaCirculo`, `areaTrapecio` |
 | Conversión de unidades | `nucleo/unidades.js` | `areaAMetrosCuadrados(cantidad, unidad)` |

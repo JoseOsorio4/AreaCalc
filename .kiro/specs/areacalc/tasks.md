@@ -1,9 +1,9 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3. **Plan de la Etapa C listo**; ninguna tarea está autorizada ni iniciada. · **Fecha:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-06 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-07 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
-> Este plan **no autoriza implementar**. Ninguna tarea está iniciada. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute.
+> Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
 
 ## 0. Convenciones
 
@@ -15,7 +15,8 @@
   - Desde que T-01 crea el proyecto, `npm test` y `npm run build` pasan donde se trabaja: el entorno de Kiro Web o la computadora del responsable. Antes de T-01 no hay proyecto que probar ni construir.
   - La prueba de arquitectura pasa, también desde T-01.
   - Los valores esperados salen de `tests/casos-referencia.js`, nunca del código bajo prueba.
-  - R revisa los cambios en la copia local del repositorio. Por ahora no hay commits ni PR; si el equipo los autoriza más adelante, se aplica design §18.
+  - R revisa los cambios en la copia local o en la rama de respaldo. El equipo autorizó commits y push normal de respaldo en `avance-t04`; no hay PR ni merge a `main` sin autorización explícita.
+- **Estado y revisión, por separado:** la casilla `[x]` de una tarea T indica que está implementada, con `npm test` y `npm run build` correctos. **No** significa que R la haya revisado. La revisión de R solo se registra en T-R1 (casos de referencia) y T-R6 (revisión de cambios), y únicamente cuando R la hace.
 - **Explicación matemática:** cada tarea indica qué debe poder explicar el equipo en la exposición.
 
 ## 1. Orden y calendario
@@ -71,7 +72,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-22.1 a R-22.3, R-24; design §1, §13._
   - **Explicar:** qué hace cada dependencia y por qué la versión construida no necesita internet.
 
-- [ ] **T-02 · Racionales exactos y casos de referencia** · A · 2.5 h · MVP
+- [x] **T-02 · Racionales exactos y casos de referencia** · A · 2.5 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R1 y T-R6).** Commit `bc08e42` en `avance-t04`. `tests/nucleo/racional.test.js` tiene 79 pruebas. `tests/casos-referencia.js` contiene los CR del MVP y COMP; CR-11, CR-13, CR-19 y CR-21 tienen entradas que las fuentes no fijan, anotadas en su campo `pendientes` sin rellenarlas.
   - **Depende de:** T-01.
   - **Archivos:** `src/nucleo/racional.js`, `tests/nucleo/racional.test.js`, `tests/casos-referencia.js` (lo transcribe A y lo verifica R en T-R1).
   - **Aceptación:**
@@ -82,7 +84,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-03.2, R-18.1, R-18.5._
   - **Explicar:** por qué `Number` no basta (2⁵³) y cómo se simplifica una fracción con el mcd.
 
-- [ ] **T-03 · Polinomios** · A · 1.5 h · MVP
+- [x] **T-03 · Polinomios** · A · 1.5 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit `bc08e42`. `tests/nucleo/polinomio.test.js` tiene 30 pruebas, incluidos los tres ejemplos de aceptación.
   - **Depende de:** T-02.
   - **Archivos:** `src/nucleo/polinomio.js` y su prueba.
   - **Aceptación:** suma, resta, producto, potencia, escalado, derivada, división con resto, mcd mónico, `evaluar` exacto (Horner) y `evaluarAprox` solo para la gráfica. El polinomio cero es `coef = []`.
@@ -90,7 +93,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-02.2, R-02.7._
   - **Explicar:** la regla de Horner y qué significa que el mcd de f y f′ revele raíces repetidas.
 
-- [ ] **T-04 · Análisis de ceros y signos** · A · 7 h · MVP · **mayor riesgo**
+- [x] **T-04 · Análisis de ceros y signos** · A · 7 h · MVP · **mayor riesgo**
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit `bc08e42`. `tests/nucleo/ceros.test.js` tiene 30 pruebas con los CR de esta tarea. `tests/propiedades.test.js` tiene la parte de raíces racionales (3 pruebas sobre 400 polinomios, 100 escalados hasta 10⁸⁰, sin ningún E-SIS-01).
   - **Depende de:** T-03.
   - **Archivos:** `src/nucleo/ceros.js`, `tests/nucleo/ceros.test.js`, la parte de raíces racionales de `tests/propiedades.test.js`.
   - **Aceptación:**
@@ -114,7 +118,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-05.1 a R-05.5, R-21.1, R-21.3._
   - **Explicar:** Bolzano, Sturm, multiplicidad par frente a impar y el teorema de las raíces racionales (formulario §2.1).
 
-- [ ] **T-05 · Integral definida y valor promedio** · A · 3 h · MVP
+- [x] **T-05 · Integral definida y valor promedio** · A · 3 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit `d3bffdf`. `tests/nucleo/integral.test.js` (22 pruebas) y `tests/nucleo/promedio.test.js` (23 pruebas).
   - **Depende de:** T-03.
   - **Archivos:** `src/nucleo/integral.js`, `src/nucleo/promedio.js` y sus pruebas.
   - **Aceptación:**
@@ -125,7 +130,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-04, R-07, R-08._
   - **Explicar:** el teorema fundamental del cálculo, por qué no hay «+C» y por qué el promedio usa la integral con signo.
 
-- [ ] **T-06 · Área geométrica** · A · 2 h · MVP
+- [x] **T-06 · Área geométrica** · A · 2 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit `e22ec7f`. `tests/nucleo/area.test.js` tiene 34 pruebas. Con T-06, `npm test` da 227/227 y `npm run build` es correcto. Queda para T-08 comprobar el área de los 400 polinomios con raíces conocidas (design §15).
   - **Depende de:** T-04 y T-05.
   - **Archivos:** `src/nucleo/area.js` y su prueba.
   - **Aceptación:** A_geo es la suma de |Iₖ| por tramos; nunca se usa |I| como sustituto; la cota M₁·δ² se calcula si hay cortes aproximados; si A_geo < |I|, E-SIS-02.
@@ -268,7 +274,7 @@ Solo se hacen si sobra la reserva de 1 h después del 29 de octubre o tras la en
 - [ ] **T-P1 · Centroides de una sola función no negativa** · R-27 · Contrato de design §10; pruebas CR-24; E-CEN-01 y E-CEN-02. El ejemplo entre dos curvas (CR-25) sigue siendo solo una referencia académica.
 - [ ] **T-P2 · Comparación numérica acotada** · R-28 · Rectángulos de una altura y trapecios compuestos con n ∈ {1, 2, 4, 8, 16}; prueba CR-26; Simpson se explica como exacta para grado ≤ 3.
 
-## 5. Primer paso de implementación (pendiente de autorización)
+## 5. Primer paso de implementación (histórico: T-01 ya está completada)
 
 **T-01** es la primera tarea y la única que instala dependencias. Cuando el equipo la autorice:
 

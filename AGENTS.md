@@ -6,7 +6,7 @@ Este archivo resume `design.md` §18 y se aplica a todo el repositorio. Si hay d
 
 1. Leer `.kiro/specs/areacalc/requirements.md`, `.kiro/specs/areacalc/design.md`, `.kiro/specs/areacalc/tasks.md` y `docs/formulario-matematico.md`.
 2. Implementar **solo** la tarea autorizada de `tasks.md`, de una en una. No empezar la siguiente sin autorización del equipo.
-3. No modificar las especificaciones. Si algo las contradice, detenerse e informar al equipo del cambio propuesto.
+3. No modificar las especificaciones (`requirements.md`, `design.md`, `tasks.md` y el formulario) salvo con autorización explícita del equipo, y solo en lo autorizado. Si algo las contradice, detenerse e informar al equipo del cambio propuesto. No cambiar el alcance por iniciativa propia.
 
 ## Dependencias y seguridad
 
@@ -22,8 +22,13 @@ Este archivo resume `design.md` §18 y se aplica a todo el repositorio. Si hay d
 
 ## Control de versiones
 
-- Por ahora no hay commits ni PR: el revisor revisa los cambios en la copia local.
-- Si el equipo los autoriza: una rama por tarea, un PR hacia `main` y mensajes de commit en español con el identificador de la tarea, por ejemplo «T-04: análisis de ceros con Sturm».
+Esta sección actualiza, por decisión del equipo, la regla 8 de `design.md` §18.
+
+- Rama de trabajo: `avance-t04`. El nombre es histórico; ya contiene T-01 a T-06.
+- El equipo autorizó commits y push normal de respaldo a `origin/avance-t04`. Se hacen solo cuando el equipo lo pide, con mensajes en español que llevan el identificador de la tarea, por ejemplo «T-04: análisis de ceros con Sturm».
+- Añadir los archivos por nombre. Nunca incluir `node_modules/`, `dist/`, registros, archivos temporales ni credenciales.
+- Prohibido sin autorización explícita: PR, merge a `main`, force push y borrar ramas.
+- El revisor revisa los cambios en la copia local o en la rama de respaldo.
 
 ## Estilo
 

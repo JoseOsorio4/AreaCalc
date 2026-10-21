@@ -2,7 +2,7 @@
 
 Aplicación web estática para el curso de Cálculo Integral (Universidad Mariano Gálvez de Guatemala, Campus Jutiapa). Calcula el área bajo un perfil polinómico de grado ≤ 3, la integral con signo y el valor promedio; muestra la gráfica y el procedimiento, y da una estimación teórica de material y costo.
 
-> **Estado:** base del proyecto creada y verificada. T-01 se completó el 20 de octubre en la computadora del programador A (véase «Estado de T-01»). La aplicación todavía no tiene funciones.
+> **Estado:** base del proyecto creada y verificada en T-01 (véase «Estado de T-01»). El núcleo matemático de T-02 a T-06 (racionales exactos, polinomios, análisis de ceros, integral, valor promedio y área geométrica) está implementado y probado: en la última ejecución, `npm test` dio 227/227 y `npm run build` fue correcto. Falta la revisión independiente de R. **Todavía no hay una aplicación funcional ni una interfaz terminada:** la página principal no calcula nada. Para continuar el trabajo, lea [`docs/RELEVO-KIRO.md`](docs/RELEVO-KIRO.md).
 
 ## Documentación
 
@@ -13,6 +13,7 @@ Aplicación web estática para el curso de Cálculo Integral (Universidad Marian
 | `.kiro/specs/areacalc/tasks.md` | Plan de tareas |
 | `docs/formulario-matematico.md` | Fórmulas y procedimientos del curso |
 | `AGENTS.md` | Reglas para Codex |
+| [`docs/RELEVO-KIRO.md`](docs/RELEVO-KIRO.md) | Estado actual y guía para continuar en otro chat o cuenta |
 
 ## Requisitos
 
