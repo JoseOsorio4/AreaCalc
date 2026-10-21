@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya llega a T-06.
-- Commit base de este relevo: **`e22ec7f`** (`e22ec7fdc815604b68d5c28da454df4a95c5f6e5`), «T-06: area geometrica y cota de error con pruebas». El commit de documentación que añade este archivo va encima.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya llega a T-07.
+- Último trabajo: el commit «T-07: numeros, errores, unidades, materiales y figuras con pruebas», encima de `a3a3ef9` (primera versión de este relevo) y de `e22ec7f` (T-06). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -33,11 +33,12 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-04 Ceros y signos | Implementada y probada | `bc08e42` |
 | T-05 Integral y promedio | Implementada y probada | `d3bffdf` |
 | T-06 Área geométrica | Implementada y probada | `e22ec7f` |
-| T-07 en adelante | Sin iniciar | — |
+| T-07 Números, errores, unidades, materiales y figuras | Implementada y probada | commit «T-07: …» |
+| T-08 en adelante | Sin iniciar | — |
 
-Última ejecución, con el commit `e22ec7f`: `npm test` dio **227/227** pruebas en 8 archivos y `npm run build` fue correcto (solo el aviso esperado por el tamaño de Plotly, design §13).
+Última ejecución, con T-07: `npm test` dio **290/290** pruebas en 13 archivos y `npm run build` fue correcto (solo el aviso esperado por el tamaño de Plotly, design §13).
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-06: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-07: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -59,6 +60,11 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | `integral.js` | Antiderivada e integral definida con desglose |
 | `promedio.js` | Valor promedio y rectángulo equivalente |
 | `area.js` | Área geométrica por tramos y cota de error |
+| `errores.js` | Catálogo de errores y advertencias de requirements §10 |
+| `numeros.js` | Texto de un campo → Racional exacto, y el intervalo [a, b] |
+| `unidades.js` | Unidades por interpretación y conversión cm² → m² |
+| `geometria.js` | Rectángulo, triángulo y círculo (k·π) |
+| `materiales.js` | Área estimada, costo base y costo estimado |
 
 **Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `arquitectura.test.js`, `propiedades.test.js` (parte de T-04) y `nucleo/` con una prueba por módulo.
 
@@ -75,21 +81,30 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 - **Área geométrica** (`area.js`): `areaGeometrica(integral, analisis)` suma |F(hasta) − F(desde)| por tramo; nunca usa |I|. Devuelve `tramos`, `area` (`{ clase: 'exacta', valor }` o `{ clase: 'aproximada', valor, cota, motivo: 'ceros-irracionales' }`) e `igualAI`. Si A_geo < |I|, error E-SIS-02.
 - **Cota de cortes irracionales:** `ceros.cotaCorte(f, l, h)` = M₁·δ² (formulario §2.1, punto 4) es el único lugar de la fórmula; `area.js` suma esa cota sobre los ceros aproximados. La bisección se detiene con ancho ≤ 10⁻¹² y cota ≤ 10⁻¹², o a la profundidad 200 (entonces W-04 con la cota obtenida, como CR-36).
 - Las advertencias W-02, W-03, W-04 y W-09 se deducen de estos campos; las generará `analizarPerfil` en T-08.
+- **Errores** (`errores.js`): `CATALOGO` tiene exactamente los 28 errores y las 9 advertencias de requirements §10. `crearError(codigo, datos)` devuelve `{ codigo, campo, mensaje, sugerencia, posicion, datos }` y `crearAdvertencia(codigo, datos)`, `{ codigo, mensaje, datos }`; los datos se insertan como texto. Un código desconocido o un dato que falta para la plantilla es un error de programación.
+- **Números** (`numeros.js`): `leerNumero(texto, reglas)` sigue los 7 pasos de design §11 sin `Number(texto)` y devuelve `Resultado`: `{ ok: true, valor, advertencias }` o `{ ok: false, errores }`. `REGLAS` (limite, dimensionM, dimensionCm, precio, adicional) transcribe la Tabla 9.3, y `conCampo` les pone el campo y la etiqueta. `leerIntervalo(textoA, textoB)` acumula los errores de a y b y después da E-INT-01 o E-INT-02, sin intercambiar.
+- **Cantidad** (design §10): `{ clase: 'exacta', valor }`, `{ clase: 'multiploPi', coeficiente, aprox, cota }` o `{ clase: 'aproximada', valor, cota, motivo }`. `unidades.escalarCantidad` la multiplica por un racional ≥ 0 sin perder la clase; `areaAMetrosCuadrados(c, 'cm')` divide entre 10 000 = 100².
+- **Figuras** (`geometria.js`): `areaRectangulo`, `areaTriangulo` (exactas) y `areaCirculo` (k = r², aprox = k·`PI_APROX` y cota = k·10⁻³⁵, `COTA_PI`). No hay trapecio (T-D1).
+- **Materiales** (`materiales.js`): `estimarMaterial(areaUtil, precio, w)` devuelve `areaUtil`, `factorAdicional`, `areaEstimada`, `costoBase` y `costoEstimado`, todo exacto (CR-03: 2000/3 y 2200/3). Formatear «Q666.67» es trabajo de `formato.js` (T-11).
 
-## 6. Siguiente tarea: T-07
+## 6. Siguiente tarea según las dependencias: T-09
 
-**T-07 · Números, errores, unidades, materiales y figuras** (programador A). Depende solo de T-02, que está implementada. Sus criterios están en `tasks.md`, sección «Núcleo matemático (A)», en el bloque que empieza por `**T-07 ·`. Archivos: `src/nucleo/numeros.js`, `errores.js`, `unidades.js`, `materiales.js` y `geometria.js`, con sus pruebas. Contratos en design §9, §10 y §11. El trapecio queda fuera (T-D1).
+El núcleo de A (T-02 a T-07) está implementado. **T-08** (casos de uso) necesita T-06, T-07 y **T-10**, y T-10 necesita T-03 y **T-09**. Por eso la siguiente tarea en la ruta hacia T-08 es:
 
-Después, seguir el orden y las dependencias de `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**. T-08 necesita T-06, T-07 y T-10; las tareas de B (T-09 a T-16) tienen sus propias dependencias.
+**T-09 · Analizador léxico y sintáctico** (carpeta de B: `src/expresiones/lexico.js` y `sintaxis.js`, con sus pruebas). Depende solo de T-01. Sus criterios están en `tasks.md`, sección «Analizador, presentación e interfaz (B)», en el bloque que empieza por `**T-09 ·`; la gramática, el orden de comprobación y los códigos están en design §5.2 y §5.3 y en requirements Tabla 9.1 y §10. Después vienen T-10 y luego T-08.
+
+También están desbloqueadas, sin depender de T-09, T-11 (formato, depende de T-02), T-13 (estado) y T-15 (datos de la gráfica). El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
-- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-06).
+- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-07).
 - **Área de los 400 polinomios:** design §15 pide comprobar también el área calculada con los cortes conocidos en la propiedad de raíces racionales. Está prevista para T-08 (`tests/propiedades.test.js`).
 - **Ensayo en la laptop sin internet:** T-R5 (`npm ci`, `npm run preview` con el Wi-Fi apagado).
 - **Entradas no fijadas en las fuentes:** CR-11 (la función), CR-13 (intervalo y lugar de `Infinity`), CR-19 (figura y dimensión que valen 0) y CR-21 (contenido del texto de 201 caracteres e intervalo). Están anotadas en `pendientes` dentro de `tests/casos-referencia.js`; el equipo debe fijarlas o aceptarlas.
-- **Para decidir en T-07:** requirements §12 dice que el decimal del círculo se calcula con π en doble precisión, y design §6 y §9 usan `PI_APROX` (35 decimales), ya definida en `racional.js`.
-- **Interpretaciones que R debe confirmar:** el campo `potencia` de `terminos` es el exponente del término de F; `racional.potencia(r, 0)` y `polinomio.potencia(p, 0)` valen 1 también para cero; `analizarSigno` rechaza grado > 3; en CR-35 los valores se guardaron irreducibles (275·10⁵⁸/9 y 10175·10⁵⁸/243).
+- **Resuelto en T-07:** requirements §12 decía que el decimal del círculo usaba π en doble precisión; por autorización del equipo ahora dice `PI_APROX`, como design §6 y §9.
+- **Interpretaciones que R debe confirmar:**
+  - T-02 a T-06: el campo `potencia` de `terminos` es el exponente del término de F; `racional.potencia(r, 0)` y `polinomio.potencia(p, 0)` valen 1 también para cero; `analizarSigno` rechaza grado > 3; en CR-35 los valores se guardaron irreducibles (275·10⁵⁸/9 y 10175·10⁵⁸/243).
+  - T-07: los decimales se cuentan tal como se escriben (`1.0000000` tiene 7); en precio, adicional y dimensiones el paso 5 solo comprueba el máximo, para que un negativo llegue a E-NUM-05 o E-NUM-06; `leerIntervalo` es una función añadida en `numeros.js` para CR-11; los textos de los mensajes son una propuesta basada en los orientativos de requirements §10.
 - **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente.
 
 ## 8. Intención visual (para antes de T-14)

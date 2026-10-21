@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-06 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-07 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -140,7 +140,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-06._
   - **Explicar:** por qué el área de x en [−1, 1] es 1 aunque la integral sea 0.
 
-- [ ] **T-07 · Números, errores, unidades, materiales y figuras** · A · 4.5 h · MVP y COMP
+- [x] **T-07 · Números, errores, unidades, materiales y figuras** · A · 4.5 h · MVP y COMP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-07: numeros, errores, unidades, materiales y figuras con pruebas» en `avance-t04`. Pruebas en `tests/nucleo/`: `numeros` (27), `errores` (7), `unidades` (7), `geometria` (12) y `materiales` (10). Con T-07, `npm test` da 290/290 y `npm run build` es correcto. El decimal del círculo usa `PI_APROX`; requirements §12 se alineó con design §6 y §9 por autorización del equipo.
   - **Depende de:** T-02.
   - **Archivos:** `src/nucleo/numeros.js`, `errores.js`, `unidades.js`, `materiales.js`, `geometria.js` y sus pruebas.
   - **Aceptación:**

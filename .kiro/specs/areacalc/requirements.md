@@ -593,7 +593,7 @@ Los códigos son estables. Los mensajes son orientativos.
   - Si la profundidad se agota antes de demostrar que un cero es irracional, la respuesta es E-SIS-01, sin resultado parcial (CR-33, CR-34).
   - Si se agota después, solo en la aproximación, el resultado se muestra con la cota obtenida en W-04 (CR-36).
   - A_geo se rotula «aproximada», y la cota **no** se presenta como garantía universal.
-- **Círculo:** el resultado exacto es k·π; el decimal se calcula con el valor de π en doble precisión y se rotula «≈».
+- **Círculo:** el resultado exacto es k·π; el decimal se calcula con la aproximación racional `PI_APROX` de π (35 decimales, con error menor que 10⁻³⁵; design §6 y §9) y se rotula «≈».
 
 ## 13. Funcionamiento local
 
