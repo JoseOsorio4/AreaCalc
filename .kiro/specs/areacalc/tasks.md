@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07 y T-09 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 y T-10 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -168,7 +168,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
 
 ### Analizador, presentación e interfaz (B)
 
-- [ ] **T-09 · Analizador léxico y sintáctico** · B · 4 h · MVP
+- [x] **T-09 · Analizador léxico y sintáctico** · B · 4 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-09: analizador léxico y sintáctico con pruebas» en `avance-t04`. `tests/expresiones/lexico.test.js` (95 pruebas) y `tests/expresiones/sintaxis.test.js` (174 pruebas, incluidos los textos de la función de todos los CR). Con T-09, `npm test` da 559/559 en 15 archivos y `npm run build` es correcto. Las posiciones de fichas, nodos y errores cuentan desde 1; las interpretaciones que R debe confirmar están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-01, solo para ejecutar las pruebas; el código puede escribirse en paralelo. Las fichas guardan el texto del número y la conversión a racional se hace en la normalización.
   - **Archivos:** `src/expresiones/lexico.js`, `sintaxis.js` y sus pruebas.
   - **Aceptación:** el orden de comprobación de design §5.2, la gramática y la tabla de productos implícitos de §5.3; errores con posición; sin `eval` ni `new Function`.
