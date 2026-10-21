@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07 y T-09 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 y T-10 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07, T-09 y T-10 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 y T-11 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -177,7 +177,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-02.5, R-02.8, R-20._
   - **Explicar:** qué es un árbol de expresión y por qué analizar el texto no es ejecutarlo.
 
-- [ ] **T-10 · Normalización al modelo validado** · B · 4 h · MVP
+- [x] **T-10 · Normalización al modelo validado** · B · 4 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-10: normalización al modelo validado con pruebas» en `avance-t04`. `tests/expresiones/normalizar.test.js` tiene 207 pruebas. Las entradas del prototipo no están en el repositorio; por autorización del equipo se usa en su lugar una **tabla reconstruida para pruebas**, `tests/expresiones/tabla-gramatica.js` (60 válidas y 84 inválidas, con los 12 códigos E-EXP), derivada a mano de requirements y design y sin atribuirla al prototipo. Con T-10, `npm test` da 766/766 en 16 archivos y `npm run build` es correcto. Las interpretaciones que R debe confirmar están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-03 y T-09.
   - **Archivos:** `src/expresiones/normalizar.js` y la tabla de gramática completa en `tests/expresiones/`.
   - **Aceptación:**

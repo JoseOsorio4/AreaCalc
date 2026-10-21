@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-07 y T-09 (T-08 sigue pendiente).
-- Último trabajo: el commit «T-09: analizador léxico y sintáctico con pruebas», encima de `ea16afd` (T-07). Para ver los SHA: `git log --oneline -n 5`.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-07, T-09 y T-10 (T-08 sigue pendiente).
+- Último trabajo: el commit «T-10: normalización al modelo validado con pruebas», encima de `dac0250` (T-09). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -34,13 +34,14 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-05 Integral y promedio | Implementada y probada | `d3bffdf` |
 | T-06 Área geométrica | Implementada y probada | `e22ec7f` |
 | T-07 Números, errores, unidades, materiales y figuras | Implementada y probada | `ea16afd` |
-| T-08 Casos de uso | Sin iniciar (necesita T-10) | — |
-| T-09 Analizador léxico y sintáctico | Implementada y probada | commit «T-09: …» |
-| T-10 en adelante | Sin iniciar | — |
+| T-08 Casos de uso | Sin iniciar; sus dependencias (T-06, T-07 y T-10) ya están | — |
+| T-09 Analizador léxico y sintáctico | Implementada y probada | `dac0250` |
+| T-10 Normalización al modelo validado | Implementada y probada | commit «T-10: …» |
+| T-11 en adelante | Sin iniciar | — |
 
-Última ejecución, con T-09: `npm test` dio **559/559** pruebas en 15 archivos (290 anteriores, 95 del léxico y 174 de la sintaxis) y `npm run build` fue correcto (solo el aviso esperado por el tamaño de Plotly, design §13).
+Última ejecución, con T-10: `npm test` dio **766/766** pruebas en 16 archivos (290 del núcleo y la arquitectura, 95 del léxico, 174 de la sintaxis y 207 de la normalización), con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13).
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-07 ni para T-09: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-07, T-09 ni T-10: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -74,10 +75,9 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 |---|---|
 | `lexico.js` | Texto de la función → fichas `{ tipo, texto, posicion }`, con los pasos 1 a 6 de design §5.2 |
 | `sintaxis.js` | Fichas → árbol, por descenso recursivo (design §5.3); `analizarExpresion(texto)` hace léxico y sintaxis |
+| `normalizar.js` | Árbol → polinomio de grado ≤ 3 (design §5.4); `interpretarFuncion(texto)` → `ModeloValidado` (design §10) |
 
-`normalizar.js` (árbol → polinomio) es T-10 y todavía no existe.
-
-**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `arquitectura.test.js`, `propiedades.test.js` (parte de T-04), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js` y `sintaxis.test.js`.
+**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `arquitectura.test.js`, `propiedades.test.js` (parte de T-04), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
 **Otros:** `index.html` y `src/main.js` son mínimos y vacíos. `prueba-recursos.html` y `src/prueba-recursos.js` son temporales de T-01 y se eliminan en T-17. `scripts/verificar-dist.js` comprueba que `dist/` no use recursos externos.
 
@@ -100,19 +100,21 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 - **Léxico** (`lexico.js`): `analizarLexico(texto)` devuelve `Resultado` con `valor` = fichas congeladas `{ tipo, texto, posicion }` (tipos `NUMERO`, `X`, `MAS`, `MENOS`, `POR`, `ENTRE`, `POTENCIA`, `ABRE`, `CIERRA`), o un solo error: el primero en el orden de design §5.2. Los `NUMERO` guardan el texto del literal, sin convertirlo (tasks T-09). `LIMITES` = 200 caracteres, 100 fichas, 10 paréntesis y 6 decimales.
 - **Sintaxis** (`sintaxis.js`): `analizarSintaxis(fichas)` y `analizarExpresion(texto)` devuelven `Resultado` con el árbol congelado, o un solo error (E-EXP-02, E-EXP-07 o E-EXP-11). Nodos: `numero{valor}` (texto del literal), `x`, `negacion{arg}`, `suma`, `resta`, `division{izq, der}`, `producto{izq, der, implicito}` y `potencia{base, exponente}`, donde `exponente` es un nodo `numero` entero. Todos llevan `posicion`. El `+` unario no crea nodo y no hay nodo de paréntesis. `x^4`, `x^0`, `2^4`, `1/x` y `x/x` son árboles válidos: sus errores (E-EXP-10, E-EXP-07, E-EXP-08) son de T-10.
 - **Posiciones:** en fichas, nodos y errores son el número de carácter en el texto original **contando desde 1**, como en el mensaje de E-EXP-02 («cerca de la posición n»). Un final prematuro se señala justo después de la última ficha (`x^` → 3).
+- **Normalización** (`normalizar.js`): `normalizarArbol(arbol)` devuelve `Resultado` con `{ polinomio, huboDesarrollo }`, o un solo error. Recorre el árbol de abajo arriba y de izquierda a derecha, con `racional.desdeDecimal` para los literales y las operaciones de `polinomio.js`, y comprueba cada operación **antes** de hacerla: producto con grados que suman > 3 → E-EXP-10; exponente 0 → E-EXP-07; base de grado g ≥ 1 con g·n > 3 → E-EXP-10 (sin calcular la potencia: `x^999999` es inmediato); base constante con n > 3 → E-EXP-07; divisor normalizado de grado ≥ 1 → E-EXP-08, y divisor cero → E-EXP-09. E-EXP-10 lleva `datos.grado`. No hay tope de coeficientes (D-09).
+- **Posición de esos errores:** E-EXP-07 señala el exponente; E-EXP-10, el `^` o el producto (el `*`, o el primer carácter del segundo factor si es implícito); E-EXP-08 y E-EXP-09, la `/`.
+- **ModeloValidado** (`interpretarFuncion(texto)`): `{ textoOriginal, polinomio, huboDesarrollo, textoNormalizado, latexNormalizado }`, congelado. `huboDesarrollo` es verdadero si un producto o una potencia tiene un factor que es una suma o resta, aunque lleve signos delante. El texto y el LaTeX salen del polinomio, al estilo de design §14.1: potencias descendentes, «−» (U+2212) en el texto, y monomios como `x²/4`, `5x/3` o `\frac{5x}{3}`. Ejemplos: «x³ − 1» y «x³ − 4x²/3 − 5x/3 + 2/3».
 
-## 6. Siguiente tarea según las dependencias: T-10
+## 6. Siguiente tarea según las dependencias: T-08
 
-El núcleo de A (T-02 a T-07) y el analizador de T-09 están implementados. **T-08** (casos de uso) necesita T-06, T-07 y **T-10**, y T-10 ya tiene sus dependencias (T-03 y T-09). Por eso la siguiente tarea en la ruta hacia T-08 es:
-
-**T-10 · Normalización al modelo validado** (carpeta de B: `src/expresiones/normalizar.js` y la tabla de gramática completa en `tests/expresiones/`). Recorre el árbol de `sintaxis.js` y construye el `Polinomio` con las reglas de design §5.4 (E-EXP-07 a E-EXP-10, `huboDesarrollo`, `textoNormalizado`). Convierte cada `numero.valor` con `racional.desdeDecimal` y puede usar `posicion` de los nodos para los errores. Sus criterios están en `tasks.md`, en el bloque que empieza por `**T-10 ·`. Después viene T-08.
+El núcleo de A (T-02 a T-07) y el analizador de B (T-09 y T-10) están implementados, así que **T-08 · Casos de uso y pruebas globales** (carpeta de A: `src/casos-de-uso/`, `tests/casos-de-uso/`, `tests/propiedades.test.js` y la versión completa de `tests/arquitectura.test.js`) ya tiene todas sus dependencias. `analizarPerfil` debe usar `interpretarFuncion(texto)` para la función y `leerIntervalo` para a y b, acumular sus errores (design §11) y capturar E-SIS-01 y E-SIS-02. Sus criterios están en `tasks.md`, en el bloque que empieza por `**T-08 ·`.
 
 También están desbloqueadas T-11 (formato, depende de T-02), T-13 (estado) y T-15 (datos de la gráfica). El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
-- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-07 y de T-09).
-- **Tabla del prototipo para T-10:** tasks T-10 pide «las 33 entradas válidas y 59 inválidas del prototipo» (design §0), pero el prototipo estaba en `/tmp` y esas entradas **no están en el repositorio**. El equipo debe aportarlas o aceptar que T-10 transcriba una tabla equivalente desde requirements Tabla 9.1, §10 y design §5.
+- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-07, T-09 y T-10). R también debe verificar `tests/expresiones/tabla-gramatica.js`, porque sus valores se derivaron a mano.
+- **Tabla del prototipo para T-10:** las «33 entradas válidas y 59 inválidas del prototipo» de tasks T-10 no están en el repositorio. Por autorización del equipo, T-10 usa en su lugar una **tabla reconstruida para pruebas** (60 válidas y 84 inválidas), derivada de requirements Tabla 9.1, Tabla 9.2, §10 y §14, y de design §5.2 a §5.4 y §14.1. Las especificaciones no se cambiaron: tasks T-10 sigue citando el prototipo.
+- **Escritura de polinomios en dos capas:** `textoNormalizado` y `latexNormalizado` se escriben en `normalizar.js` porque `expresiones/` no puede importar `presentacion/` (design §2). T-11 (`formato.js`) también tendrá que escribir polinomios, como la antiderivada. Para no duplicar reglas, el equipo puede autorizar mover esa escritura a `nucleo/`, o aceptar dos implementaciones con las mismas pruebas de estilo.
 - **Área de los 400 polinomios:** design §15 pide comprobar también el área calculada con los cortes conocidos en la propiedad de raíces racionales. Está prevista para T-08 (`tests/propiedades.test.js`).
 - **Ensayo en la laptop sin internet:** T-R5 (`npm ci`, `npm run preview` con el Wi-Fi apagado).
 - **Entradas no fijadas en las fuentes:** CR-11 (la función), CR-13 (intervalo y lugar de `Infinity`), CR-19 (figura y dimensión que valen 0) y CR-21 (contenido del texto de 201 caracteres e intervalo). Están anotadas en `pendientes` dentro de `tests/casos-referencia.js`; el equipo debe fijarlas o aceptarlas. Mientras tanto, la prueba de T-09 usa dos contenidos de 201 caracteres (`x` seguida de espacios y `x+1+` repetido), sin rellenar el pendiente.
@@ -123,7 +125,11 @@ También están desbloqueadas T-11 (formato, depende de T-02), T-13 (estado) y T
   - T-09, posiciones: cuentan desde 1 en fichas, nodos y errores (unidades UTF-16, como `texto.length`). E-EXP-12 señala el comienzo del prefijo; E-EXP-11 por longitud, el carácter 201, y por fichas, la ficha 101. E-EXP-11 lleva `datos.limite` (`'caracteres'`, `'elementos'` o `'profundidad'`).
   - T-09, léxico: los 200 caracteres se miden sin recortar los espacios; un nombre seguido de `(` aunque haya espacios (`sin (x)`) es una función (E-EXP-06), también `X(x+1)`, por el orden de design §5.2; las unidades solo se reconocen en minúscula (`CM` y `M` dan E-EXP-03); las letras son solo ASCII, así que `π` da E-EXP-06; `1.5.3` da E-EXP-04, como un punto con dígitos al lado.
   - T-09, sintaxis: los paréntesis del exponente cuentan para la profundidad; tras `^`, un signo, un decimal, `x`, `(` sin entero o un entero seguido de algo que no es `)` dan E-EXP-07 (`x^(2+1)`, `x^((2))`, `x^2.0`), y una ficha que no puede empezar un operando o el final dan E-EXP-02 (`x^()`, `x^*2`, `x^^2`); `x^2x` es x²·x por la tabla del producto implícito. `analizarExpresion` es una función añadida para unir léxico y sintaxis. Las sugerencias de funciones, unidades, caracteres y `X` son una propuesta.
-- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-07 y T-09.
+  - T-10, divisiones: se decide por el divisor **normalizado** (design §5.4), así que `1/(x-x+1)` se admite (vale 1, definido en todo x) y `x/(x-x)` da E-EXP-09, no E-EXP-08. `x/x` y `(x^2-1)/(x-1)` siguen dando E-EXP-08 (R-02.6).
+  - T-10, potencias y productos: la base constante también se decide normalizada, así que `(x-x+1)^4` y `0^4` dan E-EXP-07. El grado se comprueba en cada subexpresión normalizada: `0*x*x*x*x` y `(x-x)^2` dan el polinomio cero, mientras que `x*x*x*x*0` da E-EXP-10 porque `x*x*x*x` ya tiene grado 4.
+  - T-10, `huboDesarrollo`: mira a través de los signos (`2*-(x+1)` y `-2(x+1)^2` dan true) y se activa también con sumas de constantes (`(1+1)x`) y con exponente 1 (`(x+1)^1`). La división de una suma (`(x+1)/2`) y el signo delante de una suma (`-(x-1)`) dan false, porque design §5.4 solo menciona productos y potencias.
+  - T-10, otros: `latexNormalizado` se implementó porque forma parte del contrato `ModeloValidado` (design §10), aunque los criterios de T-10 solo nombran `textoNormalizado`; `normalizarArbol` es una función añadida; el polinomio esperado de CR-33 (x³ + x/10⁶⁰ − 2) se dedujo a mano de su texto, porque `casos-referencia.js` no lo fija.
+- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-07, T-09 y T-10.
 
 ## 8. Intención visual (para antes de T-14)
 
@@ -139,7 +145,7 @@ npm run verificar-dist
 npm run preview
 ```
 
-`npm ci` instala exactamente lo de `package-lock.json`. **No** usar `npm install` para actualizar versiones. En Windows, si PowerShell bloquea `npm.ps1`, usar `cmd` o `npm.cmd`. En la terminal de Kiro, `npm test` a veces devolvía el control antes de terminar; funcionó lanzarlo como proceso en segundo plano y leer su salida.
+`npm ci` instala exactamente lo de `package-lock.json`. **No** usar `npm install` para actualizar versiones. En Windows, si PowerShell bloquea `npm.ps1`, usar `cmd` o `npm.cmd`. En la terminal de Kiro, `npm test` a veces devolvía el control antes de terminar; funcionó lanzarlo como proceso en segundo plano y leer su salida. Para confirmar el código de salida se añade una impresión al final del mismo comando, por ejemplo `npm.cmd test; "CODIGO_SALIDA=$LASTEXITCODE"`, y se espera a que aparezca esa línea.
 
 ## 10. Reglas de continuidad
 
