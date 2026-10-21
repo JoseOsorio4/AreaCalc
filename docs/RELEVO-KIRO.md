@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-10.
-- Último trabajo: el commit «T-08: casos de uso, propiedades y arquitectura con pruebas», encima de `bfa956e` (T-10). Para ver los SHA: `git log --oneline -n 5`.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-11.
+- Último trabajo: el commit «T-11: formato de números y fórmulas con pruebas», encima de `21f7c08` (T-08). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -34,14 +34,15 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-05 Integral y promedio | Implementada y probada | `d3bffdf` |
 | T-06 Área geométrica | Implementada y probada | `e22ec7f` |
 | T-07 Números, errores, unidades, materiales y figuras | Implementada y probada | `ea16afd` |
-| T-08 Casos de uso y pruebas globales | Implementada y probada; `pasos` y `grafica` quedan en `null` (§6) | commit «T-08: …» |
+| T-08 Casos de uso y pruebas globales | Implementada y probada; `pasos` y `grafica` quedan en `null` (§6) | `21f7c08` |
 | T-09 Analizador léxico y sintáctico | Implementada y probada | `dac0250` |
 | T-10 Normalización al modelo validado | Implementada y probada | `bfa956e` |
-| T-11 en adelante | Sin iniciar | — |
+| T-11 Formato de números y fórmulas | Implementada y probada | commit «T-11: …» |
+| T-12 en adelante | Sin iniciar | — |
 
-Última ejecución, con T-08: `npm test` dio **953/953** pruebas en 20 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13). T-08 añadió 110 pruebas de casos de uso, 40 de propiedades y 37 de arquitectura.
+Última ejecución, con T-11: `npm test` dio **1076/1076** pruebas en 21 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13). T-11 añadió 123 pruebas de formato.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-10: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-11: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -86,7 +87,15 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | `estimarMaterial.js` | Fuente apta, precio y adicional → área estimada y costos exactos, con los supuestos |
 | `comun.js` | `exito`, `fracaso` y `protegido`, que convierte las excepciones en E-SIS-01 o E-SIS-02 (archivo añadido a design §3) |
 
-**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
+**Presentación** (`src/presentacion/`, carpeta de B; solo importa `nucleo/`; sin DOM):
+
+| Archivo | Contenido |
+|---|---|
+| `formato.js` | Único lugar donde se redondea: decimales con «=» o «≈», quetzales, fracciones, sustituciones, monomios, polinomios, k·π, cotas y cantidades con unidad, en texto y LaTeX (design §14.1) |
+
+`pasos.js` (T-12) y `datosGrafica.js` (T-15) todavía no existen.
+
+**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js`, `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
 **Otros:** `index.html` y `src/main.js` son mínimos y vacíos. `prueba-recursos.html` y `src/prueba-recursos.js` son temporales de T-01 y se eliminan en T-17. `scripts/verificar-dist.js` comprueba que `dist/` no use recursos externos.
 
@@ -117,6 +126,13 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
   - Advertencias: W-01 si cambia de signo; W-02 por tangencia y W-03 por cero en un extremo (con `datos.x`); W-04 con `datos.cota`; W-09 si f ≡ 0.
   - `calcularFigura(entrada)`: rectángulo, triángulo y círculo en cm o m; reglas `dimensionCm` o `dimensionM`, errores acumulados por dimensión. Devuelve `entrada`, `tipo`, `unidad`, `dimensiones`, `area`, `unidadArea`, `areaM2`, `formula` (texto y LaTeX del formulario §8) y `pasos: null`.
   - `estimarMaterial(entrada)`: sin fuente → E-MOD-04; perfil no apto → su motivo; después precio y adicional, acumulados. Devuelve `descripcionFuente`, `areaUtilM2`, `adicional`, `factorAdicional`, `areaEstimadaM2`, `precio`, `costoBase`, `costoEstimado` y `supuestos` (W-06, y W-05 si `datosSimulados`).
+- **Formato** (`formato.js`, T-11): todo con BigInt, sin `Number`. Redondeo mitad alejándose de cero sobre el racional: |p/q|·10ⁿ, cociente y resto, y +1 si 2·resto ≥ q.
+  - `aDecimal(r, n = 4)` → «60.75», «13.3333», «−0.6667»; sin ceros finales si es exacto. `esDecimalExacto(r, n)` decide el símbolo. `decimalConSimbolo(r)` → «= 60.75» o «≈ 13.3333»; `decimalConSimboloLatex` usa `\approx`. Nunca «−0»: −1/10⁹ → «≈ 0.0000».
+  - `quetzales(r)` → «Q666.67», «Q0.00»: siempre 2 decimales y sin «=» ni «≈».
+  - `fraccionTexto` / `fraccionLatex` → «−3/4» / `-\frac{3}{4}`; `sustitucionTexto` / `sustitucionLatex` ponen entre paréntesis los negativos y las fracciones: «(−1)», «(1/2)», `\left(-1\right)`.
+  - `monomioTexto`, `monomioLatex`, `polinomioTexto` y `polinomioLatex`, de cualquier grado: «x⁴/4 − x», «x³ − 4x²/3 − 5x/3 + 2/3».
+  - `multiploPiTexto` / `multiploPiLatex` → «25π», «π/4», `\frac{9\pi}{4}`. `cotaTexto` / `cotaLatex` → «6·10⁻²⁵», con una cifra redondeada hacia arriba.
+  - `cantidadTexto(cantidad, unidad)`: «243/4 = 60.75 u²», «6 u²», «25π ≈ 78.5398 m²», «≈ 2.4379 u² (aproximada; cota de error ≤ 6·10⁻²⁵)». `quetzalesCantidad`: «Q666.67», «Q250π ≈ Q785.40». `UNIDADES` = u, u², m, m², cm, cm², Q/m² y %.
 - **ModeloValidado** (`interpretarFuncion(texto)`): `{ textoOriginal, polinomio, huboDesarrollo, textoNormalizado, latexNormalizado }`, congelado. `huboDesarrollo` es verdadero si un producto o una potencia tiene un factor que es una suma o resta, aunque lleve signos delante. El texto y el LaTeX salen del polinomio, al estilo de design §14.1: potencias descendentes, «−» (U+2212) en el texto, y monomios como `x²/4`, `5x/3` o `\frac{5x}{3}`. Ejemplos: «x³ − 1» y «x³ − 4x²/3 − 5x/3 + 2/3».
 
 ## 6. Qué falta después de T-08 y siguiente tarea
@@ -128,18 +144,18 @@ El núcleo (T-02 a T-07), el analizador (T-09 y T-10) y los casos de uso (T-08) 
 | `ResultadoPerfil.pasos` (`{ area, promedio }`) | `null` | `presentacion/pasos.js` (T-12) | T-17, en `analizarPerfil` (design §4, paso 8) |
 | `ResultadoPerfil.grafica` (`DatosGrafica`) | `null` | `presentacion/datosGrafica.js` (T-15) | T-17, en `analizarPerfil` (design §4, paso 9) |
 | `ResultadoFigura.pasos` | `null` | `presentacion/pasos.js` (T-12) | T-17, en `calcularFigura` |
-| Cifras de W-02, W-03 y W-04 | fracción exacta (`racional.aTexto`), p. ej. la cota de W-04 | `presentacion/formato.js` (T-11) | T-17 |
-| «Q666.67» y «Q733.33» de CR-03 | el caso de uso da 2000/3 y 2200/3 exactos | `formato.js` (T-11) | — |
+| Cifras de W-02, W-03 y W-04 | fracción exacta (`racional.aTexto`), p. ej. la cota de W-04 | ya existe: `fraccionTexto` y `cotaTexto` de `formato.js` (T-11) | T-17, en `analizarPerfil` |
+| «Q666.67» y «Q733.33» de CR-03 | el caso de uso da 2000/3 y 2200/3 exactos | ya existe: `quetzales` de `formato.js` (T-11) | la vista (T-14) |
 | Invalidación de CR-13 y CR-22 en pantalla | el caso de uso no guarda estado | `interfaz/estado.js` (T-13) | — |
 
-Siguientes tareas desbloqueadas: T-11 (formato), T-13 (estado) y T-15 (datos de la gráfica); T-12 depende de T-11. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
+Siguientes tareas desbloqueadas: T-12 (pasos, ya tiene T-11), T-13 (estado), T-15 (datos de la gráfica) y, cuando exista T-13, T-14. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
-- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-10). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
+- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-11). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
 - **Área de los 400 polinomios:** resuelto en T-08: `tests/propiedades.test.js` comprueba que los 400 dan, exacta, el área calculada con sus cortes conocidos.
 - **Tabla del prototipo para T-10:** las «33 entradas válidas y 59 inválidas del prototipo» de tasks T-10 no están en el repositorio. Por autorización del equipo, T-10 usa en su lugar una **tabla reconstruida para pruebas** (60 válidas y 84 inválidas), derivada de requirements Tabla 9.1, Tabla 9.2, §10 y §14, y de design §5.2 a §5.4 y §14.1. Las especificaciones no se cambiaron: tasks T-10 sigue citando el prototipo.
-- **Escritura de polinomios en dos capas:** `textoNormalizado` y `latexNormalizado` se escriben en `normalizar.js` porque `expresiones/` no puede importar `presentacion/` (design §2). T-11 (`formato.js`) también tendrá que escribir polinomios, como la antiderivada. Para no duplicar reglas, el equipo puede autorizar mover esa escritura a `nucleo/`, o aceptar dos implementaciones con las mismas pruebas de estilo.
+- **Escritura de polinomios en dos capas (duplicación conocida):** `normalizar.js` (T-10) escribe `textoNormalizado` y `latexNormalizado`, y `formato.js` (T-11) tiene `polinomioTexto` y `polinomioLatex` con las mismas reglas, ampliadas a cualquier grado para la antiderivada. No se puede reutilizar una desde la otra sin romper design §2: `expresiones/` no importa `presentacion/`, y `presentacion/` no importa `expresiones/`. No se tocó T-10. Mientras tanto, `formato.test.js` comprueba que las dos dan el mismo texto y el mismo LaTeX en las 60 entradas válidas de la tabla reconstruida. Para resolverlo en la integración, el equipo puede autorizar mover la escritura de polinomios a `nucleo/` y que las dos capas la importen.
 - **Ensayo en la laptop sin internet:** T-R5 (`npm ci`, `npm run preview` con el Wi-Fi apagado).
 - **Entradas no fijadas en las fuentes:** CR-11 (la función), CR-13 (intervalo y lugar de `Infinity`), CR-19 (figura y dimensión que valen 0) y CR-21 (contenido del texto de 201 caracteres e intervalo). Están anotadas en `pendientes` dentro de `tests/casos-referencia.js`; el equipo debe fijarlas o aceptarlas. Mientras tanto, la prueba de T-09 usa dos contenidos de 201 caracteres (`x` seguida de espacios y `x+1+` repetido), sin rellenar el pendiente.
 - **Resuelto en T-07:** requirements §12 decía que el decimal del círculo usaba π en doble precisión; por autorización del equipo ahora dice `PI_APROX`, como design §6 y §9.
@@ -156,9 +172,14 @@ Siguientes tareas desbloqueadas: T-11 (formato), T-13 (estado) y T-15 (datos de 
   - T-08, contratos añadidos a design §10: `aptitud.error` (el ErrorAreaCalc del motivo, porque `interfaz/` no puede importar el núcleo para crear el mensaje); `ResultadoFigura.tipo`, `unidad` y `unidadArea`; `ResultadoEstimacion.factorAdicional` (para que T-12 muestre 1 + w/100 sin recalcular); `EntradaEstimacion.datosSimulados` (W-05 solo cuando la interfaz carga un caso simulado, porque el caso de uso no sabe de dónde viene el precio); y el archivo `casos-de-uso/comun.js`.
   - T-08, `pasos` y `grafica` valen `null` en vez de omitirse, para que el contrato tenga ya todos sus campos; T-17 debe sustituirlos (§6).
   - T-08, errores: la forma de la entrada (un campo que no es texto, una interpretación, unidad o figura desconocidas, el trapecio) se trata como error de programación (E-SIS-02), porque la interfaz controla esos valores. E-SIS-02 escribe el detalle en `console.error` y E-SIS-01 no escribe nada. En `estimarMaterial`, la fuente es una condición previa: sin una fuente apta solo se informa E-MOD, sin validar el precio ni el adicional.
-  - T-08, advertencias y textos: las cifras de W-02, W-03 y W-04 son fracciones exactas hasta T-11; `descripcionFuente` usa `textoNormalizado` (orden descendente: «Perfil x²/4 + 2 en [0, 4] m», no «2 + x²/4» como el ejemplo de design §10) y los textos de a, b y las dimensiones tal como los escribió el usuario, sin espacios. W-01 se añade siempre que f cambia de signo, también en CR-15 y CR-36, aunque su referencia solo nombre W-04.
+  - T-08, advertencias y textos: las cifras de W-02, W-03 y W-04 son fracciones exactas hasta que T-17 use `formato.js` en `analizarPerfil` (T-11 no tocó los casos de uso); `descripcionFuente` usa `textoNormalizado` (orden descendente: «Perfil x²/4 + 2 en [0, 4] m», no «2 + x²/4» como el ejemplo de design §10) y los textos de a, b y las dimensiones tal como los escribió el usuario, sin espacios. W-01 se añade siempre que f cambia de signo, también en CR-15 y CR-36, aunque su referencia solo nombre W-04.
   - T-08, prueba de arquitectura: añade reglas que no estaban escritas como prueba: las capas exactas (`nucleo/`, `expresiones/`, `casos-de-uso/`) no usan `Number()`, `parseFloat`, `parseInt`, `aNumber`, `evaluarAprox` ni `Math.round/floor/ceil/sqrt/…`, salvo `racional.js` y `polinomio.js`, que los definen; y solo `presentacion/formato.js` puede usar `toFixed`, `toPrecision`, `toLocaleString` o `Math.round`. T-11 a T-15 deben respetarlas.
-- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-10.
+  - T-11, símbolos: el texto usa «−» (U+2212), como `textoNormalizado`, y el LaTeX usa «-». Los decimales «≈» conservan los ceros finales («≈ 0.0000», «≈ 1.0000»), y los «=» los quitan («= 60.75», «= 6»).
+  - T-11, quetzales: siempre 2 decimales, sin «=» ni «≈» aunque se redondee («Q666.67», como fija CR-03). Un costo de un círculo se muestra «Q250π ≈ Q785.40» (coeficiente exacto y decimal con PI_APROX, design §9); el diseño no fija ese texto. Un importe negativo, que el MVP no produce, se escribe «−Q1.50».
+  - T-11, cantidades: una exacta entera se muestra sin decimal («6 u²»); una no entera, con la fracción y su decimal («40/3 ≈ 13.3333 m²»). Un múltiplo de π siempre lleva «≈» y no muestra su cota de 10⁻³⁵. La cota de una aproximada se escribe con una cifra redondeada **hacia arriba** («5.85·10⁻²⁵» → «6·10⁻²⁵»), para que siga siendo una cota. Con la cota real del núcleo, CR-15 da exactamente el ejemplo de design §14.1.
+  - T-11, sustituciones: además de los negativos (R-09.6), las fracciones van entre paréntesis («(1/2)⁴»), para que una potencia no se lea mal.
+  - T-11, orden de la antiderivada: design §14.1 manda potencias descendentes, pero `casos-referencia.js` (y el formulario §5.2 y §7.1) escriben las antiderivadas de CR-02 y CR-03 en orden ascendente («x + x³/3», «2x + x³/12»). `polinomioTexto` da «x³/3 + x» y «x³/12 + 2x»; la prueba compara con los términos de la referencia invertidos. T-12 o el equipo deben decidir si los pasos siguen el orden de la pizarra.
+- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-11.
 
 ## 8. Intención visual (para antes de T-14)
 

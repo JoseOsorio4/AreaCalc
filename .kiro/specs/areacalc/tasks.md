@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-10 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 deja `pasos` y `grafica` en `null` hasta T-12, T-15 y T-17. T-11 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-11 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 deja `pasos` y `grafica` en `null` hasta T-12, T-15 y T-17. T-12 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -191,7 +191,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-02, R-03.2._
   - **Explicar:** por qué `(x-1)^2` y `x^2 - 2x + 1` dan el mismo modelo y por qué se rechaza `1/x`.
 
-- [ ] **T-11 · Formato de números y fórmulas** · B · 2.5 h · MVP
+- [x] **T-11 · Formato de números y fórmulas** · B · 2.5 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-11: formato de números y fórmulas con pruebas» en `avance-t04`. `tests/presentacion/formato.test.js` tiene 123 pruebas: los cinco casos de esta tarea, los 25 textos decimales de `casos-referencia.js`, valores a mitad, negativos, «−0», unidades, las tres clases de Cantidad y la coincidencia con `textoNormalizado` y `latexNormalizado` de T-10 en las 60 entradas válidas de la tabla reconstruida. Con T-11, `npm test` da 1076/1076 en 21 archivos y `npm run build` es correcto, ambos con código de salida 0. Las decisiones que R debe revisar están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-02.
   - **Archivos:** `src/presentacion/formato.js` y su prueba.
   - **Aceptación:** fracciones y LaTeX; 4 decimales en los valores y 2 en los quetzales; «=» o «≈» según la expansión decimal; redondeo mitad alejándose de cero calculado sobre el racional; sin «−0»; monomios al estilo del curso (design §14.1).
