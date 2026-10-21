@@ -341,7 +341,7 @@ Todas las funciones devuelven objetos nuevos, congelados con `Object.freeze`.
 **`promedio.js`:**
 
 - `valorPromedio(I, a, b)` devuelve `{ longitud: b − a, fProm: I/(b − a) }`. Reutiliza I y no vuelve a integrar (R-07.1).
-- `rectanguloEquivalente(analisis, fProm, a, b)` solo devuelve `{ base, altura, area }` si `analisis.noNegativa`. En otro caso devuelve `null` con el motivo (R-08.2).
+- `rectanguloEquivalente(analisis, fProm, a, b)` devuelve `{ rectangulo: { base, altura, area } | null, motivo: string | null }`. Si `analisis.noNegativa`, `rectangulo` es `{ base, altura, area }` y `motivo` es `null`. En otro caso, `rectangulo` es `null` y `motivo` indica que la igualdad requiere f ≥ 0 (R-08.2); T-05 usa el valor `'requiere-f-no-negativa'`.
 
 ## 8. Análisis de ceros y signos (`ceros.js`), la parte de mayor riesgo
 
@@ -498,7 +498,7 @@ Son contratos **documentales**. En el código se expresarán con `@typedef` de J
 | `EntradaPerfil` | `textoFuncion`, `textoA`, `textoB` (cadenas sin interpretar); `interpretacion: 'abstracta' \| 'fisica'` |
 | `ModeloValidado` | `textoOriginal`; `polinomio` (grado ≤ 3); `huboDesarrollo`; `textoNormalizado` (p. ej., «x³ − 1»); `latexNormalizado` |
 | `Intervalo` | `{ a: Racional, b: Racional }` con a < b; las posiciones negativas son válidas (R-01.5) |
-| `ResultadoPerfil` | `entrada` (copia de los textos usados, para R-11.1); `modelo`; `intervalo`; `unidades`; `integral` (§7); `analisis` (§8); `area` (§9); `promedio`; `rectangulo` (o `null` con motivo); `aptitud: { apta, motivo: 'E-MOD-0n' \| null }`; `pasos: { area: Paso[], promedio: Paso[] }`; `grafica: DatosGrafica`; `advertencias` |
+| `ResultadoPerfil` | `entrada` (copia de los textos usados, para R-11.1); `modelo`; `intervalo`; `unidades`; `integral` (§7); `analisis` (§8); `area` (§9); `promedio`; `rectangulo`: `{ rectangulo: { base, altura, area } \| null, motivo: string \| null }`, como lo devuelve `rectanguloEquivalente` (§7); `aptitud: { apta, motivo: 'E-MOD-0n' \| null }`; `pasos: { area: Paso[], promedio: Paso[] }`; `grafica: DatosGrafica`; `advertencias` |
 
 **Procedimiento y gráfica:**
 
