@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-07, T-09 y T-10 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 y T-11 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-10 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 deja `pasos` y `grafica` en `null` hasta T-12, T-15 y T-17. T-11 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -154,7 +154,9 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-03, R-14, R-15, R-17, R-19._
   - **Explicar:** por qué el área se convierte con el cuadrado del factor y por qué redondear 13.33 antes de multiplicar da Q666.50.
 
-- [ ] **T-08 · Casos de uso y pruebas globales** · A · 4 h · MVP
+- [x] **T-08 · Casos de uso y pruebas globales** · A · 4 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-08: casos de uso, propiedades y arquitectura con pruebas» en `avance-t04`. Se cumplen los cuatro criterios de aceptación y las pruebas que pide la tarea. Hay 110 pruebas en `tests/casos-de-uso/` (`analizarPerfil` 62, `calcularFigura` 17, `estimarMaterial` 28 y `robustez` 3, con 900 entradas arbitrarias); `tests/propiedades.test.js` pasa de 3 a 43, y `tests/arquitectura.test.js`, de 6 a 43. Con T-08, `npm test` da 953/953 en 20 archivos y `npm run build` es correcto, ambos con código de salida 0.
+  - **Pendiente fuera de T-08** (design §4, pasos 8 y 9): los campos `pasos` y `grafica` de `ResultadoPerfil` y `pasos` de `ResultadoFigura` valen `null`. Sus productores son `presentacion/pasos.js` (T-12) y `presentacion/datosGrafica.js` (T-15); T-17 debe conectarlos a los casos de uso. También quedan para T-11 el formato decimal de las cifras de W-02, W-03 y W-04 (hoy son fracciones exactas) y los textos «Q666.67» y «Q733.33» de CR-03. La invalidación en pantalla de CR-13 y CR-22 es de T-13. Las decisiones de contrato que R debe revisar están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-06, T-07 y T-10.
   - **Archivos:** `src/casos-de-uso/analizarPerfil.js`, `calcularFigura.js`, `estimarMaterial.js`, `tests/casos-de-uso/`, `tests/propiedades.test.js` y la versión completa de `tests/arquitectura.test.js`.
   - **Aceptación:**
