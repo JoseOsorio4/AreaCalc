@@ -2,7 +2,7 @@
 
 Aplicación web estática para el curso de Cálculo Integral (Universidad Mariano Gálvez de Guatemala, Campus Jutiapa). Calcula el área bajo un perfil polinómico de grado ≤ 3, la integral con signo y el valor promedio; muestra la gráfica y el procedimiento, y da una estimación teórica de material y costo.
 
-> **Estado:** base del proyecto creada (T-01). La aplicación todavía no tiene funciones. La instalación de dependencias, las pruebas y el build están **pendientes de verificar**: el registro npm no fue accesible desde el entorno de Kiro Web (véase «Estado de T-01»).
+> **Estado:** base del proyecto creada y verificada. T-01 se completó el 20 de octubre en la computadora del programador A (véase «Estado de T-01»). La aplicación todavía no tiene funciones.
 
 ## Documentación
 
@@ -16,13 +16,13 @@ Aplicación web estática para el curso de Cálculo Integral (Universidad Marian
 
 ## Requisitos
 
-- Node.js compatible con la versión de Vite que se instale. Vite 7 exige Node 20.19+ o 22.12+; compruébelo con `node --version`.
+- Node.js 22.12 o posterior; se recomienda 24 LTS, la versión usada en T-01. Vite 8.3.4 admite Node 20.19+ o 22.12+, pero Vitest 5.0.5 exige 22.12+, 24 o 26+. Compruébelo con `node --version`.
 - Un navegador moderno.
 - Internet solo para instalar las dependencias. Después, la versión construida funciona sin conexión.
 
-## Instalación inicial (una sola vez, T-01)
+## Instalación inicial (ya hecha en T-01)
 
-Estos comandos instalan las cuatro dependencias aprobadas y fijan sus versiones exactas en `package.json` y `package-lock.json`:
+T-01 instaló las cuatro dependencias aprobadas con estos comandos, que fijaron sus versiones exactas en `package.json` y `package-lock.json`:
 
 ```
 npm install --save-dev --save-exact vite vitest
@@ -30,7 +30,7 @@ npm install --save-exact plotly.js-basic-dist-min katex
 npm ls --depth=0
 ```
 
-`npm ls` debe mostrar solo esos cuatro paquetes. Anote las versiones en «Versiones instaladas».
+No los repita: instalarían las versiones más recientes y cambiarían el lock. En una copia nueva use `npm ci`. `npm ls --depth=0` debe mostrar solo los cuatro paquetes de «Versiones instaladas».
 
 ## Comandos
 
@@ -52,7 +52,7 @@ No abra `index.html` con doble clic: la aplicación se sirve con `npm run previe
 3. Ejecute `npm run preview` y abra la dirección que muestra la consola.
 4. En las herramientas de desarrollo del navegador (pestaña Red), recargue y compruebe que ningún recurso externo falla.
 
-En Windows, use el Símbolo del sistema (`cmd`), porque PowerShell puede bloquear `npm.ps1`. Evite carpetas sincronizadas como OneDrive.
+En Windows, use el Símbolo del sistema (`cmd`), porque PowerShell puede bloquear `npm.ps1` (en la computadora de A la política es `Restricted`). En PowerShell también funciona `npm.cmd`, por ejemplo `npm.cmd run preview`. Evite carpetas sincronizadas como OneDrive.
 
 Mientras exista, la página temporal `prueba-recursos.html`, enlazada desde la página principal, comprueba Plotly y KaTeX.
 
@@ -64,11 +64,13 @@ Copie la carpeta del proyecto **sin** `node_modules/` ni `dist/` y ejecute `npm 
 
 | Elemento | Versión |
 |---|---|
-| Node.js | pendiente |
-| vite | pendiente |
-| vitest | pendiente |
-| plotly.js-basic-dist-min | pendiente |
-| katex | pendiente |
+| Node.js | 24.22.0 (npm 11.19.1) |
+| vite | 8.3.4 |
+| vitest | 5.0.5 |
+| plotly.js-basic-dist-min | 4.1.2 |
+| katex | 0.19.0 |
+
+El fragmento minificado de Plotly ocupa unos 1.16 MB. Al cerrar T-01 se actualizaron las referencias de versiones de `design.md` (§0, §13 y §20), que mencionaban Vite 7, Vitest con Node 20 y Plotly 3.x.
 
 ## Limitaciones conocidas
 
@@ -80,19 +82,12 @@ Copie la carpeta del proyecto **sin** `node_modules/` ni `dist/` y ejecute `npm 
 
 | Comprobación | Estado (20 de octubre) |
 |---|---|
-| Archivos base | Creados en el entorno de Kiro Web |
-| Sintaxis de los archivos JavaScript (`node --check`) | Correcta en Kiro Web |
-| Lógica de `tests/arquitectura.test.js` | Revisada en Kiro Web con un sustituto mínimo de Vitest: 6 de 6 comprobaciones correctas y 5 fallos detectados con infracciones deliberadas. **No sustituye a `npm test`.** |
-| Instalación de dependencias | Pendiente: el registro npm respondió HTTP 403 |
-| `npm test` | Pendiente |
-| `npm run build` y `npm run verificar-dist` | Pendientes |
-| Página de prueba de Plotly y KaTeX | Pendiente |
+| Archivos base | Creados en el entorno de Kiro Web; conservados sin cambios |
+| Instalación de dependencias | Correcta en la computadora de A (en Kiro Web, npm respondía HTTP 403). `npm ls --depth=0` muestra solo los cuatro paquetes y `npm audit` no encontró vulnerabilidades. |
+| `npm test` | Correcto: 1 archivo y 6 pruebas |
+| `npm run build` | Correcto. El aviso por el tamaño del fragmento de Plotly es esperado (design §13). |
+| `npm run verificar-dist` | Correcto: 66 archivos, sin recursos externos en HTML ni CSS. Hay 59 fuentes de KaTeX en `dist/assets`; la restante, de menos de 4 KB, va incrustada en el CSS. |
+| Página de prueba, comprobación automática | Correcta: con `npm run preview`, Edge sin interfaz y con el acceso externo bloqueado informó que KaTeX y Plotly dibujaron sin errores. La gráfica contiene el relleno, dos formas y la anotación. No comprueba la apariencia. |
+| Página de prueba, revisión visual | Correcta, revisada por A en el navegador: la fórmula, el área sombreada, el rectángulo y la línea del promedio se ven bien. La pestaña Red muestra 9 solicitudes de la página y de sus recursos, sin fallos ni recursos externos; los 304 son respuestas de caché. |
 
-El programador A ejecuta los pasos pendientes en su computadora (`tasks.md`, T-01):
-
-1. Los comandos de «Instalación inicial».
-2. Anotar las versiones en «Versiones instaladas».
-3. `npm test`, `npm run build` y `npm run verificar-dist`.
-4. `npm run preview` y la comprobación visual de `prueba-recursos.html`.
-
-T-01 se marca como completada solo cuando estos pasos pasen y se hayan revisado sus resultados.
+T-01 quedó marcada como completada en `tasks.md`. El punto 5 de la página, con el Wi-Fi apagado, corresponde a T-R5.

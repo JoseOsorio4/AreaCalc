@@ -9,15 +9,15 @@
 
 | Afirmación usada en el diseño | Fuente consultada | Estado |
 |---|---|---|
-| Vite 7 exige Node.js 20.19+ o 22.12+ | página de `create-vite` en npm; anuncio de Vite 7 | Verificada (fragmento de búsqueda) |
+| Vite 8.3.4, la versión instalada, exige Node.js 20.19+ o 22.12+ | campo `engines` de su `package.json`, instalado en T-01 | Verificada en T-01 |
 | `vite preview` sirve `dist/` en `http://localhost:4173`; es para revisar el build en local, no un servidor de producción | documentación de Vite, «Deploying a Static Site» | Verificada |
 | Si el puerto está ocupado, la vista previa prueba el siguiente puerto libre | documentación de Vite, «Preview Options» | Verificada |
-| Vitest requiere Vite 6 o superior y Node 20 o superior; `vitest run` ejecuta una sola vez | guía de vitest.dev; espejo de su documentación | Verificada (fragmento) |
-| `plotly.js-basic-dist-min` contiene las trazas bar, pie y scatter; npm indica unos 1.04 MB | npm | Verificada (fragmento) |
-| La serie publicada de Plotly es la 3.x, y la traza scatter está en todos los paquetes | README de `dist` y `CUSTOM_BUNDLE.md` de plotly.js | Verificada (fragmento) |
+| Vitest 5.0.5, la versión instalada, admite Vite 6.4, 7 u 8 y exige Node 22.12+, 24 o 26+; `vitest run` ejecuta una sola vez | campos `engines` y `peerDependencies` de su `package.json`; `npm test` en T-01 | Verificada en T-01 |
+| `plotly.js-basic-dist-min` 4.1.2 contiene las trazas bar, pie y scatter; su fragmento minificado ocupa unos 1.16 MB | README del paquete instalado; salida de `npm run build` en T-01 | Verificada en T-01 |
+| La versión instalada de Plotly es la 4.1.2 (serie 4.x), y la traza scatter está en todos los paquetes | `package-lock.json` (T-01); README de `dist` y `CUSTOM_BUNDLE.md` de plotly.js, consultados para la serie 3.x | Versión verificada en T-01; scatter, por fragmento |
 | KaTeX lanza `ParseError` ante LaTeX inválido, porque `throwOnError` vale `true` por defecto | katex.org, «Options» | Verificada |
 | Math.js no integra simbólicamente y tiene avisos de seguridad en 2026 | Etapa A | Verificada |
-| **Versiones exactas vigentes en npm** | el registro npm devolvió HTTP 403 desde el sandbox | **No verificadas.** Se fijan al instalar, en T-01 (§13). |
+| **Versiones exactas** | `npm install` en la computadora de A (desde el sandbox, el registro npm devolvió HTTP 403) | **Fijadas en T-01** en `package-lock.json`: vite 8.3.4, vitest 5.0.5, plotly.js-basic-dist-min 4.1.2 y katex 0.19.0, con Node 24.22.0 (README, «Versiones instaladas»). |
 | Formas (*shapes*) y anotaciones en el paquete *basic*; importación del paquete de Plotly desde Vite; copia de las fuentes de KaTeX en `dist/` | — | **Por verificar** en T-01, en el entorno de Kiro Web |
 | Reglas de D-09 (§8): parte primitiva, presupuesto agotado y entradas sin tope | prototipo desechable v5, en `/tmp` | Validado: CR-32 a CR-36 dan lo esperado; se mantienen CR-01, CR-04 a CR-07, CR-14, CR-15 y CR-28 a CR-31; 500 polinomios con raíces racionales (100 de ellos multiplicados por factores de hasta 10⁸⁰) dan todas sus raíces exactas, sin ningún E-SIS-01. **No es código del producto.** |
 | Método de análisis de ceros (§8, v0.2) | prototipo desechable v3 en Python, en `/tmp` y fuera del repositorio | Validado: 10 casos CR (incluido CR-31), 5 casos con raíces racionales, 3 con raíces irracionales, 400 polinomios con raíces racionales aleatorias y 300 polinomios aleatorios frente a un oráculo numérico independiente. Resultados en §8. **No es código del producto.** |
@@ -588,7 +588,7 @@ estado = {
 
 **Requisitos de la laptop:**
 
-- Node.js que cumpla el requisito del Vite instalado. Para Vite 7 es 20.19+ o 22.12+, y se comprueba con `node --version`.
+- Node.js que cumpla los requisitos de Vite y Vitest instalados. Vite 8.3.4 admite 20.19+ o 22.12+, pero Vitest 5.0.5 exige 22.12+, 24 o 26+. En T-01 se usó Node 24.22.0 (24 LTS). Se comprueba con `node --version`.
 - Un navegador moderno de escritorio.
 - Proyecto en una carpeta local, por ejemplo `C:\proyectos\AreaCalc`. Se recomienda **evitar** carpetas sincronizadas como OneDrive, porque bloquean archivos de `node_modules`.
 
@@ -900,7 +900,7 @@ No hay un `AGENTS.md` existente, así que no hay incompatibilidades. El archivo 
 | Alta | Analizar el signo con coma flotante o muestreo puede presupuestar un perfil negativo. | Estimación de material errónea | Decisión exacta con mcd y Sturm (§8), validada con un prototipo y un oráculo |
 | Alta | La lista inicial del equipo incluía Math.js. | Superficie de ataque y diferencias con la gramática aprobada | Analizador propio (§5). Math.js sale de las dependencias. |
 | Media | Plotly es el recurso más pesado y es una biblioteca externa. | Primer render lento, o falla de la gráfica | Carga diferida y precarga, W-07, resultados independientes de la gráfica (§13, §14) |
-| Media | Las versiones exactas no pudieron verificarse (el registro npm devolvió 403). | Incompatibilidad con Node | Fijarlas en `package-lock.json` en T-01 y probar en la laptop real |
+| Media | Las versiones exactas no pudieron verificarse (el registro npm devolvió 403). | Incompatibilidad con Node | Fijadas en `package-lock.json` en T-01 (vite 8.3.4, vitest 5.0.5, plotly.js-basic-dist-min 4.1.2 y katex 0.19.0; Node 24.22.0). La prueba en la laptop real queda en T-R5. |
 | Media | Las 62 h estimadas superan ligeramente las 60 h disponibles. | Retraso del núcleo | Orden de recorte, alcance congelado el 26 de octubre y carpetas separadas (§16) |
 | Alta | v0.1 de §8: la fracción de menor denominador se probaba solo una vez, al principio; en x − 1/3 sobre [0, 1] esa fracción es 0 y la bisección nunca alcanza 1/3. | Raíz racional tratada como aproximada; un área exacta (5/18) rotulada como aproximada, en contra de R-05.3 y R-18.2 | Fórmula directa en grado 1 y prueba de racionalidad con el teorema de las raíces racionales (§8, pasos 2 y 5); CR-31; propiedad de raíces racionales aleatorias (§15). Validado con el prototipo v3. |
 | Media | v0.1 de §5.3: la gramática solo aceptaba los exponentes 1 a 3, así que `x^4` habría recibido un error de sintaxis o E-EXP-07. | Incumple requirements Tabla 9.1 y CR-21, que fijan E-EXP-10 | El exponente es cualquier entero en la sintaxis; el grado se comprueba al normalizar (§5.4) |

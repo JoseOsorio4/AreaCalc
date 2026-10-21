@@ -52,8 +52,11 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
 
 ### Núcleo matemático (A)
 
-- [ ] **T-01 · Base del proyecto, verificada en el entorno de Kiro Web** · A · 2 h · MVP
-  - **Estado (20 de octubre): en curso, sin completar.** Los archivos base están creados en el entorno de Kiro Web, pero `npm install` falló con HTTP 403 (red del entorno: solo integraciones). Hubo un reintento después de que el equipo habilitara «Common dependencies», con el mismo resultado: el entorno de esta sesión sigue informando `INTEGRATIONS_ONLY`. La instalación, `npm test`, `npm run build`, `npm run verificar-dist` y la página de prueba quedan pendientes en la computadora de A (README, «Estado de T-01»).
+- [x] **T-01 · Base del proyecto, verificada en el entorno de Kiro Web** · A · 2 h · MVP
+  - **Estado (20 de octubre): completada.** Los archivos base se crearon en el entorno de Kiro Web, donde `npm install` falló con HTTP 403 (red del entorno: solo integraciones). Por eso la instalación y las comprobaciones se hicieron en la computadora de A, con Node 24.22.0:
+    - `npm test` (6 pruebas), `npm run build` y `npm run verificar-dist` pasan.
+    - A revisó la página de prueba en el navegador. Plotly *basic* dibuja el relleno, el rectángulo, la línea y la anotación, y KaTeX dibuja la fórmula. La pestaña Red no muestra fallos ni recursos externos.
+    - Las versiones fijadas están en el README, «Versiones instaladas».
   - **Depende de:** aprobación de `tasks.md`. Es la única tarea que instala dependencias.
   - **Archivos:** `package.json`, `package-lock.json`, `vite.config.js`, `index.html` mínimo, `src/main.js` vacío, `AGENTS.md` (design §18), `README.md` con los comandos de design §13, `tests/arquitectura.test.js` inicial y una página de prueba temporal.
   - **Aceptación (en el entorno de Kiro Web):**
