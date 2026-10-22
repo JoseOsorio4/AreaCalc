@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-11 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). T-08 deja `pasos` y `grafica` en `null` hasta T-12, T-15 y T-17. T-12 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-12 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). Los casos de uso de T-08 siguen devolviendo `pasos` y `grafica` en `null` hasta T-15 y T-17. T-13 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -200,7 +200,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-18.2 a R-18.4._
   - **Explicar:** por qué se redondea una sola vez, al final.
 
-- [ ] **T-12 · Procedimientos paso a paso** · B · 3.5 h · MVP
+- [x] **T-12 · Procedimientos paso a paso** · B · 3.5 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-12: procedimientos paso a paso con pruebas» en `avance-t04`. `tests/presentacion/pasos.test.js` tiene 37 pruebas, con resultados reales de los casos de uso: CR-01 (F(4) = 60, F(1) = −3/4, 243/4), CR-02 (equivalencia con la pizarra), CR-05 (tramos), CR-03 (estimación) y además CR-06, CR-07, CR-08, CR-14, CR-15, CR-20 y las figuras. Ningún paso de los perfiles válidos de los CR ni de 4 figuras contiene «+C». `pasos.js` todavía no está conectado a `analizarPerfil` ni a `calcularFigura`: eso es de T-17. Con T-12, `npm test` da 1113/1113 en 22 archivos y `npm run build` es correcto, ambos con código de salida 0. Las decisiones que R debe revisar están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-11 y los contratos de design §10. Se desarrolla con datos simulados y se conecta con los reales durante la integración.
   - **Archivos:** `src/presentacion/pasos.js` y su prueba.
   - **Aceptación:** los procedimientos de design §14.2, que solo formatean los datos del núcleo; sustituciones negativas entre paréntesis; ningún resultado contiene «+C».

@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-11.
-- Último trabajo: el commit «T-11: formato de números y fórmulas con pruebas», encima de `21f7c08` (T-08). Para ver los SHA: `git log --oneline -n 5`.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-12.
+- Último trabajo: el commit «T-12: procedimientos paso a paso con pruebas», encima de `9efdfb9` (T-11). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -37,12 +37,13 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-08 Casos de uso y pruebas globales | Implementada y probada; `pasos` y `grafica` quedan en `null` (§6) | `21f7c08` |
 | T-09 Analizador léxico y sintáctico | Implementada y probada | `dac0250` |
 | T-10 Normalización al modelo validado | Implementada y probada | `bfa956e` |
-| T-11 Formato de números y fórmulas | Implementada y probada | commit «T-11: …» |
-| T-12 en adelante | Sin iniciar | — |
+| T-11 Formato de números y fórmulas | Implementada y probada | `9efdfb9` |
+| T-12 Procedimientos paso a paso | Implementada y probada; aún no conectada a los casos de uso (T-17) | commit «T-12: …» |
+| T-13 en adelante | Sin iniciar | — |
 
-Última ejecución, con T-11: `npm test` dio **1076/1076** pruebas en 21 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13). T-11 añadió 123 pruebas de formato.
+Última ejecución, con T-12: `npm test` dio **1113/1113** pruebas en 22 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13). T-12 añadió 37 pruebas de pasos.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-11: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-12: T-R1 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -93,9 +94,11 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 |---|---|
 | `formato.js` | Único lugar donde se redondea: decimales con «=» o «≈», quetzales, fracciones, sustituciones, monomios, polinomios, k·π, cotas y cantidades con unidad, en texto y LaTeX (design §14.1) |
 
-`pasos.js` (T-12) y `datosGrafica.js` (T-15) todavía no existen.
+| `pasos.js` | Procedimientos (design §14.2): `pasosArea`, `pasosPromedio`, `pasosPerfil`, `pasosFigura` y `pasosEstimacion`; solo formatea los datos del núcleo con `formato.js` |
 
-**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js`, `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
+`datosGrafica.js` (T-15) todavía no existe.
+
+**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js` y `presentacion/pasos.test.js`, `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
 **Otros:** `index.html` y `src/main.js` son mínimos y vacíos. `prueba-recursos.html` y `src/prueba-recursos.js` son temporales de T-01 y se eliminan en T-17. `scripts/verificar-dist.js` comprueba que `dist/` no use recursos externos.
 
@@ -133,6 +136,10 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
   - `monomioTexto`, `monomioLatex`, `polinomioTexto` y `polinomioLatex`, de cualquier grado: «x⁴/4 − x», «x³ − 4x²/3 − 5x/3 + 2/3».
   - `multiploPiTexto` / `multiploPiLatex` → «25π», «π/4», `\frac{9\pi}{4}`. `cotaTexto` / `cotaLatex` → «6·10⁻²⁵», con una cifra redondeada hacia arriba.
   - `cantidadTexto(cantidad, unidad)`: «243/4 = 60.75 u²», «6 u²», «25π ≈ 78.5398 m²», «≈ 2.4379 u² (aproximada; cota de error ≤ 6·10⁻²⁵)». `quetzalesCantidad`: «Q666.67», «Q250π ≈ Q785.40». `UNIDADES` = u, u², m, m², cm, cm², Q/m² y %.
+- **Pasos** (`pasos.js`, T-12): cada `Paso` es `{ id, titulo, texto, latex, explicacion }`, congelado (design §10); `latex` y `explicacion` pueden ser `null`. Solo formatea: F(b) y F(a) salen de `integral.terminos[].valorEnB/valorEnA`, `Fb` y `Fa`; los tramos, de `area.tramos`; los signos, de `analisis`; los costos, de `ResultadoEstimacion`. Una prueba comprueba que, si el resultado trae otros valores, los pasos muestran esos valores, y que `pasos.js` no hace aritmética ni importa el núcleo de cálculo.
+  - `pasosArea(resultado)`: sin cambio de signo, `datos`, `desarrollo` (si `huboDesarrollo`), `signo`, `planteamiento`, `antiderivada`, `limiteSuperior`, `limiteInferior`, `resta`, `resultado` e `interpretacion`. Con cambio de signo, después de `antiderivada`: `ceros`, un `tramo` por tramo, `suma`, `comparacion`, `resultado` e `interpretacion`.
+  - `pasosPromedio(resultado)`: `formula`, `sustitucion`, `integral`, `division`, `unidades` e `interpretacion`. La equivalencia con la pizarra va en la explicación de `division`.
+  - `pasosPerfil(resultado)` → `{ area, promedio }`, la forma de `ResultadoPerfil.pasos`. `pasosFigura(figura)`: `datos`, `formula`, `sustitucion`, `resultado` y `conversion` si es en cm. `pasosEstimacion(estimacion)`: `areaUtil`, `adicional`, `costoBase`, `costoEstimado` y `supuestos`.
 - **ModeloValidado** (`interpretarFuncion(texto)`): `{ textoOriginal, polinomio, huboDesarrollo, textoNormalizado, latexNormalizado }`, congelado. `huboDesarrollo` es verdadero si un producto o una potencia tiene un factor que es una suma o resta, aunque lleve signos delante. El texto y el LaTeX salen del polinomio, al estilo de design §14.1: potencias descendentes, «−» (U+2212) en el texto, y monomios como `x²/4`, `5x/3` o `\frac{5x}{3}`. Ejemplos: «x³ − 1» y «x³ − 4x²/3 − 5x/3 + 2/3».
 
 ## 6. Qué falta después de T-08 y siguiente tarea
@@ -141,18 +148,19 @@ El núcleo (T-02 a T-07), el analizador (T-09 y T-10) y los casos de uso (T-08) 
 
 | Campo o texto | Hoy | Lo produce | Lo conecta |
 |---|---|---|---|
-| `ResultadoPerfil.pasos` (`{ area, promedio }`) | `null` | `presentacion/pasos.js` (T-12) | T-17, en `analizarPerfil` (design §4, paso 8) |
+| `ResultadoPerfil.pasos` (`{ area, promedio }`) | `null` | ya existe: `pasosPerfil` de `presentacion/pasos.js` (T-12) | T-17, en `analizarPerfil` (design §4, paso 8) |
 | `ResultadoPerfil.grafica` (`DatosGrafica`) | `null` | `presentacion/datosGrafica.js` (T-15) | T-17, en `analizarPerfil` (design §4, paso 9) |
-| `ResultadoFigura.pasos` | `null` | `presentacion/pasos.js` (T-12) | T-17, en `calcularFigura` |
+| `ResultadoFigura.pasos` | `null` | ya existe: `pasosFigura` de `pasos.js` (T-12) | T-17, en `calcularFigura` |
+| Pasos de la estimación | `ResultadoEstimacion` no tiene ese campo en design §10 | ya existe: `pasosEstimacion` de `pasos.js` (T-12) | T-17 decide si la vista lo llama o se añade el campo |
 | Cifras de W-02, W-03 y W-04 | fracción exacta (`racional.aTexto`), p. ej. la cota de W-04 | ya existe: `fraccionTexto` y `cotaTexto` de `formato.js` (T-11) | T-17, en `analizarPerfil` |
 | «Q666.67» y «Q733.33» de CR-03 | el caso de uso da 2000/3 y 2200/3 exactos | ya existe: `quetzales` de `formato.js` (T-11) | la vista (T-14) |
 | Invalidación de CR-13 y CR-22 en pantalla | el caso de uso no guarda estado | `interfaz/estado.js` (T-13) | — |
 
-Siguientes tareas desbloqueadas: T-12 (pasos, ya tiene T-11), T-13 (estado), T-15 (datos de la gráfica) y, cuando exista T-13, T-14. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
+Siguientes tareas desbloqueadas: T-13 (estado), T-15 (datos de la gráfica), T-16 (KaTeX y ejemplos, ya tiene T-12) y, cuando exista T-13, T-14. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
-- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-11). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
+- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-12). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
 - **Área de los 400 polinomios:** resuelto en T-08: `tests/propiedades.test.js` comprueba que los 400 dan, exacta, el área calculada con sus cortes conocidos.
 - **Tabla del prototipo para T-10:** las «33 entradas válidas y 59 inválidas del prototipo» de tasks T-10 no están en el repositorio. Por autorización del equipo, T-10 usa en su lugar una **tabla reconstruida para pruebas** (60 válidas y 84 inválidas), derivada de requirements Tabla 9.1, Tabla 9.2, §10 y §14, y de design §5.2 a §5.4 y §14.1. Las especificaciones no se cambiaron: tasks T-10 sigue citando el prototipo.
 - **Escritura de polinomios en dos capas (duplicación conocida):** `normalizar.js` (T-10) escribe `textoNormalizado` y `latexNormalizado`, y `formato.js` (T-11) tiene `polinomioTexto` y `polinomioLatex` con las mismas reglas, ampliadas a cualquier grado para la antiderivada. No se puede reutilizar una desde la otra sin romper design §2: `expresiones/` no importa `presentacion/`, y `presentacion/` no importa `expresiones/`. No se tocó T-10. Mientras tanto, `formato.test.js` comprueba que las dos dan el mismo texto y el mismo LaTeX en las 60 entradas válidas de la tabla reconstruida. Para resolverlo en la integración, el equipo puede autorizar mover la escritura de polinomios a `nucleo/` y que las dos capas la importen.
@@ -178,8 +186,13 @@ Siguientes tareas desbloqueadas: T-12 (pasos, ya tiene T-11), T-13 (estado), T-1
   - T-11, quetzales: siempre 2 decimales, sin «=» ni «≈» aunque se redondee («Q666.67», como fija CR-03). Un costo de un círculo se muestra «Q250π ≈ Q785.40» (coeficiente exacto y decimal con PI_APROX, design §9); el diseño no fija ese texto. Un importe negativo, que el MVP no produce, se escribe «−Q1.50».
   - T-11, cantidades: una exacta entera se muestra sin decimal («6 u²»); una no entera, con la fracción y su decimal («40/3 ≈ 13.3333 m²»). Un múltiplo de π siempre lleva «≈» y no muestra su cota de 10⁻³⁵. La cota de una aproximada se escribe con una cifra redondeada **hacia arriba** («5.85·10⁻²⁵» → «6·10⁻²⁵»), para que siga siendo una cota. Con la cota real del núcleo, CR-15 da exactamente el ejemplo de design §14.1.
   - T-11, sustituciones: además de los negativos (R-09.6), las fracciones van entre paréntesis («(1/2)⁴»), para que una potencia no se lea mal.
-  - T-11, orden de la antiderivada: design §14.1 manda potencias descendentes, pero `casos-referencia.js` (y el formulario §5.2 y §7.1) escriben las antiderivadas de CR-02 y CR-03 en orden ascendente («x + x³/3», «2x + x³/12»). `polinomioTexto` da «x³/3 + x» y «x³/12 + 2x»; la prueba compara con los términos de la referencia invertidos. T-12 o el equipo deben decidir si los pasos siguen el orden de la pizarra.
-- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-11.
+  - T-11, orden de la antiderivada: design §14.1 manda potencias descendentes, pero `casos-referencia.js` (y el formulario §5.2 y §7.1) escriben las antiderivadas de CR-02 y CR-03 en orden ascendente («x + x³/3», «2x + x³/12»). `polinomioTexto` da «x³/3 + x» y «x³/12 + 2x»; la prueba compara con los términos de la referencia invertidos. T-12 aplicó el orden descendente también en los pasos (ver abajo).
+  - T-12, orden de los términos: por indicación del equipo, la antiderivada y las sustituciones usan el orden descendente de design §14.1. En CR-02 el paso dice «F(x) = x³/3 + x», y su explicación añade que en los apuntes puede escribirse «x + x³/3», la misma antiderivada. Por eso «F(−1) = (−1)³/3 + (−1) = −1/3 − 1 = −4/3» invierte el orden del formulario §5.2 («(−1) + (−1)³/3 = −1 − 1/3»). Los valores no cambian. R debe confirmarlo.
+  - T-12, sin cálculos nuevos: los pasos omiten igualdades intermedias que exigirían calcular en presentación. CR-01: «F(4) = 4⁴/4 − 4 = 64 − 4 = 60», sin el «256/4» del formulario §4.2, y «60 − (−3/4) = 243/4», sin «240/4 + 3/4». CR-02: la equivalencia con la pizarra se muestra sacando factor común, «(1/3)·(14/3) − (1/3)·(−4/3) = (1/3)·[14/3 − (−4/3)] = (1/3)·6 = 2», en lugar de los productos «14/9 + 4/9 = 18/9» del formulario, que habría que calcular.
+  - T-12, tramos: cada tramo se escribe «Iₖ = F(hasta) − F(desde) = valor», con el valor de `area.tramos`, pero sin el desglose de F en los cortes interiores. El formulario CR-31 muestra «F(1/3) = 1/18 − 1/9 = −1/18», y el núcleo no entrega F en los cortes, así que evaluarla aquí sería recalcular. Si el equipo quiere ese desglose, el núcleo (`area.js`) debería entregar F en cada corte. Un corte irracional se llama r₁, r₂… y sus tramos usan decimales con «≈».
+  - T-12, textos: el paso `desarrollo` muestra el texto del usuario recortado («(x-1)^2 = x² − 2x + 1») solo como texto; su LaTeX sale del modelo (R-20.5). Los costos llevan la fracción delante como en el formulario §7.2 («2000/3 ≈ Q666.67»). Las dimensiones de una figura se muestran con sus decimales exactos (hasta 6). El LaTeX de las cantidades se escribe en `pasos.js` (`\,\text{m}^{2}`), porque `formato.js` solo da cantidades en texto.
+  - T-12, alcance: `pasos.js` no está conectado a los casos de uso (T-17). `ResultadoEstimacion` no tiene campo de pasos en design §10; `pasosEstimacion` existe para que T-17 o la vista lo usen.
+- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-12.
 
 ## 8. Intención visual (para antes de T-14)
 
@@ -195,7 +208,7 @@ npm run verificar-dist
 npm run preview
 ```
 
-`npm ci` instala exactamente lo de `package-lock.json`. **No** usar `npm install` para actualizar versiones. En Windows, si PowerShell bloquea `npm.ps1`, usar `cmd` o `npm.cmd`. En la terminal de Kiro, `npm test` a veces devolvía el control antes de terminar; funcionó lanzarlo como proceso en segundo plano y leer su salida. Para confirmar el código de salida se añade una impresión al final del mismo comando, por ejemplo `npm.cmd test; "CODIGO_SALIDA=$LASTEXITCODE"`, y se espera a que aparezca esa línea.
+`npm ci` instala exactamente lo de `package-lock.json`. **No** usar `npm install` para actualizar versiones. En Windows, si PowerShell bloquea `npm.ps1`, usar `cmd` o `npm.cmd`. En la terminal de Kiro, `npm test` a veces devolvía el control antes de terminar; funcionó lanzarlo como proceso en segundo plano y leer su salida. Para confirmar el código de salida se añade una impresión al final del mismo comando, por ejemplo `npm.cmd test; "CODIGO_SALIDA=$LASTEXITCODE"`, y se espera a que aparezca esa línea. Si ni así se lee la salida, se redirige a un archivo (`npm.cmd run build *> registro.log; "CODIGO_SALIDA=$LASTEXITCODE" | Out-File -Append registro.log`), se lee el archivo y se borra después; no se añade al commit.
 
 ## 10. Reglas de continuidad
 
