@@ -15,6 +15,7 @@ Aplicación web estática para el curso de Cálculo Integral (Universidad Marian
 | `AGENTS.md` | Reglas para Codex |
 | [`docs/RELEVO-KIRO.md`](docs/RELEVO-KIRO.md) | Estado actual y guía para continuar en otro chat o cuenta |
 | [`docs/verificacion-integracion.md`](docs/verificacion-integracion.md) | Comprobaciones de T-17, resultados, limitaciones y pendientes del equipo |
+| [`docs/revision-manual.md`](docs/revision-manual.md) | Lista de revisión manual (T-R2) para T-R3 y el ensayo sin internet de T-R5 |
 
 ## Requisitos
 

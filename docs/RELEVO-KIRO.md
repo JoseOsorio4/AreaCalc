@@ -20,7 +20,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
 - Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-17.
-- Último trabajo: el commit «T-17: integración de pasos, gráfica, KaTeX y ejemplos», encima del respaldo parcial `b43108b` («WIP T-17»), que a su vez va sobre `e6b9623` (T-16). La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
+- Último trabajo: el commit documental «T-R2: lista de revisión manual» (`docs/revision-manual.md`), encima de `20f470a` («T-17: integración de pasos, gráfica, KaTeX y ejemplos»), que va sobre el respaldo parcial `b43108b` y `e6b9623` (T-16). Después de T-17 no se cambió código. La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -44,11 +44,12 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-14, revisión visual | Menú lateral expandible, fondo con trama suave, tarjetas e ilustraciones geométricas; **apariencia aprobada por el equipo** (22 de octubre), que pide conservarla en las tareas siguientes | `13c6c5c` |
 | T-15 Datos de la gráfica y adaptador de Plotly | Implementada y probada; conectada en T-17 | `98fab65` |
 | T-16 Fórmulas con KaTeX y ejemplos | Implementada y probada; conectada en T-17 | `e6b9623` |
-| T-17 Integración | Implementada y probada; recorrido manual de T-R2/T-R3 y ensayo de T-R5 pendientes (§6) | `b43108b` (respaldo parcial) y commit «T-17: integración de pasos, gráfica, KaTeX y ejemplos» |
+| T-17 Integración | Implementada y probada; revisión manual (T-R3) y ensayo sin internet (T-R5) pendientes (§6) | `b43108b` (respaldo parcial) y `20f470a` |
+| T-R2 Lista de revisión manual | Redactada en `docs/revision-manual.md`; 40 puntos, todos pendientes de ejecutar | commit «T-R2: lista de revisión manual» |
 
 Última ejecución, con T-17: `npm test` dio **1304/1304** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-17 añade 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R2, T-R3, T-R5 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R3, T-R5 y T-R6 siguen pendientes. T-R2 (la lista) está redactada en `docs/revision-manual.md` con sus 40 puntos en «Pendiente»; el equipo solo registró, como antecedente, que vio CR-03 en Estimación con 40/3 m², 44/3 m², Q666.67 y Q733.33. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -59,6 +60,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 - `.kiro/specs/areacalc/tasks.md`: plan, calendario y criterios de cada tarea.
 - `docs/formulario-matematico.md`: fuente canónica de fórmulas y procedimientos del curso.
 - `AGENTS.md`: reglas de trabajo para el asistente.
+- `docs/verificacion-integracion.md`: comprobaciones automáticas de T-17. `docs/revision-manual.md`: lista de T-R2 para la revisión manual (T-R3) y el ensayo sin internet (T-R5).
 
 **Núcleo** (`src/nucleo/`, funciones puras, sin DOM):
 
@@ -234,7 +236,7 @@ T-17 conectó lo que T-08 y T-14 dejaron como puntos de integración. Lo hizo la
 
 Verificación: `docs/verificacion-integracion.md` (comandos con sus códigos de salida y recorrido en Chrome sin interfaz sobre el build servido).
 
-**Siguiente paso:** las revisiones del equipo: T-R2 y T-R3 (revisión manual), T-R5 (ensayo en la laptop sin internet), T-R1 y T-R6. Los complementos T-D1 a T-D3 solo con autorización y reserva de tiempo (tasks §3). Se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
+**Siguiente paso:** las revisiones del equipo. La lista de T-R2 ya está en `docs/revision-manual.md`: T-R3 ejecuta sus puntos PREP-01 a FAL-03 y T-R5, OFF-01 a OFF-04 en la laptop sin internet; después, T-R1 y T-R6. Kiro no marca como aprobado ningún punto manual; un punto fallido se informa y su corrección se decide aparte. Los complementos T-D1 a T-D3 solo con autorización y reserva de tiempo (tasks §3). Se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
