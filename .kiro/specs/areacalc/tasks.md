@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-13 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). Los casos de uso de T-08 siguen devolviendo `pasos` y `grafica` en `null` hasta T-15 y T-17. T-14 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-14 están implementadas y probadas, con la revisión de R pendiente (T-R1, T-R3 y T-R6). Los casos de uso de T-08 siguen devolviendo `pasos` y `grafica` en `null` hasta T-15 y T-17, y las vistas de T-14 lo indican sin simular datos. T-15 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -218,7 +218,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-12, R-13.2._
   - **Explicar:** por qué un resultado viejo no puede quedar visible con datos nuevos.
 
-- [ ] **T-14 · Vistas, HTML y CSS accesibles** · B · 7 h · MVP y COMP
+- [x] **T-14 · Vistas, HTML y CSS accesibles** · B · 7 h · MVP y COMP
+  - **Estado: implementada; revisión manual de R pendiente (T-R2 y T-R3).** Commit «T-14: vistas, HTML y CSS accesibles» en `avance-t04`. Las tres secciones funcionan con los casos de uso reales a través del estado de T-13: perfil (I, A_geo y f_prom con unidades, distintivo cuando I ≠ A_geo, ceros, rectángulo equivalente, advertencias y aptitud), figuras (rectángulo, triángulo y círculo, en m o cm, con el área en m²) y estimación (fuente o motivo, costos y supuestos fijos). La gráfica, los pasos, KaTeX y el selector de ejemplos son puntos de integración marcados (T-15, T-16 y T-17); la página dice que faltan y no muestra datos simulados. Comprobación automática en Chrome sin interfaz sobre el build: CR-01, CR-03 (Q666.67 y Q733.33) y CR-05; errores por campo con `aria-invalid` y `aria-describedby`; resumen con `role="alert"`; foco al encabezado o al resumen; sin desplazamiento horizontal a 360 px; contraste mínimo medido 5.05:1; orden de tabulación y contorno de 3 px. La tarea no añade pruebas automáticas (su prueba es la revisión manual); `npm test` sigue en 1155/1155 en 23 archivos y `npm run build` es correcto, ambos con código de salida 0. Las decisiones están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** T-11 y T-13. Los resultados reales llegan durante la integración.
   - **Archivos:** `index.html`, `src/estilos/app.css`, `src/interfaz/vistaPerfil.js`, `vistaFiguras.js`, `vistaEstimacion.js`, `vistaComun.js` y `src/main.js`.
   - **Aceptación:**

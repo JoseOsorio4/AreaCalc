@@ -3,14 +3,202 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ÁreaCalc</title>
+    <meta name="description" content="ÁreaCalc: integral con signo, área geométrica y valor promedio de polinomios de grado ≤ 3, con figuras y estimación teórica de material." />
+    <title>ÁreaCalc · Áreas bajo curvas y valor promedio</title>
+    <link rel="stylesheet" href="./src/estilos/app.css" />
   </head>
   <body>
-    <main id="aplicacion">
-      <h1>ÁreaCalc</h1>
-      <p>Base del proyecto (T-01). La interfaz se construye en T-14.</p>
-      <p><a href="./prueba-recursos.html">Página temporal de prueba de recursos</a></p>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+    <header class="cabecera">
+      <div class="cabecera__marca">
+        <svg class="cabecera__logo" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false">
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="#14b8a6" />
+          <path d="M6 24 C 10 24, 12 10, 26 8 L 26 24 Z" fill="#0b1f3a" opacity="0.85" />
+          <path d="M6 24 C 10 24, 12 10, 26 8" fill="none" stroke="#ffffff" stroke-width="2" />
+        </svg>
+        <div>
+          <p class="cabecera__nombre">ÁreaCalc</p>
+          <p class="cabecera__lema">Cálculo Integral: áreas, integrales y valor promedio</p>
+        </div>
+      </div>
+      <nav class="navegacion" aria-label="Secciones">
+        <ul class="navegacion__lista">
+          <li><a class="navegacion__enlace" href="#perfil" data-seccion="perfil">Perfil</a></li>
+          <li><a class="navegacion__enlace" href="#figuras" data-seccion="figuras">Figuras</a></li>
+          <li><a class="navegacion__enlace" href="#estimacion" data-seccion="estimacion">Estimación</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="contenido" class="contenido" tabindex="-1">
+      <!-- ── Perfil ──────────────────────────────────────────────── -->
+      <section id="seccion-perfil" class="seccion" data-seccion="perfil" aria-labelledby="titulo-perfil">
+        <header class="seccion__cabecera">
+          <h1 id="titulo-perfil" class="seccion__titulo">Analizador de perfiles</h1>
+          <p class="seccion__descripcion">Integral con signo, área geométrica y valor promedio de y = f(x) en [a, b].</p>
+        </header>
+
+        <div class="disposicion">
+          <form id="perfil-formulario" class="tarjeta formulario" novalidate>
+            <h2 class="tarjeta__titulo">Datos</h2>
+
+            <div id="perfil-ejemplos" class="campo" hidden>
+              <label class="campo__etiqueta" for="perfil-ejemplo">Ejemplo</label>
+              <select id="perfil-ejemplo" class="campo__control"></select>
+            </div>
+
+            <div class="campo">
+              <label class="campo__etiqueta" for="perfil-funcion">Función <span class="campo__prefijo">f(x) =</span></label>
+              <input id="perfil-funcion" class="campo__control campo__control--formula" name="textoFuncion" type="text"
+                autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="perfil-funcion-ayuda" />
+              <p id="perfil-funcion-ayuda" class="campo__ayuda">Polinomios en x de grado ≤ 3, p. ej., <code>x^3 - 1</code> o <code>2 + x^2/4</code>.</p>
+              <p id="perfil-funcion-error" class="campo__error" hidden></p>
+            </div>
+
+            <div class="campo-par">
+              <div class="campo">
+                <label class="campo__etiqueta" for="perfil-a">Límite inferior a <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
+                <input id="perfil-a" class="campo__control" name="textoA" type="text" inputmode="decimal" autocomplete="off" />
+                <p id="perfil-a-error" class="campo__error" hidden></p>
+              </div>
+              <div class="campo">
+                <label class="campo__etiqueta" for="perfil-b">Límite superior b <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
+                <input id="perfil-b" class="campo__control" name="textoB" type="text" inputmode="decimal" autocomplete="off" />
+                <p id="perfil-b-error" class="campo__error" hidden></p>
+              </div>
+            </div>
+
+            <fieldset class="opciones">
+              <legend class="campo__etiqueta">Interpretación</legend>
+              <label class="opcion">
+                <input type="radio" name="interpretacion" value="abstracta" />
+                <span>Ejercicio abstracto <span class="opcion__detalle">(u, u²)</span></span>
+              </label>
+              <label class="opcion">
+                <input type="radio" name="interpretacion" value="fisica" />
+                <span>Perfil físico <span class="opcion__detalle">(x y f(x) en metros)</span></span>
+              </label>
+            </fieldset>
+
+            <button class="boton boton--principal" type="submit">Calcular</button>
+            <div id="perfil-errores" class="resumen-errores" role="alert"></div>
+          </form>
+
+          <div id="perfil-resultados" class="resultados" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ── Figuras ─────────────────────────────────────────────── -->
+      <section id="seccion-figuras" class="seccion" data-seccion="figuras" aria-labelledby="titulo-figuras" hidden>
+        <header class="seccion__cabecera">
+          <h1 id="titulo-figuras" class="seccion__titulo">Figuras geométricas</h1>
+          <p class="seccion__descripcion">Fórmulas directas, sin integración: rectángulo, triángulo y círculo.</p>
+        </header>
+
+        <div class="disposicion">
+          <form id="figura-formulario" class="tarjeta formulario" novalidate>
+            <h2 class="tarjeta__titulo">Datos</h2>
+
+            <div class="campo-par">
+              <div class="campo">
+                <label class="campo__etiqueta" for="figura-tipo">Figura</label>
+                <select id="figura-tipo" class="campo__control" name="tipo">
+                  <option value="rectangulo">Rectángulo</option>
+                  <option value="triangulo">Triángulo</option>
+                  <option value="circulo">Círculo</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label class="campo__etiqueta" for="figura-unidad">Unidad</label>
+                <select id="figura-unidad" class="campo__control" name="unidad">
+                  <option value="m">m (metros)</option>
+                  <option value="cm">cm (centímetros)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="campo" data-dimension="base">
+              <label class="campo__etiqueta" for="figura-base">Base <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+              <input id="figura-base" class="campo__control" name="base" type="text" inputmode="decimal" autocomplete="off" />
+              <p id="figura-base-error" class="campo__error" hidden></p>
+            </div>
+            <div class="campo" data-dimension="altura">
+              <label class="campo__etiqueta" for="figura-altura">Altura <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+              <input id="figura-altura" class="campo__control" name="altura" type="text" inputmode="decimal" autocomplete="off"
+                aria-describedby="figura-altura-ayuda" />
+              <p id="figura-altura-ayuda" class="campo__ayuda" data-ayuda-triangulo hidden>Perpendicular a la base.</p>
+              <p id="figura-altura-error" class="campo__error" hidden></p>
+            </div>
+            <div class="campo" data-dimension="radio" hidden>
+              <label class="campo__etiqueta" for="figura-radio">Radio <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+              <input id="figura-radio" class="campo__control" name="radio" type="text" inputmode="decimal" autocomplete="off" />
+              <p id="figura-radio-error" class="campo__error" hidden></p>
+            </div>
+
+            <button class="boton boton--principal" type="submit">Calcular</button>
+            <div id="figura-errores" class="resumen-errores" role="alert"></div>
+          </form>
+
+          <div id="figura-resultados" class="resultados" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ── Estimación ──────────────────────────────────────────── -->
+      <section id="seccion-estimacion" class="seccion" data-seccion="estimacion" aria-labelledby="titulo-estimacion" hidden>
+        <header class="seccion__cabecera">
+          <h1 id="titulo-estimacion" class="seccion__titulo">Estimación de material</h1>
+          <p class="seccion__descripcion">Área con un adicional y costo teórico, a partir de un perfil físico o de una figura.</p>
+        </header>
+
+        <div class="disposicion">
+          <div class="pila">
+            <div id="estimacion-fuente" class="tarjeta fuente"></div>
+
+            <form id="estimacion-formulario" class="tarjeta formulario" novalidate>
+              <h2 class="tarjeta__titulo">Precio y adicional</h2>
+              <div class="campo-par">
+                <div class="campo">
+                  <label class="campo__etiqueta" for="estimacion-precio">Precio <span class="campo__unidad">(Q/m²)</span></label>
+                  <input id="estimacion-precio" class="campo__control" name="textoPrecio" type="text" inputmode="decimal" autocomplete="off" />
+                  <p id="estimacion-precio-error" class="campo__error" hidden></p>
+                </div>
+                <div class="campo">
+                  <label class="campo__etiqueta" for="estimacion-adicional">Adicional w <span class="campo__unidad">(%)</span></label>
+                  <input id="estimacion-adicional" class="campo__control" name="textoAdicional" type="text" inputmode="decimal"
+                    autocomplete="off" aria-describedby="estimacion-adicional-ayuda" />
+                  <p id="estimacion-adicional-ayuda" class="campo__ayuda">Adicional sobre el área útil, entre 0 y 100.</p>
+                  <p id="estimacion-adicional-error" class="campo__error" hidden></p>
+                </div>
+              </div>
+              <button id="estimacion-calcular" class="boton boton--principal" type="submit">Calcular estimación</button>
+              <div id="estimacion-errores" class="resumen-errores" role="alert"></div>
+            </form>
+          </div>
+
+          <div class="pila">
+            <div id="estimacion-resultados" class="resultados" aria-live="polite"></div>
+
+            <aside class="tarjeta supuestos" aria-labelledby="titulo-supuestos">
+              <h2 id="titulo-supuestos" class="tarjeta__titulo">Supuestos de la estimación</h2>
+              <ul class="supuestos__lista">
+                <li>El adicional w se aplica sobre el área útil: A<sub>estimada</sub> = A<sub>útil</sub> × (1 + w/100).</li>
+                <li>El material realmente comprado depende de los formatos comerciales, los márgenes y los cortes, y no se calcula.</li>
+                <li>No incluye mano de obra, impuestos, márgenes comerciales, láminas ni litros de pintura.</li>
+                <li>Los precios de los ejemplos son simulados.</li>
+                <li>El precio se aplica a áreas en m²; nunca a la integral con signo ni a áreas abstractas (u²).</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
     </main>
+
+    <footer class="pie">
+      <p>Cálculo exacto con fracciones; los decimales se redondean solo al mostrarlos.</p>
+      <p><a href="./prueba-recursos.html">Página temporal de prueba de recursos</a></p>
+    </footer>
+
     <script type="module" src="./src/main.js"></script>
   </body>
 </html>
