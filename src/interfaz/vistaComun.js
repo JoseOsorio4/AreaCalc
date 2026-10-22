@@ -6,6 +6,9 @@
 // nunca como marcado (R-20.5).
 //
 // Las vistas reciben el `documento` como argumento; aquí no se usa el objeto global.
+import {
+  aDecimal, cotaTexto, decimalConSimbolo, fraccionTexto, multiploPiTexto, quetzalesCantidad
+} from '../presentacion/formato.js';
 
 /**
  * @typedef {import('../nucleo/errores.js').ErrorAreaCalc} ErrorAreaCalc
@@ -78,7 +81,7 @@ export function mostrarSeccion(documento, seccion) {
   for (const elemento of documento.querySelectorAll('.seccion[data-seccion]')) {
     elemento.hidden = elemento.dataset.seccion !== seccion;
   }
-  for (const enlace of documento.querySelectorAll('.navegacion__enlace[data-seccion]')) {
+  for (const enlace of documento.querySelectorAll('.lateral__enlace[data-seccion]')) {
     if (enlace.dataset.seccion === seccion) enlace.setAttribute('aria-current', 'page');
     else enlace.removeAttribute('aria-current');
   }
@@ -205,8 +208,49 @@ export function tituloResumen(resumen) {
  */
 export function estadoVacio(documento, { titulo, texto, idTitulo }) {
   return crear(documento, 'div', { clase: 'vacio' },
-    crear(documento, 'h2', { clase: 'vacio__titulo', id: idTitulo, texto: titulo }),
-    crear(documento, 'p', { texto }));
+    crear(documento, 'span', { clase: 'vacio__icono', 'aria-hidden': 'true', texto: '∫' }),
+    crear(documento, 'div', { clase: 'vacio__cuerpo' },
+      crear(documento, 'h2', { clase: 'vacio__titulo', id: idTitulo, texto: titulo }),
+      crear(documento, 'p', { texto })));
+}
+
+/**
+ * Cifra en dos líneas: la principal (fracción exacta, k·π o el decimal aproximado) y la
+ * secundaria (su decimal o la cota). Todo el texto sale de presentacion/formato.js; aquí
+ * solo se reparte en dos elementos para que la fracción sea la protagonista.
+ *   exacta      «40/3 m²» + «≈ 13.3333 m²» (un entero no lleva línea secundaria)
+ *   multiploPi  «25π m²» + «≈ 78.5398 m²»
+ *   aproximada  «≈ 2.4379 u²» + «aproximada; cota de error ≤ 6·10⁻²⁵»
+ * Con `enQuetzales`, la cantidad se escribe con quetzalesCantidad en una sola línea.
+ * @param {Document} documento
+ * @param {object} cantidad Cantidad de design §10.
+ * @param {string} unidad Una de formato.UNIDADES (se ignora con enQuetzales).
+ * @param {{ enQuetzales?: boolean }} [opciones]
+ * @returns {HTMLElement}
+ */
+export function cifra(documento, cantidad, unidad, { enQuetzales = false } = {}) {
+  const linea = (clase, texto) => crear(documento, 'span', { clase, texto });
+  if (enQuetzales) {
+    return crear(documento, 'span', { clase: 'cifra' }, linea('cifra__principal', quetzalesCantidad(cantidad)));
+  }
+  switch (cantidad?.clase) {
+    case 'exacta': {
+      const r = cantidad.valor;
+      return crear(documento, 'span', { clase: 'cifra' },
+        linea('cifra__principal', `${fraccionTexto(r)} ${unidad}`),
+        r.den === 1n ? null : linea('cifra__secundaria', `${decimalConSimbolo(r)} ${unidad}`));
+    }
+    case 'multiploPi':
+      return crear(documento, 'span', { clase: 'cifra' },
+        linea('cifra__principal', `${multiploPiTexto(cantidad.coeficiente)} ${unidad}`),
+        linea('cifra__secundaria', `≈ ${aDecimal(cantidad.aprox)} ${unidad}`));
+    case 'aproximada':
+      return crear(documento, 'span', { clase: 'cifra' },
+        linea('cifra__principal', `≈ ${aDecimal(cantidad.valor)} ${unidad}`),
+        linea('cifra__secundaria', `aproximada; cota de error ≤ ${cotaTexto(cantidad.cota)}`));
+    default:
+      throw new TypeError('vista: se esperaba una Cantidad (exacta, multiploPi o aproximada)');
+  }
 }
 
 /**

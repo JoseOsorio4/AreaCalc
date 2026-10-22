@@ -11,6 +11,7 @@
 //   - conexión de pasos y gráfica a los casos de uso.
 import { estadoInicial, irASeccion } from './interfaz/estado.js';
 import { iniciarNavegacion } from './interfaz/navegacion.js';
+import { iniciarMenuLateral } from './interfaz/menuLateral.js';
 import { enfocar, mostrarSeccion } from './interfaz/vistaComun.js';
 import { crearVistaEstimacion } from './interfaz/vistaEstimacion.js';
 import { crearVistaFiguras } from './interfaz/vistaFiguras.js';
@@ -47,6 +48,9 @@ function pintar() {
 }
 
 pintar();
+
+// Menú lateral (contraer en escritorio, panel en pantallas estrechas); no toca el estado.
+iniciarMenuLateral({ documento, ventana });
 
 // «Saltar al contenido» lleva el foco a <main> sin cambiar el fragmento: un fragmento que
 // no es una sección haría volver a «Perfil» (navegacion.seccionDesdeFragmento).

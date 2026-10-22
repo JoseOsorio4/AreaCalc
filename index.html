@@ -10,156 +10,342 @@
   <body>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
 
-    <header class="cabecera">
-      <div class="cabecera__marca">
-        <svg class="cabecera__logo" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false">
-          <rect x="1" y="1" width="30" height="30" rx="8" fill="#14b8a6" />
-          <path d="M6 24 C 10 24, 12 10, 26 8 L 26 24 Z" fill="#0b1f3a" opacity="0.85" />
-          <path d="M6 24 C 10 24, 12 10, 26 8" fill="none" stroke="#ffffff" stroke-width="2" />
-        </svg>
-        <div>
-          <p class="cabecera__nombre">ÁreaCalc</p>
-          <p class="cabecera__lema">Cálculo Integral: áreas, integrales y valor promedio</p>
+    <div class="app" data-menu="expandido">
+      <!-- Barra superior solo en pantallas estrechas: abre el menú lateral como panel. -->
+      <header class="barra-movil">
+        <button id="menu-abrir" class="boton-icono boton-icono--claro" type="button"
+          aria-controls="menu-lateral" aria-expanded="false" aria-label="Abrir menú de secciones">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+            <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+        <p class="barra-movil__marca">ÁreaCalc</p>
+      </header>
+
+      <div id="menu-velo" class="velo" hidden></div>
+
+      <aside id="menu-lateral" class="lateral" aria-label="Menú principal">
+        <div class="lateral__cabecera">
+          <div class="marca">
+            <svg class="marca__logo" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+              <rect x="1" y="1" width="38" height="38" rx="11" fill="#1d4ed8" />
+              <path d="M8 31 C 14 31, 16 13, 32 10 L 32 31 Z" fill="#22d3ee" opacity="0.45" />
+              <path d="M8 31 C 14 31, 16 13, 32 10" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" />
+              <path d="M8 31 H 33" stroke="#bfdbfe" stroke-width="1.6" stroke-linecap="round" />
+            </svg>
+            <div class="marca__texto">
+              <p class="marca__nombre">ÁreaCalc</p>
+              <p class="marca__lema">Cálculo Integral</p>
+            </div>
+          </div>
+          <button id="menu-cerrar" class="boton-icono lateral__cerrar" type="button" aria-label="Cerrar menú de secciones">
+            <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+              <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button>
         </div>
-      </div>
-      <nav class="navegacion" aria-label="Secciones">
-        <ul class="navegacion__lista">
-          <li><a class="navegacion__enlace" href="#perfil" data-seccion="perfil">Perfil</a></li>
-          <li><a class="navegacion__enlace" href="#figuras" data-seccion="figuras">Figuras</a></li>
-          <li><a class="navegacion__enlace" href="#estimacion" data-seccion="estimacion">Estimación</a></li>
-        </ul>
-      </nav>
-    </header>
 
-    <main id="contenido" class="contenido" tabindex="-1">
-      <!-- ── Perfil ──────────────────────────────────────────────── -->
-      <section id="seccion-perfil" class="seccion" data-seccion="perfil" aria-labelledby="titulo-perfil">
-        <header class="seccion__cabecera">
-          <h1 id="titulo-perfil" class="seccion__titulo">Analizador de perfiles</h1>
-          <p class="seccion__descripcion">Integral con signo, área geométrica y valor promedio de y = f(x) en [a, b].</p>
-        </header>
+        <nav class="lateral__nav" aria-label="Secciones">
+          <ul class="lateral__lista">
+            <li>
+              <a class="lateral__enlace" href="#perfil" data-seccion="perfil">
+                <svg class="lateral__icono" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                  <path d="M5 18 C 9 18, 10 8, 20 6 V 18 Z" fill="currentColor" opacity="0.28" />
+                  <path d="M5 18 C 9 18, 10 8, 20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path d="M3 20.5 H 21 M 4 21 V 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+                <span class="lateral__texto">
+                  <span class="lateral__nombre">Perfil</span>
+                  <span class="lateral__detalle" aria-hidden="true">Integral, área y promedio</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="lateral__enlace" href="#figuras" data-seccion="figuras">
+                <svg class="lateral__icono" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                  <rect x="3" y="12" width="8" height="8" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.8" />
+                  <circle cx="17" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
+                  <path d="M12 3 L 17 10 H 7 Z" fill="currentColor" opacity="0.28" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                </svg>
+                <span class="lateral__texto">
+                  <span class="lateral__nombre">Figuras</span>
+                  <span class="lateral__detalle" aria-hidden="true">Rectángulo, triángulo y círculo</span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="lateral__enlace" href="#estimacion" data-seccion="estimacion">
+                <svg class="lateral__icono" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+                  <path d="M3 9 L 12 5 L 21 9 L 12 13 Z" fill="currentColor" opacity="0.28" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                  <path d="M3 13 L 12 17 L 21 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                  <path d="M7.5 7 L 16.5 11" fill="none" stroke="currentColor" stroke-width="1.4" />
+                </svg>
+                <span class="lateral__texto">
+                  <span class="lateral__nombre">Estimación</span>
+                  <span class="lateral__detalle" aria-hidden="true">Material y costo teórico</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
-        <div class="disposicion">
-          <form id="perfil-formulario" class="tarjeta formulario" novalidate>
-            <h2 class="tarjeta__titulo">Datos</h2>
+        <div class="lateral__pie">
+          <button id="menu-contraer" class="lateral__alternar" type="button"
+            aria-controls="menu-lateral" aria-expanded="true">
+            <svg class="lateral__alternar-icono" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+              <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span class="lateral__alternar-texto">Contraer menú</span>
+          </button>
+        </div>
+      </aside>
 
-            <div id="perfil-ejemplos" class="campo" hidden>
-              <label class="campo__etiqueta" for="perfil-ejemplo">Ejemplo</label>
-              <select id="perfil-ejemplo" class="campo__control"></select>
-            </div>
-
-            <div class="campo">
-              <label class="campo__etiqueta" for="perfil-funcion">Función <span class="campo__prefijo">f(x) =</span></label>
-              <input id="perfil-funcion" class="campo__control campo__control--formula" name="textoFuncion" type="text"
-                autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="perfil-funcion-ayuda" />
-              <p id="perfil-funcion-ayuda" class="campo__ayuda">Polinomios en x de grado ≤ 3, p. ej., <code>x^3 - 1</code> o <code>2 + x^2/4</code>.</p>
-              <p id="perfil-funcion-error" class="campo__error" hidden></p>
-            </div>
-
-            <div class="campo-par">
-              <div class="campo">
-                <label class="campo__etiqueta" for="perfil-a">Límite inferior a <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
-                <input id="perfil-a" class="campo__control" name="textoA" type="text" inputmode="decimal" autocomplete="off" />
-                <p id="perfil-a-error" class="campo__error" hidden></p>
+      <div class="principal">
+        <main id="contenido" class="contenido" tabindex="-1">
+          <!-- ── Perfil ────────────────────────────────────────────── -->
+          <section id="seccion-perfil" class="seccion" data-seccion="perfil" aria-labelledby="titulo-perfil">
+            <header class="seccion__cabecera">
+              <div class="seccion__textos">
+                <p class="seccion__etiqueta">01 · Integral definida</p>
+                <h1 id="titulo-perfil" class="seccion__titulo">Analizador de perfiles</h1>
+                <p class="seccion__descripcion">De la curva a la superficie: integral con signo, área geométrica y valor promedio de y = f(x) en [a, b], con fracciones exactas.</p>
               </div>
-              <div class="campo">
-                <label class="campo__etiqueta" for="perfil-b">Límite superior b <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
-                <input id="perfil-b" class="campo__control" name="textoB" type="text" inputmode="decimal" autocomplete="off" />
-                <p id="perfil-b-error" class="campo__error" hidden></p>
+              <svg class="seccion__ilustracion" viewBox="0 0 240 140" width="240" height="140" aria-hidden="true" focusable="false">
+                <path d="M30 112 C 70 112, 92 54, 210 34 L 210 112 Z" class="ilu-relleno" />
+                <path d="M30 112 C 70 112, 92 54, 210 34" class="ilu-trazo" />
+                <path d="M20 112 H 226 M 30 124 V 16" class="ilu-eje" />
+                <path d="M30 76 H 210" class="ilu-guia" />
+                <path d="M210 112 V 34" class="ilu-cota" />
+                <text x="26" y="134" class="ilu-texto">a</text>
+                <text x="206" y="134" class="ilu-texto">b</text>
+                <text x="168" y="30" class="ilu-texto">f(x)</text>
+              </svg>
+            </header>
+
+            <div class="disposicion disposicion--perfil">
+              <form id="perfil-formulario" class="tarjeta formulario" novalidate>
+                <div class="tarjeta__encabezado">
+                  <span class="chip-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false"><path d="M4 18 C 8 18, 10 8, 20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+                  </span>
+                  <h2 class="tarjeta__titulo">Configuración del modelo</h2>
+                </div>
+
+                <div id="perfil-ejemplos" class="campo" hidden>
+                  <label class="campo__etiqueta" for="perfil-ejemplo">Ejemplo</label>
+                  <select id="perfil-ejemplo" class="campo__control"></select>
+                </div>
+
+                <fieldset class="opciones">
+                  <legend class="campo__etiqueta">Interpretación</legend>
+                  <div class="opciones__grupo">
+                    <label class="opcion">
+                      <input type="radio" name="interpretacion" value="abstracta" />
+                      <span class="opcion__cuerpo">
+                        <span class="opcion__nombre">Ejercicio abstracto</span>
+                        <span class="opcion__detalle">unidades u y u²</span>
+                      </span>
+                    </label>
+                    <label class="opcion">
+                      <input type="radio" name="interpretacion" value="fisica" />
+                      <span class="opcion__cuerpo">
+                        <span class="opcion__nombre">Perfil físico</span>
+                        <span class="opcion__detalle">x y f(x) en metros</span>
+                      </span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="campo">
+                  <label class="campo__etiqueta" for="perfil-funcion">Función del perfil f(x)</label>
+                  <div class="entrada-formula">
+                    <span class="entrada-formula__prefijo" aria-hidden="true">f(x) =</span>
+                    <input id="perfil-funcion" class="campo__control campo__control--formula" name="textoFuncion" type="text"
+                      autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="perfil-funcion-ayuda" />
+                  </div>
+                  <p id="perfil-funcion-ayuda" class="campo__ayuda">Polinomios en x de grado ≤ 3, p. ej., <code>x^3 - 1</code> o <code>2 + x^2/4</code>.</p>
+                  <p id="perfil-funcion-error" class="campo__error" hidden></p>
+                </div>
+
+                <div class="campo-par">
+                  <div class="campo">
+                    <label class="campo__etiqueta" for="perfil-a">Límite inferior a <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
+                    <input id="perfil-a" class="campo__control" name="textoA" type="text" inputmode="decimal" autocomplete="off" />
+                    <p id="perfil-a-error" class="campo__error" hidden></p>
+                  </div>
+                  <div class="campo">
+                    <label class="campo__etiqueta" for="perfil-b">Límite superior b <span class="campo__unidad" data-unidad-perfil>(u)</span></label>
+                    <input id="perfil-b" class="campo__control" name="textoB" type="text" inputmode="decimal" autocomplete="off" />
+                    <p id="perfil-b-error" class="campo__error" hidden></p>
+                  </div>
+                </div>
+
+                <button class="boton boton--principal boton--ancho" type="submit">Calcular</button>
+                <div id="perfil-errores" class="resumen-errores" role="alert"></div>
+              </form>
+
+              <div class="columna">
+                <div id="perfil-resultados" class="resultados" aria-live="polite"></div>
+
+                <section class="tarjeta tarjeta--grafica" aria-labelledby="perfil-grafica-titulo">
+                  <div class="tarjeta__encabezado">
+                    <span class="chip-icono" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="20" height="20" focusable="false"><path d="M4 20 V 4 M 4 20 H 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /><path d="M7 15 L 11 11 L 14 13 L 19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </span>
+                    <div>
+                      <h2 id="perfil-grafica-titulo" class="tarjeta__titulo">Gráfica</h2>
+                      <p class="tarjeta__subtitulo">Curva, regiones sobre y bajo el eje y valor promedio</p>
+                    </div>
+                  </div>
+                  <figure id="perfil-grafica" class="grafica" data-grafica aria-labelledby="perfil-grafica-titulo"></figure>
+                </section>
+
+                <div id="perfil-detalles" class="detalles"></div>
               </div>
             </div>
+          </section>
 
-            <fieldset class="opciones">
-              <legend class="campo__etiqueta">Interpretación</legend>
-              <label class="opcion">
-                <input type="radio" name="interpretacion" value="abstracta" />
-                <span>Ejercicio abstracto <span class="opcion__detalle">(u, u²)</span></span>
+          <!-- ── Figuras ───────────────────────────────────────────── -->
+          <section id="seccion-figuras" class="seccion" data-seccion="figuras" aria-labelledby="titulo-figuras" hidden>
+            <header class="seccion__cabecera">
+              <div class="seccion__textos">
+                <p class="seccion__etiqueta">02 · Geometría</p>
+                <h1 id="titulo-figuras" class="seccion__titulo">Figuras geométricas</h1>
+                <p class="seccion__descripcion">Fórmulas directas, sin integración: el área en la unidad de las medidas y su conversión a m².</p>
+              </div>
+              <svg class="seccion__ilustracion" viewBox="0 0 240 140" width="240" height="140" aria-hidden="true" focusable="false">
+                <rect x="18" y="58" width="78" height="56" rx="3" class="ilu-relleno" />
+                <rect x="18" y="58" width="78" height="56" rx="3" class="ilu-trazo" />
+                <path d="M104 114 L 146 40 L 188 114 Z" class="ilu-relleno" />
+                <path d="M104 114 L 146 40 L 188 114 Z" class="ilu-trazo" />
+                <path d="M146 40 V 114" class="ilu-guia" />
+                <circle cx="206" cy="46" r="24" class="ilu-relleno" />
+                <circle cx="206" cy="46" r="24" class="ilu-trazo" />
+                <path d="M206 46 H 230" class="ilu-cota" />
+                <path d="M18 126 H 96" class="ilu-cota" />
+                <text x="52" y="138" class="ilu-texto">b</text>
+                <text x="150" y="84" class="ilu-texto">h</text>
+                <text x="212" y="42" class="ilu-texto">r</text>
+              </svg>
+            </header>
+
+            <fieldset id="figura-tipo" class="selector-figuras">
+              <legend class="selector-figuras__leyenda">Elija la figura</legend>
+              <label class="figura-opcion" data-figura="rectangulo">
+                <input type="radio" name="tipo" value="rectangulo" />
+                <svg class="figura-opcion__dibujo" viewBox="0 0 160 96" aria-hidden="true" focusable="false">
+                  <rect x="38" y="16" width="84" height="56" class="dib-relleno" />
+                  <rect x="38" y="16" width="84" height="56" class="dib-trazo" />
+                  <path d="M28 16 V 72 M 24 16 H 32 M 24 72 H 32" class="dib-cota" />
+                  <path d="M38 82 H 122 M 38 78 V 86 M 122 78 V 86" class="dib-cota" />
+                  <text x="15" y="48" class="dib-texto">h</text>
+                  <text x="76" y="95" class="dib-texto">b</text>
+                </svg>
+                <span class="figura-opcion__nombre">Rectángulo</span>
+                <span class="figura-opcion__formula">A = b × h</span>
               </label>
-              <label class="opcion">
-                <input type="radio" name="interpretacion" value="fisica" />
-                <span>Perfil físico <span class="opcion__detalle">(x y f(x) en metros)</span></span>
+              <label class="figura-opcion" data-figura="triangulo">
+                <input type="radio" name="tipo" value="triangulo" />
+                <svg class="figura-opcion__dibujo" viewBox="0 0 160 96" aria-hidden="true" focusable="false">
+                  <path d="M32 72 L 80 14 L 128 72 Z" class="dib-relleno" />
+                  <path d="M32 72 L 80 14 L 128 72 Z" class="dib-trazo" />
+                  <path d="M80 14 V 72" class="dib-guia" />
+                  <path d="M32 82 H 128 M 32 78 V 86 M 128 78 V 86" class="dib-cota" />
+                  <text x="85" y="50" class="dib-texto">h</text>
+                  <text x="76" y="95" class="dib-texto">b</text>
+                </svg>
+                <span class="figura-opcion__nombre">Triángulo</span>
+                <span class="figura-opcion__formula">A = (b × h)/2</span>
+              </label>
+              <label class="figura-opcion" data-figura="circulo">
+                <input type="radio" name="tipo" value="circulo" />
+                <svg class="figura-opcion__dibujo" viewBox="0 0 160 96" aria-hidden="true" focusable="false">
+                  <circle cx="80" cy="46" r="34" class="dib-relleno" />
+                  <circle cx="80" cy="46" r="34" class="dib-trazo" />
+                  <path d="M80 46 H 114" class="dib-guia" />
+                  <circle cx="80" cy="46" r="2.5" class="dib-punto" />
+                  <text x="94" y="40" class="dib-texto">r</text>
+                </svg>
+                <span class="figura-opcion__nombre">Círculo</span>
+                <span class="figura-opcion__formula">A = π r²</span>
               </label>
             </fieldset>
 
-            <button class="boton boton--principal" type="submit">Calcular</button>
-            <div id="perfil-errores" class="resumen-errores" role="alert"></div>
-          </form>
+            <div class="disposicion disposicion--figuras">
+              <form id="figura-formulario" class="tarjeta formulario" novalidate>
+                <div class="tarjeta__encabezado">
+                  <span class="chip-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false"><path d="M4 20 L 20 4 M 7 17 l 2 2 M 10 14 l 2 2 M 13 11 l 2 2 M 16 8 l 2 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                  </span>
+                  <h2 class="tarjeta__titulo">Medidas</h2>
+                </div>
 
-          <div id="perfil-resultados" class="resultados" aria-live="polite"></div>
-        </div>
-      </section>
-
-      <!-- ── Figuras ─────────────────────────────────────────────── -->
-      <section id="seccion-figuras" class="seccion" data-seccion="figuras" aria-labelledby="titulo-figuras" hidden>
-        <header class="seccion__cabecera">
-          <h1 id="titulo-figuras" class="seccion__titulo">Figuras geométricas</h1>
-          <p class="seccion__descripcion">Fórmulas directas, sin integración: rectángulo, triángulo y círculo.</p>
-        </header>
-
-        <div class="disposicion">
-          <form id="figura-formulario" class="tarjeta formulario" novalidate>
-            <h2 class="tarjeta__titulo">Datos</h2>
-
-            <div class="campo-par">
-              <div class="campo">
-                <label class="campo__etiqueta" for="figura-tipo">Figura</label>
-                <select id="figura-tipo" class="campo__control" name="tipo">
-                  <option value="rectangulo">Rectángulo</option>
-                  <option value="triangulo">Triángulo</option>
-                  <option value="circulo">Círculo</option>
-                </select>
-              </div>
-              <div class="campo">
-                <label class="campo__etiqueta" for="figura-unidad">Unidad</label>
-                <select id="figura-unidad" class="campo__control" name="unidad">
-                  <option value="m">m (metros)</option>
-                  <option value="cm">cm (centímetros)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="campo" data-dimension="base">
-              <label class="campo__etiqueta" for="figura-base">Base <span class="campo__unidad" data-unidad-figura>(m)</span></label>
-              <input id="figura-base" class="campo__control" name="base" type="text" inputmode="decimal" autocomplete="off" />
-              <p id="figura-base-error" class="campo__error" hidden></p>
-            </div>
-            <div class="campo" data-dimension="altura">
-              <label class="campo__etiqueta" for="figura-altura">Altura <span class="campo__unidad" data-unidad-figura>(m)</span></label>
-              <input id="figura-altura" class="campo__control" name="altura" type="text" inputmode="decimal" autocomplete="off"
-                aria-describedby="figura-altura-ayuda" />
-              <p id="figura-altura-ayuda" class="campo__ayuda" data-ayuda-triangulo hidden>Perpendicular a la base.</p>
-              <p id="figura-altura-error" class="campo__error" hidden></p>
-            </div>
-            <div class="campo" data-dimension="radio" hidden>
-              <label class="campo__etiqueta" for="figura-radio">Radio <span class="campo__unidad" data-unidad-figura>(m)</span></label>
-              <input id="figura-radio" class="campo__control" name="radio" type="text" inputmode="decimal" autocomplete="off" />
-              <p id="figura-radio-error" class="campo__error" hidden></p>
-            </div>
-
-            <button class="boton boton--principal" type="submit">Calcular</button>
-            <div id="figura-errores" class="resumen-errores" role="alert"></div>
-          </form>
-
-          <div id="figura-resultados" class="resultados" aria-live="polite"></div>
-        </div>
-      </section>
-
-      <!-- ── Estimación ──────────────────────────────────────────── -->
-      <section id="seccion-estimacion" class="seccion" data-seccion="estimacion" aria-labelledby="titulo-estimacion" hidden>
-        <header class="seccion__cabecera">
-          <h1 id="titulo-estimacion" class="seccion__titulo">Estimación de material</h1>
-          <p class="seccion__descripcion">Área con un adicional y costo teórico, a partir de un perfil físico o de una figura.</p>
-        </header>
-
-        <div class="disposicion">
-          <div class="pila">
-            <div id="estimacion-fuente" class="tarjeta fuente"></div>
-
-            <form id="estimacion-formulario" class="tarjeta formulario" novalidate>
-              <h2 class="tarjeta__titulo">Precio y adicional</h2>
-              <div class="campo-par">
                 <div class="campo">
-                  <label class="campo__etiqueta" for="estimacion-precio">Precio <span class="campo__unidad">(Q/m²)</span></label>
+                  <label class="campo__etiqueta" for="figura-unidad">Unidad de longitud</label>
+                  <select id="figura-unidad" class="campo__control" name="unidad">
+                    <option value="m">m (metros)</option>
+                    <option value="cm">cm (centímetros)</option>
+                  </select>
+                </div>
+
+                <div class="campo-par">
+                  <div class="campo" data-dimension="base">
+                    <label class="campo__etiqueta" for="figura-base">Base b <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+                    <input id="figura-base" class="campo__control" name="base" type="text" inputmode="decimal" autocomplete="off" />
+                    <p id="figura-base-error" class="campo__error" hidden></p>
+                  </div>
+                  <div class="campo" data-dimension="altura">
+                    <label class="campo__etiqueta" for="figura-altura">Altura h <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+                    <input id="figura-altura" class="campo__control" name="altura" type="text" inputmode="decimal" autocomplete="off"
+                      aria-describedby="figura-altura-ayuda" />
+                    <p id="figura-altura-ayuda" class="campo__ayuda" data-ayuda-triangulo hidden>Perpendicular a la base.</p>
+                    <p id="figura-altura-error" class="campo__error" hidden></p>
+                  </div>
+                  <div class="campo" data-dimension="radio" hidden>
+                    <label class="campo__etiqueta" for="figura-radio">Radio r <span class="campo__unidad" data-unidad-figura>(m)</span></label>
+                    <input id="figura-radio" class="campo__control" name="radio" type="text" inputmode="decimal" autocomplete="off" />
+                    <p id="figura-radio-error" class="campo__error" hidden></p>
+                  </div>
+                </div>
+
+                <button class="boton boton--principal boton--ancho" type="submit">Calcular área</button>
+                <div id="figura-errores" class="resumen-errores" role="alert"></div>
+              </form>
+
+              <div id="figura-resultados" class="resultados" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <!-- ── Estimación ────────────────────────────────────────── -->
+          <section id="seccion-estimacion" class="seccion" data-seccion="estimacion" aria-labelledby="titulo-estimacion" hidden>
+            <header class="seccion__cabecera">
+              <div class="seccion__textos">
+                <p class="seccion__etiqueta">03 · Material y costo</p>
+                <h1 id="titulo-estimacion" class="seccion__titulo">Estimación de material</h1>
+                <p class="seccion__descripcion">Convierte un área útil en m² en un área con adicional y un costo teórico, a partir de un perfil físico o de una figura.</p>
+              </div>
+              <svg class="seccion__ilustracion" viewBox="0 0 240 140" width="240" height="140" aria-hidden="true" focusable="false">
+                <rect x="28" y="22" width="184" height="100" rx="4" class="ilu-guia" />
+                <rect x="44" y="34" width="152" height="76" rx="3" class="ilu-relleno" />
+                <rect x="44" y="34" width="152" height="76" rx="3" class="ilu-trazo" />
+                <path d="M82 34 V 110 M 120 34 V 110 M 158 34 V 110" class="ilu-eje" />
+                <text x="98" y="78" class="ilu-texto">A útil</text>
+                <text x="168" y="18" class="ilu-texto">+ w %</text>
+              </svg>
+            </header>
+
+            <div id="estimacion-fuente" class="banda-fuente"></div>
+
+            <div class="disposicion disposicion--estimacion">
+              <form id="estimacion-formulario" class="tarjeta formulario" novalidate>
+                <div class="tarjeta__encabezado">
+                  <span class="chip-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M8 7 H 16 M 8 12 h 2 M 14 12 h 2 M 8 16 h 2 M 14 16 h 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                  </span>
+                  <h2 class="tarjeta__titulo">Parámetros</h2>
+                </div>
+                <div class="campo">
+                  <label class="campo__etiqueta" for="estimacion-precio">Precio por metro cuadrado <span class="campo__unidad">(Q/m²)</span></label>
                   <input id="estimacion-precio" class="campo__control" name="textoPrecio" type="text" inputmode="decimal" autocomplete="off" />
                   <p id="estimacion-precio-error" class="campo__error" hidden></p>
                 </div>
@@ -167,37 +353,40 @@
                   <label class="campo__etiqueta" for="estimacion-adicional">Adicional w <span class="campo__unidad">(%)</span></label>
                   <input id="estimacion-adicional" class="campo__control" name="textoAdicional" type="text" inputmode="decimal"
                     autocomplete="off" aria-describedby="estimacion-adicional-ayuda" />
-                  <p id="estimacion-adicional-ayuda" class="campo__ayuda">Adicional sobre el área útil, entre 0 y 100.</p>
+                  <p id="estimacion-adicional-ayuda" class="campo__ayuda">Porcentaje sobre el área útil, entre 0 y 100.</p>
                   <p id="estimacion-adicional-error" class="campo__error" hidden></p>
                 </div>
-              </div>
-              <button id="estimacion-calcular" class="boton boton--principal" type="submit">Calcular estimación</button>
-              <div id="estimacion-errores" class="resumen-errores" role="alert"></div>
-            </form>
-          </div>
+                <button id="estimacion-calcular" class="boton boton--principal boton--ancho" type="submit">Calcular estimación</button>
+                <div id="estimacion-errores" class="resumen-errores" role="alert"></div>
+              </form>
 
-          <div class="pila">
+              <aside class="tarjeta supuestos" aria-labelledby="titulo-supuestos">
+                <div class="tarjeta__encabezado">
+                  <span class="chip-icono chip-icono--aviso" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" /><path d="M12 11 V 16 M 12 8 v 0.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+                  </span>
+                  <h2 id="titulo-supuestos" class="tarjeta__titulo">Supuestos de la estimación</h2>
+                </div>
+                <ul class="supuestos__lista">
+                  <li>El adicional w se aplica sobre el área útil: A<sub>estimada</sub> = A<sub>útil</sub> × (1 + w/100).</li>
+                  <li>El material realmente comprado depende de los formatos comerciales, los márgenes y los cortes, y no se calcula.</li>
+                  <li>No incluye mano de obra, impuestos, márgenes comerciales, láminas ni litros de pintura.</li>
+                  <li>Los precios de los ejemplos son simulados.</li>
+                  <li>El precio se aplica a áreas en m²; nunca a la integral con signo ni a áreas abstractas (u²).</li>
+                </ul>
+              </aside>
+            </div>
+
             <div id="estimacion-resultados" class="resultados" aria-live="polite"></div>
+          </section>
+        </main>
 
-            <aside class="tarjeta supuestos" aria-labelledby="titulo-supuestos">
-              <h2 id="titulo-supuestos" class="tarjeta__titulo">Supuestos de la estimación</h2>
-              <ul class="supuestos__lista">
-                <li>El adicional w se aplica sobre el área útil: A<sub>estimada</sub> = A<sub>útil</sub> × (1 + w/100).</li>
-                <li>El material realmente comprado depende de los formatos comerciales, los márgenes y los cortes, y no se calcula.</li>
-                <li>No incluye mano de obra, impuestos, márgenes comerciales, láminas ni litros de pintura.</li>
-                <li>Los precios de los ejemplos son simulados.</li>
-                <li>El precio se aplica a áreas en m²; nunca a la integral con signo ni a áreas abstractas (u²).</li>
-              </ul>
-            </aside>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="pie">
-      <p>Cálculo exacto con fracciones; los decimales se redondean solo al mostrarlos.</p>
-      <p><a href="./prueba-recursos.html">Página temporal de prueba de recursos</a></p>
-    </footer>
+        <footer class="pie">
+          <p>Cálculo exacto con fracciones; los decimales se redondean solo al mostrarlos.</p>
+          <p><a href="./prueba-recursos.html">Página temporal de prueba de recursos</a></p>
+        </footer>
+      </div>
+    </div>
 
     <script type="module" src="./src/main.js"></script>
   </body>

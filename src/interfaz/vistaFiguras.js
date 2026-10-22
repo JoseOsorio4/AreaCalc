@@ -1,8 +1,9 @@
-// Vista de las figuras geométricas (T-14; design.md §14.5; requirements R-14, R-15 y R-23).
+// Vista de las figuras geométricas (T-14 y su revisión visual; design.md §14.5; requirements R-14, R-15 y R-23).
 //
-// Rectángulo, triángulo y círculo, con fórmulas directas. La vista no calcula: despacha
-// editarFigura, calcularFigura y usarComoFuente (T-13) y escribe el ResultadoFigura
-// vigente con presentacion/formato.js. Sin resultado, muestra un estado vacío sin cifras.
+// Rectángulo, triángulo y círculo, con fórmulas directas. La figura se elige con tarjetas
+// (un grupo de radios nativos en index.html). La vista no calcula: despacha editarFigura,
+// calcularFigura y usarComoFuente (T-13) y escribe el ResultadoFigura vigente con
+// presentacion/formato.js. Sin resultado, muestra un estado vacío sin cifras.
 //
 // Punto de integración (no se simula): resultado.pasos vale null hasta que T-17 conecte
 // pasosFigura (presentacion/pasos.js) con calcularFigura; mientras tanto se avisa.
@@ -10,7 +11,7 @@ import { calcularFigura, editarFigura, usarComoFuente } from './estado.js';
 import { irA } from './navegacion.js';
 import { cantidadTexto } from '../presentacion/formato.js';
 import {
-  crear, describir, enfocar, estadoVacio, fijarValor, listaPasos, mostrarErrores, pendiente, porId, tituloResumen
+  cifra, crear, describir, enfocar, estadoVacio, fijarValor, listaPasos, mostrarErrores, pendiente, porId, tituloResumen
 } from './vistaComun.js';
 
 /** Dónde se muestra cada `error.campo` de la figura. */
@@ -31,6 +32,7 @@ const NOMBRE_DIMENSION = Object.freeze({ base: 'Base b', altura: 'Altura h', rad
 
 const ID_TITULO = 'figura-resultados-titulo';
 const ID_AYUDA_ALTURA = 'figura-altura-ayuda';
+const ID_MOTIVO = 'figura-aptitud-motivo';
 
 const exacta = (valor) => ({ clase: 'exacta', valor });
 
@@ -44,7 +46,7 @@ const exacta = (valor) => ({ clase: 'exacta', valor });
  */
 export function crearVistaFiguras({ documento, ventana, despachar }) {
   const formulario = porId(documento, 'figura-formulario');
-  const tipo = porId(documento, 'figura-tipo');
+  const tipos = [...porId(documento, 'figura-tipo').querySelectorAll('input[name="tipo"]')];
   const unidad = porId(documento, 'figura-unidad');
   const dimensiones = {
     base: porId(documento, 'figura-base'),
@@ -57,9 +59,12 @@ export function crearVistaFiguras({ documento, ventana, despachar }) {
   const resumen = porId(documento, 'figura-errores');
   const resultados = porId(documento, 'figura-resultados');
 
-  for (const control of [tipo, unidad]) {
-    control.addEventListener('change', () => despachar(editarFigura, control.name, control.value));
+  for (const radio of tipos) {
+    radio.addEventListener('change', () => {
+      if (radio.checked) despachar(editarFigura, 'tipo', radio.value);
+    });
   }
+  unidad.addEventListener('change', () => despachar(editarFigura, 'unidad', unidad.value));
   for (const control of Object.values(dimensiones)) {
     control.addEventListener('input', () => despachar(editarFigura, control.name, control.value));
   }
@@ -76,7 +81,7 @@ export function crearVistaFiguras({ documento, ventana, despachar }) {
   return {
     render(estado) {
       const { entrada, resultado, errores } = estado.figura;
-      fijarValor(tipo, entrada.tipo);
+      for (const radio of tipos) radio.checked = radio.value === entrada.tipo;
       fijarValor(unidad, entrada.unidad);
       for (const [campo, control] of Object.entries(dimensiones)) fijarValor(control, entrada[campo]);
 
@@ -93,8 +98,7 @@ export function crearVistaFiguras({ documento, ventana, despachar }) {
       mostrarErrores(documento, { campos: CAMPOS, resumen, errores });
       resultados.replaceChildren(...(resultado === null
         ? [vacio(documento, errores)]
-        : [tarjetaResultado(documento, resultado), tarjetaPasos(documento, resultado),
-          tarjetaFuente(documento, ventana, despachar)]));
+        : [tarjetaResultado(documento, resultado, ventana, despachar), desplegablePasos(documento, resultado)]));
     }
   };
 }
@@ -104,81 +108,74 @@ function vacio(documento, errores) {
     return estadoVacio(documento, {
       idTitulo: ID_TITULO,
       titulo: 'Sin resultado',
-      texto: 'Corrija las dimensiones marcadas y pulse «Calcular». No se muestra el resultado de un cálculo anterior.'
+      texto: 'Corrija las medidas marcadas y pulse «Calcular área». No se muestra el resultado de un cálculo anterior.'
     });
   }
   return estadoVacio(documento, {
     idTitulo: ID_TITULO,
     titulo: 'Todavía no hay resultado',
-    texto: 'Elija la figura y la unidad, escriba sus dimensiones y pulse «Calcular». '
+    texto: 'Elija la figura y la unidad, escriba sus medidas y pulse «Calcular área». '
       + 'Verá el área en su unidad y en m².'
   });
 }
 
-function tarjetaResultado(documento, resultado) {
+function tarjetaResultado(documento, resultado, ventana, despachar) {
   const { tipo, unidad, dimensiones, area, unidadArea, areaM2, formula } = resultado;
   const figura = FIGURAS[tipo];
   const enCentimetros = unidad === 'cm';
-  return crear(documento, 'section', { clase: 'tarjeta', 'aria-labelledby': ID_TITULO },
-    crear(documento, 'h2', { clase: 'tarjeta__titulo', id: ID_TITULO, texto: `Resultado: ${figura.nombre.toLowerCase()}` }),
-    crear(documento, 'div', { clase: 'modelo' },
-      crear(documento, 'p', { clase: 'modelo__funcion', 'data-latex': formula.latex, texto: formula.texto }),
-      crear(documento, 'ul', { clase: 'modelo__datos', 'aria-label': 'Dimensiones' },
-        figura.dimensiones.map((campo) => crear(documento, 'li', {
-          clase: 'etiqueta-dato', texto: `${NOMBRE_DIMENSION[campo]} = ${cantidadTexto(exacta(dimensiones[campo]), unidad)}`
-        })))),
-    crear(documento, 'div', { clase: 'valores' },
-      valorArea(documento, {
-        nombre: 'Área', simbolo: 'A', cifra: cantidadTexto(area, unidadArea),
-        nota: enCentimetros ? 'En la unidad de las dimensiones.' : 'En m², lista para estimar material.'
-      }),
-      enCentimetros
-        ? valorArea(documento, {
-          nombre: 'Área en metros cuadrados', simbolo: 'A', cifra: cantidadTexto(areaM2, 'm²'),
-          nota: '1 m² = 10 000 cm². Es el área que se usa para estimar material.'
-        })
-        : null));
-}
 
-function valorArea(documento, { nombre, simbolo, cifra, nota }) {
-  return crear(documento, 'div', { clase: 'valor valor--area' },
-    crear(documento, 'p', { clase: 'valor__nombre' }, `${nombre} `,
-      crear(documento, 'span', { clase: 'valor__simbolo', texto: simbolo })),
-    crear(documento, 'p', { clase: 'valor__cifra', texto: cifra }),
-    crear(documento, 'p', { clase: 'valor__nota', texto: nota }));
-}
-
-function tarjetaPasos(documento, resultado) {
-  const idTitulo = 'figura-pasos-titulo';
-  const tarjeta = crear(documento, 'section', { clase: 'tarjeta', 'aria-labelledby': idTitulo },
-    crear(documento, 'h3', { clase: 'tarjeta__titulo', id: idTitulo, texto: 'Procedimiento' }));
-  if (resultado.pasos === null) {
-    // Punto de integración de T-17: pasosFigura en ResultadoFigura.pasos.
-    tarjeta.append(pendiente(documento,
-      'El procedimiento paso a paso se mostrará aquí cuando se conecte en la integración final.'));
-  } else {
-    tarjeta.append(listaPasos(documento, resultado.pasos));
-  }
-  return tarjeta;
-}
-
-/** Toda figura calculada es apta (R-16.1): el botón siempre está habilitado. */
-function tarjetaFuente(documento, ventana, despachar) {
-  const idTitulo = 'figura-aptitud-titulo';
-  const idMotivo = 'figura-aptitud-motivo';
   const boton = crear(documento, 'button', {
-    clase: 'boton boton--secundario', type: 'button', 'aria-describedby': idMotivo,
-    texto: 'Usar esta área para estimar material'
-  });
+    clase: 'boton boton--principal', type: 'button', 'aria-describedby': ID_MOTIVO
+  }, 'Usar esta área para estimar material ', crear(documento, 'span', { clase: 'boton__flecha', 'aria-hidden': 'true', texto: '→' }));
   boton.addEventListener('click', () => {
     const estado = despachar(usarComoFuente, 'figura');
     if (estado.estimacion.fuente === 'figura') irA(ventana, 'estimacion');
   });
-  return crear(documento, 'section', { clase: 'tarjeta', 'aria-labelledby': idTitulo },
-    crear(documento, 'h3', { clase: 'tarjeta__titulo', id: idTitulo, texto: 'Estimación de material' }),
-    crear(documento, 'div', { clase: 'aptitud' },
+
+  return crear(documento, 'section', { clase: 'tarjeta resultado-figura', 'aria-labelledby': ID_TITULO },
+    crear(documento, 'div', { clase: 'resumen-perfil__cabecera' },
+      crear(documento, 'h2', { clase: 'tarjeta__titulo', id: ID_TITULO, texto: `Resultado: ${figura.nombre.toLowerCase()}` }),
+      crear(documento, 'p', { clase: 'resultado-figura__formula', 'data-latex': formula.latex, texto: formula.texto })),
+    crear(documento, 'ul', { clase: 'etiquetas', 'aria-label': 'Medidas' },
+      figura.dimensiones.map((campo) => crear(documento, 'li', {
+        clase: 'etiqueta-dato', texto: `${NOMBRE_DIMENSION[campo]} = ${cantidadTexto(exacta(dimensiones[campo]), unidad)}`
+      }))),
+    crear(documento, 'div', { clase: 'valores' },
+      valorArea(documento, {
+        nombre: enCentimetros ? 'Área en cm²' : 'Área', simbolo: 'A', cantidad: area, unidad: unidadArea,
+        nota: enCentimetros ? 'En la unidad de las medidas.' : 'Ya está en m²: es el área que se usa para estimar.'
+      }),
+      enCentimetros
+        ? valorArea(documento, {
+          nombre: 'Área en m²', simbolo: 'A', cantidad: areaM2, unidad: 'm²',
+          nota: '1 m² = 10 000 cm². Es el área que se usa para estimar material.'
+        })
+        : null),
+    // Toda figura calculada es apta (R-16.1): el botón siempre está habilitado.
+    crear(documento, 'div', { clase: 'acciones' },
       boton,
       crear(documento, 'p', {
-        clase: 'aptitud__motivo', id: idMotivo, texto: 'Se usará el área en m² con el precio y el adicional que indique.'
+        clase: 'acciones__motivo', id: ID_MOTIVO, texto: 'Se usará el área en m² con el precio y el adicional que indique.'
       })));
+}
+
+function valorArea(documento, { nombre, simbolo, cantidad, unidad, nota }) {
+  return crear(documento, 'div', { clase: 'valor valor--area' },
+    crear(documento, 'p', { clase: 'valor__nombre' }, `${nombre} `,
+      crear(documento, 'span', { clase: 'valor__simbolo', texto: simbolo })),
+    cifra(documento, cantidad, unidad),
+    crear(documento, 'p', { clase: 'valor__nota', texto: nota }));
+}
+
+function desplegablePasos(documento, resultado) {
+  const sinPasos = resultado.pasos === null;
+  const contenido = crear(documento, 'div', { clase: 'desplegable__contenido' },
+    sinPasos
+      // Punto de integración de T-17: pasosFigura en ResultadoFigura.pasos.
+      ? pendiente(documento, 'El procedimiento paso a paso se mostrará aquí cuando se conecte en la integración final.')
+      : listaPasos(documento, resultado.pasos));
+  return crear(documento, 'details', { clase: 'desplegable', open: sinPasos ? null : true },
+    crear(documento, 'summary', { clase: 'desplegable__resumen' }, 'Procedimiento paso a paso',
+      sinPasos ? crear(documento, 'span', { clase: 'insignia', texto: 'Pendiente de integración' }) : null),
+    contenido);
 }

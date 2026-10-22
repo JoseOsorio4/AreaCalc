@@ -20,7 +20,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
 - Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-14.
-- Último trabajo: el commit «T-14: vistas, HTML y CSS accesibles», encima de `fdbb742` (T-13). Para ver los SHA: `git log --oneline -n 5`.
+- Último trabajo: el commit «T-14: revisión visual de la interfaz», encima de `bd03fa0` (T-14). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -40,7 +40,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-11 Formato de números y fórmulas | Implementada y probada | `9efdfb9` |
 | T-12 Procedimientos paso a paso | Implementada y probada; aún no conectada a los casos de uso (T-17) | `ac0569c` |
 | T-13 Estado e invalidación | Implementada y probada; el catálogo de ejemplos llega como argumento hasta T-16 | `fdbb742` |
-| T-14 Vistas, HTML y CSS accesibles | Implementada; gráfica, pasos, KaTeX y ejemplos quedan como puntos de integración (§6); revisión manual pendiente (T-R3) | commit «T-14: …» |
+| T-14 Vistas, HTML y CSS accesibles | Implementada; gráfica, pasos, KaTeX y ejemplos quedan como puntos de integración (§6); revisión manual pendiente (T-R3) | `bd03fa0` |
+| T-14, revisión visual | Menú lateral, nueva composición y estilos; **pendiente de aprobación visual del equipo** | commit «T-14: revisión visual…» |
 | T-15 en adelante | Sin iniciar | — |
 
 Última ejecución, con T-14: `npm test` dio **1155/1155** pruebas en 23 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-14 no añade pruebas automáticas: tasks T-14 pide revisión manual. Sí se recorrió el build en Chrome sin interfaz con un guion temporal (ya borrado); lo comprobado está en §7.
@@ -110,8 +111,9 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | `vistaPerfil.js` | `crearVistaPerfil({ documento, ventana, despachar, catalogo, grafica })` → `{ render(estado) }` |
 | `vistaFiguras.js` | `crearVistaFiguras({ documento, ventana, despachar })` → `{ render(estado) }` |
 | `vistaEstimacion.js` | `crearVistaEstimacion({ documento, despachar })` → `{ render(estado) }` |
+| `menuLateral.js` | `iniciarMenuLateral({ documento, ventana })`: contraer o expandir en escritorio (preferencia en `localStorage`) y panel en pantallas estrechas; no toca el estado |
 
-**Estilos:** `src/estilos/app.css`, enlazado desde `index.html`. Variables de color con su contraste anotado, fuentes del sistema, foco de 3 px, una columna por debajo de 768 px y animaciones que se anulan con `prefers-reduced-motion`.
+**Estilos:** `src/estilos/app.css`, enlazado desde `index.html`. Variables de color con su contraste anotado, fuentes del sistema (títulos en Palatino Linotype o Georgia), foco de 3 px, consultas de contenedor sobre `.principal` para que la composición se adapte al ancho real del contenido, panel de menú por debajo de 768 px y animaciones que se anulan con `prefers-reduced-motion`.
 
 **Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js` y `presentacion/pasos.test.js`, `interfaz/estado.test.js` (estado y navegación), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
@@ -185,8 +187,8 @@ El núcleo (T-02 a T-07), el analizador (T-09 y T-10) y los casos de uso (T-08) 
 
 | Punto | Dónde | Qué hace hoy | Qué debe hacer T-17 |
 |---|---|---|---|
-| Gráfica | `vistaPerfil.js`, `tarjetaGrafica`: `<figure class="grafica" data-grafica>` | aviso «La gráfica se conectará en la integración final…» | llenar `resultado.grafica` (T-15) y pasar `grafica: { dibujar, limpiar }` de `graficaPlotly.js` en `crearVistaPerfil`; la vista ya llama a `dibujar(figura, datos)` y a `limpiar` antes de repintar. El CSS de `.grafica` centra su contenido; puede requerir un ajuste cuando entre Plotly |
-| Pasos del perfil y de la figura | `tarjetaPasos` de `vistaPerfil.js` y `vistaFiguras.js` | aviso «El procedimiento paso a paso se mostrará aquí…» | conectar `pasosPerfil` y `pasosFigura` en los casos de uso; la vista ya pinta `pasos.area`, `pasos.promedio` o el arreglo de la figura con `listaPasos` |
+| Gráfica | `<figure id="perfil-grafica" class="grafica" data-grafica>`, fija en `index.html`; la llena `pintarGrafica` de `vistaPerfil.js` | aviso «Gráfica pendiente de integración», solo con unos ejes decorativos, sin curva | llenar `resultado.grafica` (T-15) y pasar `grafica: { dibujar, limpiar }` de `graficaPlotly.js` en `crearVistaPerfil`; la vista ya llama a `limpiar` y a `dibujar(figura, datos)` cuando cambia el resultado. El CSS de `.grafica` centra su contenido; puede requerir un ajuste cuando entre Plotly |
+| Pasos del perfil y de la figura | `desplegablePasos` de `vistaPerfil.js` y `vistaFiguras.js` (un `<details>`) | cerrado, con la insignia «Pendiente de integración» y el aviso dentro | conectar `pasosPerfil` y `pasosFigura` en los casos de uso; la vista ya pinta `pasos.area`, `pasos.promedio` o el arreglo de la figura con `listaPasos` y abre el panel |
 | Pasos de la estimación | `tarjetaResultado` de `vistaEstimacion.js` | aviso fijo | decidir si la vista llama a `pasosEstimacion` (interfaz no puede importar `pasos.js`, design §2) o si se añade el campo a `ResultadoEstimacion` |
 | KaTeX | elementos con `data-latex` (`.paso__texto`, `.modelo__funcion`) | se ve el texto Unicode (R-09.8) | llamar a `formulasKatex.mejorar(elemento, latex)` (T-16) tras cada `render` |
 | Precarga de Plotly | `main.js` | no se precarga | design §14.3, carga diferida |
@@ -244,9 +246,25 @@ Siguientes tareas desbloqueadas: T-15 (datos de la gráfica) y T-16 (KaTeX y eje
   - T-14, cálculo de estimación sin fuente: el botón «Calcular estimación» no se deshabilita; sin fuente da E-MOD-04 en el resumen, y la tarjeta de la fuente explica el motivo (incluido el E-MOD del perfil no apto) con enlaces a Perfil y Figuras.
   - T-14, repintado: el estado es inmutable, así que cada vista solo reconstruye sus resultados cuando cambian las referencias de `resultado` o `errores`; los campos se sincronizan sin mover el cursor (`fijarValor`).
   - T-14, comprobación en Chrome sin interfaz (build servido en local, guion temporal ya borrado): CR-01 (243/4 = 60.75 u², sin distintivos, W-03, botón deshabilitado con E-MOD-01), CR-05 (0 u² y 1 u² con los dos distintivos, W-01) y CR-03 (40/3 ≈ 13.3333 m², rectángulo equivalente; estimación con Q666.67 y Q733.33); «Usar esta área» lleva a `#estimacion`; «Atrás» vuelve a Perfil; editar b retira la fuente y la estimación; errores por campo con `aria-invalid="true"` y `aria-describedby`; resumen con `role="alert"`; círculo r = 5 m da 25π ≈ 78.5398 m² y el rectángulo de 200 × 150 cm, 30000 cm² y 3 m². A 360 px, `scrollWidth` = 360 en las tres secciones y con errores. Contraste mínimo medido en los textos visibles: 5.05:1. Tabulación: saltar → 3 enlaces → función → a → b → interpretación → Calcular, todos con contorno de 3 px. No se probaron lectores de pantalla ni zoom; eso queda para T-R3.
+- **Revisión visual de T-14 (decisiones que el equipo debe aprobar):**
+  - Contratos sin cambios: `estado.js`, `navegacion.js`, los casos de uso, `formato.js` y los ids de los campos y de los mensajes de error se conservan. Cambios de HTML que las vistas ya siguen: el tipo de figura es un grupo de radios `name="tipo"` dentro de `<fieldset id="figura-tipo">` (antes era un `<select>`); la gráfica es `#perfil-grafica`, fija junto a los resultados; los detalles del perfil van en `#perfil-detalles`; el enlace activo ahora es `.lateral__enlace`.
+  - `cifra` (en `vistaComun.js`) reparte en dos líneas el mismo texto que da `cantidadTexto`: fracción y decimal; k·π y su decimal; o el decimal aproximado y su cota. Usa solo funciones de `formato.js`, así que el redondeo sigue en un único sitio. Los costos usan `quetzalesCantidad` en una línea.
+  - El panel de procedimiento queda cerrado mientras no hay pasos (insignia «Pendiente de integración»); con pasos reales se abre por defecto.
+  - Tipografía: los títulos usan «Palatino Linotype» (Windows), con Georgia como respaldo; las fórmulas, «Cambria Math». No hay fuentes descargadas.
+  - Movimiento: la sección entra con opacidad y 8 px de desplazamiento (240 ms), las tarjetas de resultado en 200 ms, la anchura del menú en 220 ms; las cifras no se animan. `prefers-reduced-motion` lo anula todo. Se quitó el fondo fijo (`background-attachment`) para no costar en la laptop.
+  - Comprobación en Chrome sin interfaz (guion temporal ya borrado), a 1366 px y a 360 px: errores por campo y foco al resumen; CR-05 con los dos distintivos y la banda deshabilitada (E-MOD-01); CR-03 con banda habilitada, estimación con Q666.67 y Q733.33 y foco a cada encabezado; «Atrás»; figuras con flechas del teclado (rectángulo → triángulo), círculo 25π ≈ 78.5398 m² y rectángulo 200 × 150 cm = 3 m²; menú contraído a 80 px con `aria-expanded="false"`, «Expandir menú» y la etiqueta visible al enfocar; panel móvil con `aria-expanded`, `inert`, foco al enlace actual, Tab que no sale del panel, Escape y fondo que cierran y devuelven el foco, y enlace que cierra y lleva al título; `scrollWidth` = 360 en las tres secciones, con resultados y con errores; contraste mínimo medido 4.81:1. No se probaron lectores de pantalla, zoom ni la laptop de exposición.
 - **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-14.
 
-## 8. Intención visual (aplicada en T-14)
+## 8. Intención visual (T-14 y su revisión visual)
+
+**Revisión visual (pendiente de aprobación del equipo).** Se tomaron como referencia de apariencia las imágenes que aportó el equipo (tarjetas azules, gráfica tipo plano técnico, navegación lateral), sin sus funciones antiguas: solo Perfil, Figuras y Estimación; sin rótulos, terrenos, áreas entre curvas, reportes ni trapecio. Composición aplicada:
+- **Menú lateral** marino con marca, iconos SVG propios y las tres secciones; la activa lleva `aria-current="page"`, fondo cian translúcido y una barra cian. «Contraer menú» lo deja en una franja de iconos de 80 px (transición de la anchura de la rejilla); el nombre sigue en el DOM y aparece como etiqueta al pasar o enfocar. Por debajo de 768 px hay una barra superior con botón de menú (`aria-expanded`, `aria-controls`) que abre un panel con fondo; la página, la barra y «Saltar al contenido» quedan `inert`, el foco entra a la sección actual y vuelve al botón con Escape, con el botón de cierre o al tocar el fondo.
+- **Cabecera de sección**: etiqueta numerada («01 · Integral definida»), título con serifa del sistema, explicación breve e ilustración SVG decorativa (`aria-hidden`); la trama cuadriculada solo aparece en su mitad derecha.
+- **Perfil**: formulario fijo (sticky) a la izquierda, con la interpretación como dos tarjetas de radio y el prefijo «f(x) =» unido al campo; a la derecha, resultados, gráfica y detalles. Las tres tarjetas de valor muestran la fracción grande y el decimal debajo (`cifra` de `vistaComun.js`, con textos de `formato.js`). El procedimiento va en un `<details>` y el acceso a la estimación en una banda oscura con el botón claro.
+- **Figuras**: selector con tres tarjetas dibujadas (radios nativos, flechas del teclado, marca ✓ además del color); medidas y resultado lado a lado.
+- **Estimación**: banda oscura con la fuente (o su motivo), parámetros y supuestos lado a lado, y resultados en cuatro indicadores: área útil, área con adicional, costo base y costo estimado (destacado). El adicional y el precio aplicados aparecen como etiquetas.
+
+**Dirección original de T-14 (sigue vigente):** fondo claro, azul marino, tarjetas blancas y acentos cian o turquesa; animaciones breves; fuentes del sistema; ningún recurso externo.
 
 Dirección aprobada por el equipo para T-14 y aplicada: fondo claro, navegación azul oscuro, tarjetas blancas y acentos turquesa; solo tres secciones (Perfil, Figuras y Estimación). El perfil es el protagonista: tres tarjetas de valor (integral en violeta, área en turquesa y promedio en ámbar, cada una con nombre y símbolo en texto), una zona amplia para la gráfica y un bloque para el procedimiento. Fuentes del sistema, sin recursos externos, animaciones de entrada breves que se anulan con `prefers-reduced-motion`. Respeta design §14.5 y R-23. Los ajustes visuales siguen siendo lo segundo en el orden de recorte (design §16).
 
