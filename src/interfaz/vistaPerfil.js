@@ -9,21 +9,22 @@
 // (#perfil-resultados, aria-live), la gráfica (#perfil-grafica, fija en index.html) y
 // los detalles (#perfil-detalles: procedimiento desplegable y acceso a la estimación).
 //
-// Puntos de integración (no se simulan):
-//   - resultado.pasos ({ area, promedio }) vale null hasta que T-17 conecte
-//     presentacion/pasos.js con analizarPerfil; mientras tanto se avisa de que falta.
-//   - resultado.grafica vale null hasta T-15/T-17; la vista usa el contenedor
-//     #perfil-grafica y, si recibe `grafica` ({ dibujar, limpiar } de
-//     adaptadores/graficaPlotly.js, design §14.3) y hay datos, lo usa.
-//   - El selector de ejemplos solo aparece si `catalogo` trae ejemplos del perfil
-//     (ejemplos.js, T-16); main.js pasa hoy un catálogo vacío.
-//   - Los textos con `data-latex` los mejorará formulasKatex.mejorar (T-16).
+// Integración (T-17):
+//   - resultado.pasos ({ area, promedio }) viene de analizarPerfil (pasosPerfil, T-12).
+//   - resultado.grafica viene de analizarPerfil (datosGrafica, T-15) y la dibuja el
+//     adaptador `grafica` ({ dibujar, limpiar } de adaptadores/graficaPlotly.js). Si es
+//     null, la figura muestra el W-07 que trae el resultado; sin resultado, un estado vacío.
+//     Primero se pintan los resultados y los pasos; el adaptador cede un fotograma antes
+//     de dibujar, así que la gráfica no los retrasa.
+//   - El selector de ejemplos se llena con el catálogo de ejemplos.js (T-16); vuelve a
+//     «Elija un ejemplo…» en cuanto la entrada deja de coincidir con el ejemplo elegido.
+//   - Los textos con `data-latex` los mejora formulasKatex desde main.js, tras pintar.
 import { calcularPerfil, cargarEjemplo, editarPerfil, usarComoFuente } from './estado.js';
 import { irA } from './navegacion.js';
 import { aDecimal, cantidadTexto, fraccionTexto } from '../presentacion/formato.js';
 import {
-  cifra, crear, enfocar, estadoVacio, fijarValor, listaAdvertencias, listaPasos, mostrarErrores, pendiente, porId,
-  textoError, tituloResumen
+  avisoAdvertencia, cifra, crear, enfocar, estadoVacio, fijarValor, listaAdvertencias, listaPasos, mostrarErrores,
+  porId, prepararEjemplos, sincronizarEjemplo, textoError, tituloResumen
 } from './vistaComun.js';
 
 /** Dónde se muestra cada `error.campo` del perfil. E-INT-01/02 se explican bajo b y marcan a y b. */
@@ -61,6 +62,7 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
   const resultados = porId(documento, 'perfil-resultados');
   const figura = porId(documento, 'perfil-grafica');
   const detalles = porId(documento, 'perfil-detalles');
+  const selectorEjemplo = porId(documento, 'perfil-ejemplo');
   const ejemplos = catalogo.filter((ejemplo) => ejemplo?.seccion === 'perfil');
 
   // Edición: cada cambio pasa por el estado, que retira el resultado anterior (R-12.1).
@@ -81,7 +83,17 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
     else enfocar(tituloResumen(resumen));
   });
 
-  if (ejemplos.length > 0) prepararEjemplos(documento, ejemplos, catalogo, despachar);
+  if (ejemplos.length > 0) {
+    prepararEjemplos(documento, {
+      contenedor: porId(documento, 'perfil-ejemplos'),
+      selector: selectorEjemplo,
+      ejemplos,
+      alElegir: (id) => {
+        const estado = despachar(cargarEjemplo, id, catalogo);
+        if (estado.perfil.resultado !== null) enfocar(porId(documento, ID_TITULO));
+      }
+    });
+  }
 
   let ultimo = { resultado: undefined, errores: undefined };
 
@@ -94,6 +106,7 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
       for (const radio of radios) radio.checked = radio.value === entrada.interpretacion;
       const unidad = entrada.interpretacion === 'fisica' ? '(m)' : '(u)';
       for (const elemento of unidades) elemento.textContent = unidad;
+      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada);
 
       // El estado es inmutable: si el resultado y los errores no cambiaron, no se redibuja.
       if (ultimo.resultado === resultado && ultimo.errores === errores) return;
@@ -102,28 +115,17 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
       mostrarErrores(documento, { campos: CAMPOS, resumen, errores });
       resultados.replaceChildren(resultado === null ? vacio(documento, errores) : tarjetaResumen(documento, resultado));
       if (cambioResultado) {
-        pintarGrafica(documento, figura, resultado, grafica);
+        // Resultados y pasos primero; la gráfica se dibuja después (no los retrasa).
         detalles.replaceChildren(...(resultado === null
           ? []
           : [desplegablePasos(documento, resultado), bandaEstimacion(documento, resultado, ventana, despachar)]));
+        pintarGrafica(documento, figura, resultado, grafica, errores);
+      } else if (resultado === null) {
+        // Solo cambiaron los errores: el estado vacío de la gráfica cambia de texto.
+        pintarGrafica(documento, figura, resultado, grafica, errores);
       }
     }
   };
-}
-
-/** Muestra el selector de ejemplos (T-16) y carga el elegido por el mismo camino que una entrada manual. */
-function prepararEjemplos(documento, ejemplos, catalogo, despachar) {
-  const contenedor = porId(documento, 'perfil-ejemplos');
-  const selector = porId(documento, 'perfil-ejemplo');
-  selector.replaceChildren(
-    crear(documento, 'option', { value: '', texto: 'Elija un ejemplo…' }),
-    ...ejemplos.map((ejemplo) => crear(documento, 'option', { value: ejemplo.id, texto: ejemplo.titulo ?? ejemplo.id })));
-  contenedor.hidden = false;
-  selector.addEventListener('change', () => {
-    if (selector.value === '') return;
-    const estado = despachar(cargarEjemplo, selector.value, catalogo);
-    if (estado.perfil.resultado !== null) enfocar(porId(documento, ID_TITULO));
-  });
 }
 
 function vacio(documento, errores) {
@@ -228,23 +230,37 @@ function textoRectangulo(resultado) {
     + `y área ${cantidadTexto(exacta(rectangulo.area), unidades.area)}.`];
 }
 
-// ── Gráfica (punto de integración de T-15/T-17) ──────────────────────
+// ── Gráfica (design §14.3; R-10) ─────────────────────────────────────
 
-function pintarGrafica(documento, figura, resultado, grafica) {
+/**
+ * Sin resultado: estado vacío. Con resultado y DatosGrafica: el adaptador la dibuja (y
+ * muestra W-07 él mismo si Plotly falla). Con resultado y grafica null (valores no
+ * finitos, R-10.6): el W-07 que trae el resultado. La promesa de dibujar no se espera.
+ */
+function pintarGrafica(documento, figura, resultado, grafica, errores) {
   if (grafica !== null) grafica.limpiar(figura);
-  if (resultado !== null && resultado.grafica !== null && grafica !== null) {
-    figura.replaceChildren();
-    grafica.dibujar(figura, resultado.grafica);
+  if (resultado === null) {
+    figura.replaceChildren(crear(documento, 'div', { clase: 'grafica__aviso' },
+      ejesDecorativos(documento),
+      crear(documento, 'p', { clase: 'grafica__aviso-titulo', texto: 'Todavía no hay gráfica' }),
+      crear(documento, 'p', {
+        texto: errores.length > 0
+          ? 'Corrija los datos marcados y pulse «Calcular». No se muestra la gráfica de un cálculo anterior.'
+          : 'Al calcular verá la curva, las regiones sobre y bajo el eje, el valor promedio y los ceros.'
+      })));
     return;
   }
-  figura.replaceChildren(crear(documento, 'div', { clase: 'grafica__aviso' },
-    ejesDecorativos(documento),
-    crear(documento, 'p', { clase: 'grafica__aviso-titulo', texto: 'Gráfica pendiente de integración' }),
-    crear(documento, 'p', {
-      texto: resultado === null
-        ? 'Aquí se dibujarán la curva, las regiones sobre y bajo el eje y el valor promedio cuando se conecte la gráfica.'
-        : 'La gráfica se conectará en la integración final. Los resultados no dependen de ella.'
-    })));
+  if (resultado.grafica !== null && grafica !== null) {
+    figura.replaceChildren();
+    void grafica.dibujar(figura, resultado.grafica);
+    return;
+  }
+  const w07 = resultado.advertencias.find((aviso) => aviso.codigo === 'W-07') ?? null;
+  figura.replaceChildren(crear(documento, 'div', { clase: 'grafica__aviso', role: 'status' },
+    crear(documento, 'p', { clase: 'grafica__aviso-titulo', texto: 'Gráfica no disponible' }),
+    w07 === null
+      ? crear(documento, 'p', { texto: 'Los resultados y los pasos se conservan.' })
+      : avisoAdvertencia(documento, w07, 'p')));
 }
 
 /** Solo ejes, sin curva: no sugiere un resultado. */
@@ -266,24 +282,15 @@ function ejesDecorativos(documento) {
 
 // ── Procedimiento y estimación ───────────────────────────────────────
 
+/** Procedimientos de analizarPerfil (pasosPerfil), abiertos por defecto (design §14.2). */
 function desplegablePasos(documento, resultado) {
-  const sinPasos = resultado.pasos === null;
-  const contenido = crear(documento, 'div', { clase: 'desplegable__contenido' });
-  if (sinPasos) {
-    // Punto de integración de T-17: pasosArea y pasosPromedio en ResultadoPerfil.pasos.
-    contenido.append(pendiente(documento,
-      'El procedimiento paso a paso se mostrará aquí cuando se conecte en la integración final.'));
-  } else {
-    contenido.append(
+  return crear(documento, 'details', { clase: 'desplegable', open: true },
+    crear(documento, 'summary', { clase: 'desplegable__resumen' }, 'Procedimiento paso a paso'),
+    crear(documento, 'div', { clase: 'desplegable__contenido' },
       crear(documento, 'h3', { clase: 'subtitulo', texto: 'Integral y área' }),
       listaPasos(documento, resultado.pasos.area),
       crear(documento, 'h3', { clase: 'subtitulo', texto: 'Valor promedio' }),
-      listaPasos(documento, resultado.pasos.promedio));
-  }
-  return crear(documento, 'details', { clase: 'desplegable', open: sinPasos ? null : true },
-    crear(documento, 'summary', { clase: 'desplegable__resumen' }, 'Procedimiento paso a paso',
-      sinPasos ? crear(documento, 'span', { clase: 'insignia', texto: 'Pendiente de integración' }) : null),
-    contenido);
+      listaPasos(documento, resultado.pasos.promedio)));
 }
 
 /** Banda «Usar esta área para estimar material»: deshabilitada con el motivo E-MOD si no es apta. */

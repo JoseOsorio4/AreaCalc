@@ -1,6 +1,7 @@
-// Comprueba la versión construida (T-01 y T-R5; design.md §13): que estén las
-// páginas, que el HTML y el CSS no carguen recursos externos y que se hayan
-// copiado las fuentes de KaTeX. Uso: npm run build y después npm run verificar-dist.
+// Comprueba la versión construida (T-01, T-17 y T-R5; design.md §13): que esté la
+// página, que el HTML y el CSS no carguen recursos externos y que se hayan copiado
+// las fuentes de KaTeX. Uso: npm run build y después npm run verificar-dist.
+// T-17 retiró la página temporal de T-01 (prueba-recursos.html) y su comprobación.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { extname, join } from 'node:path';
 
@@ -22,9 +23,7 @@ function archivos(carpeta) {
 const todos = archivos(DIST);
 const problemas = [];
 
-for (const pagina of ['index.html', 'prueba-recursos.html']) {
-  if (!existsSync(join(DIST, pagina))) problemas.push(`Falta dist/${pagina}`);
-}
+if (!existsSync(join(DIST, 'index.html'))) problemas.push('Falta dist/index.html');
 
 for (const archivo of todos.filter((ruta) => extname(ruta) === '.html')) {
   const html = readFileSync(archivo, 'utf8');

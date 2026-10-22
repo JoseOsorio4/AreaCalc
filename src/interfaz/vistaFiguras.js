@@ -5,13 +5,15 @@
 // calcularFigura y usarComoFuente (T-13) y escribe el ResultadoFigura vigente con
 // presentacion/formato.js. Sin resultado, muestra un estado vacío sin cifras.
 //
-// Punto de integración (no se simula): resultado.pasos vale null hasta que T-17 conecte
-// pasosFigura (presentacion/pasos.js) con calcularFigura; mientras tanto se avisa.
-import { calcularFigura, editarFigura, usarComoFuente } from './estado.js';
+// Integración (T-17): resultado.pasos viene de calcularFigura (pasosFigura, T-12). El
+// selector de ejemplos (#figura-ejemplo) ofrece los ejemplos de figuras de ejemplos.js
+// (CR-09 y CR-10) y los carga con cargarEjemplo, como una entrada manual (R-13.2).
+import { calcularFigura, cargarEjemplo, editarFigura, usarComoFuente } from './estado.js';
 import { irA } from './navegacion.js';
 import { cantidadTexto } from '../presentacion/formato.js';
 import {
-  cifra, crear, describir, enfocar, estadoVacio, fijarValor, listaPasos, mostrarErrores, pendiente, porId, tituloResumen
+  cifra, crear, describir, desplegablePasos, enfocar, estadoVacio, fijarValor, mostrarErrores, porId, prepararEjemplos,
+  sincronizarEjemplo, tituloResumen
 } from './vistaComun.js';
 
 /** Dónde se muestra cada `error.campo` de la figura. */
@@ -40,11 +42,12 @@ const exacta = (valor) => ({ clase: 'exacta', valor });
  * @param {{
  *   documento: Document,
  *   ventana: object,
- *   despachar: (transicion: Function, ...argumentos: unknown[]) => object
+ *   despachar: (transicion: Function, ...argumentos: unknown[]) => object,
+ *   catalogo?: ReadonlyArray<import('./estado.js').Ejemplo>
  * }} opciones
  * @returns {{ render: (estado: object) => void }}
  */
-export function crearVistaFiguras({ documento, ventana, despachar }) {
+export function crearVistaFiguras({ documento, ventana, despachar, catalogo = [] }) {
   const formulario = porId(documento, 'figura-formulario');
   const tipos = [...porId(documento, 'figura-tipo').querySelectorAll('input[name="tipo"]')];
   const unidad = porId(documento, 'figura-unidad');
@@ -58,6 +61,20 @@ export function crearVistaFiguras({ documento, ventana, despachar }) {
   const unidades = [...documento.querySelectorAll('[data-unidad-figura]')];
   const resumen = porId(documento, 'figura-errores');
   const resultados = porId(documento, 'figura-resultados');
+  const selectorEjemplo = porId(documento, 'figura-ejemplo');
+  const ejemplos = catalogo.filter((ejemplo) => ejemplo?.seccion === 'figuras');
+
+  if (ejemplos.length > 0) {
+    prepararEjemplos(documento, {
+      contenedor: porId(documento, 'figura-ejemplos'),
+      selector: selectorEjemplo,
+      ejemplos,
+      alElegir: (id) => {
+        const estado = despachar(cargarEjemplo, id, catalogo);
+        if (estado.figura.resultado !== null) enfocar(porId(documento, ID_TITULO));
+      }
+    });
+  }
 
   for (const radio of tipos) {
     radio.addEventListener('change', () => {
@@ -92,13 +109,14 @@ export function crearVistaFiguras({ documento, ventana, despachar }) {
       ayudaTriangulo.hidden = !esTriangulo;
       describir(dimensiones.altura, ID_AYUDA_ALTURA, esTriangulo);
       for (const elemento of unidades) elemento.textContent = `(${entrada.unidad})`;
+      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada);
 
       if (ultimo.resultado === resultado && ultimo.errores === errores) return;
       ultimo = { resultado, errores };
       mostrarErrores(documento, { campos: CAMPOS, resumen, errores });
       resultados.replaceChildren(...(resultado === null
         ? [vacio(documento, errores)]
-        : [tarjetaResultado(documento, resultado, ventana, despachar), desplegablePasos(documento, resultado)]));
+        : [tarjetaResultado(documento, resultado, ventana, despachar), desplegablePasos(documento, resultado.pasos)]));
     }
   };
 }
@@ -167,15 +185,3 @@ function valorArea(documento, { nombre, simbolo, cantidad, unidad, nota }) {
     crear(documento, 'p', { clase: 'valor__nota', texto: nota }));
 }
 
-function desplegablePasos(documento, resultado) {
-  const sinPasos = resultado.pasos === null;
-  const contenido = crear(documento, 'div', { clase: 'desplegable__contenido' },
-    sinPasos
-      // Punto de integración de T-17: pasosFigura en ResultadoFigura.pasos.
-      ? pendiente(documento, 'El procedimiento paso a paso se mostrará aquí cuando se conecte en la integración final.')
-      : listaPasos(documento, resultado.pasos));
-  return crear(documento, 'details', { clase: 'desplegable', open: sinPasos ? null : true },
-    crear(documento, 'summary', { clase: 'desplegable__resumen' }, 'Procedimiento paso a paso',
-      sinPasos ? crear(documento, 'span', { clase: 'insignia', texto: 'Pendiente de integración' }) : null),
-    contenido);
-}

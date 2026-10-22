@@ -7,8 +7,9 @@
 //     { throwOnError: true, trust: false, output: 'htmlAndMathml' } y, solo si eso
 //     funcionó, reemplaza el contenido del elemento. Si falla la carga (de KaTeX o de su
 //     CSS) o la fórmula, el elemento conserva su texto y la promesa resuelve W-08.
-//   - mejorarDentro(raiz) hace lo mismo con cada [data-latex] de la raíz y devuelve un
-//     resumen con UN solo aviso W-08 si alguna falló, para mostrarlo una vez.
+//   - mejorarDentro(raiz) hace lo mismo con cada [data-latex] de la raíz que no se haya
+//     procesado ya y devuelve un resumen con UN solo aviso W-08 si alguna falló, para
+//     mostrarlo una vez. Marca cada elemento con data-katex="mejorada" o "fallida".
 //   - cancelar(elemento) invalida una mejora pendiente.
 // Las promesas NUNCA se rechazan.
 //
@@ -76,8 +77,10 @@ export function crearFormulasKatex({ cargarModulo = cargarPredeterminado, inform
     return carga;
   }
 
-  function fallar(etapa, error) {
+  /** W-08. Si se conoce el elemento, se marca data-katex="fallida" (su texto no cambia). */
+  function fallar(etapa, error, elemento = null) {
     informar(`formulasKatex: ${AVISO_W08.codigo} (${etapa}); se conserva el texto.`, error);
+    elemento?.setAttribute(MARCA, 'fallida');
     return Object.freeze({ estado: 'fallida', etapa, aviso: AVISO_W08 });
   }
 
@@ -93,7 +96,7 @@ export function crearFormulasKatex({ cargarModulo = cargarPredeterminado, inform
     try {
       katex = await cargar();
     } catch (error) {
-      return vigente() ? fallar('carga', error) : CANCELADA;
+      return vigente() ? fallar('carga', error, elemento) : CANCELADA;
     }
     if (!vigente()) return CANCELADA;
 
@@ -102,7 +105,7 @@ export function crearFormulasKatex({ cargarModulo = cargarPredeterminado, inform
     try {
       katex.render(latex, temporal, { ...OPCIONES_KATEX });
     } catch (error) {
-      return fallar('formula', error);
+      return fallar('formula', error, elemento);
     }
     elemento.replaceChildren(...Array.from(temporal.childNodes));
     elemento.setAttribute(MARCA, 'mejorada');
@@ -120,8 +123,14 @@ export function crearFormulasKatex({ cargarModulo = cargarPredeterminado, inform
     return mejorarSinProteger(elemento, latex).catch((error) => fallar('interna', error));
   }
 
+  /** Elementos que mejorarDentro ya está procesando, para no repetirlos. */
+  const enCurso = new WeakSet();
+
   /**
-   * Mejora todos los [data-latex] de la raíz y resume el resultado con un solo aviso.
+   * Mejora los [data-latex] de la raíz que todavía no se procesaron y resume el resultado
+   * con un solo aviso. Se saltan los ya marcados con data-katex ('mejorada' o 'fallida')
+   * y los que tienen una mejora en curso: una fórmula que no cambió no se vuelve a dibujar
+   * (T-17). Una vista que repinta crea elementos nuevos, sin marca.
    * @param {ParentNode} raiz
    * @returns {Promise<Readonly<{ total: number, mejoradas: number, fallidas: number, canceladas: number,
    *   aviso: typeof AVISO_W08 | null }>>}
@@ -129,12 +138,15 @@ export function crearFormulasKatex({ cargarModulo = cargarPredeterminado, inform
   async function mejorarDentro(raiz) {
     let elementos;
     try {
-      elementos = Array.from(raiz.querySelectorAll('[data-latex]'));
+      elementos = Array.from(raiz.querySelectorAll('[data-latex]'))
+        .filter((elemento) => !elemento.hasAttribute(MARCA) && !enCurso.has(elemento));
     } catch (error) {
       informar('formulasKatex: no se pudieron buscar las fórmulas.', error);
       return Object.freeze({ total: 0, mejoradas: 0, fallidas: 1, canceladas: 0, aviso: AVISO_W08 });
     }
-    const resultados = await Promise.all(elementos.map((elemento) => mejorar(elemento, elemento.getAttribute('data-latex'))));
+    for (const elemento of elementos) enCurso.add(elemento);
+    const resultados = await Promise.all(elementos.map((elemento) => mejorar(elemento, elemento.getAttribute('data-latex'))
+      .finally(() => enCurso.delete(elemento))));
     const contar = (estado) => resultados.filter((r) => r.estado === estado).length;
     const fallidas = contar('fallida');
     return Object.freeze({

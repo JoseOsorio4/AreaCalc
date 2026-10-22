@@ -254,6 +254,18 @@ export function cifra(documento, cantidad, unidad, { enQuetzales = false } = {})
 }
 
 /**
+ * Una advertencia con su código delante: «W-07 La gráfica no está disponible…».
+ * @param {Document} documento
+ * @param {{ codigo: string, mensaje: string }} aviso Advertencia del caso de uso o de un adaptador.
+ * @param {string} [etiqueta]
+ * @returns {HTMLElement}
+ */
+export function avisoAdvertencia(documento, aviso, etiqueta = 'li') {
+  return crear(documento, etiqueta, { clase: 'aviso' },
+    crear(documento, 'span', { clase: 'aviso__codigo', texto: aviso.codigo }), ` ${aviso.mensaje}`);
+}
+
+/**
  * Lista de advertencias, con su código (requirements §10). Vacía → null.
  * @param {Document} documento
  * @param {ReadonlyArray<Advertencia>} advertencias
@@ -262,14 +274,13 @@ export function cifra(documento, cantidad, unidad, { enQuetzales = false } = {})
 export function listaAdvertencias(documento, advertencias) {
   if (!advertencias || advertencias.length === 0) return null;
   return crear(documento, 'ul', { clase: 'avisos', 'aria-label': 'Advertencias' },
-    advertencias.map((aviso) => crear(documento, 'li', { clase: 'aviso' },
-      crear(documento, 'span', { clase: 'aviso__codigo', texto: aviso.codigo }), ` ${aviso.mensaje}`)));
+    advertencias.map((aviso) => avisoAdvertencia(documento, aviso)));
 }
 
 /**
  * Lista numerada de pasos con su versión en texto (R-09.8). La versión LaTeX queda en
- * `data-latex` del texto del paso para que formulasKatex.mejorar (T-16) la represente;
- * hasta entonces se ve el texto.
+ * `data-latex` del texto del paso; main.js la mejora con formulasKatex tras pintar
+ * (T-17). Si KaTeX falla, se sigue leyendo el texto.
  * @param {Document} documento
  * @param {ReadonlyArray<Paso>} pasos
  * @returns {HTMLElement}
@@ -283,12 +294,51 @@ export function listaPasos(documento, pasos) {
 }
 
 /**
- * Aviso de una parte que conecta una tarea posterior. Dice qué falta; no simula datos.
+ * Procedimiento en un panel desplegable, abierto por defecto (design §14.2).
  * @param {Document} documento
- * @param {string} texto
+ * @param {ReadonlyArray<Paso>} pasos
+ * @param {string} [titulo]
+ * @returns {HTMLElement}
  */
-export function pendiente(documento, texto) {
-  return crear(documento, 'p', { clase: 'pendiente', texto });
+export function desplegablePasos(documento, pasos, titulo = 'Procedimiento paso a paso') {
+  return crear(documento, 'details', { clase: 'desplegable', open: true },
+    crear(documento, 'summary', { clase: 'desplegable__resumen', texto: titulo }),
+    crear(documento, 'div', { clase: 'desplegable__contenido' }, listaPasos(documento, pasos)));
+}
+
+// ── Selector de ejemplos (R-13; T-16 y T-17) ─────────────────────────
+
+/**
+ * Llena y muestra un selector de ejemplos. Al elegir uno, llama a `alElegir(id)`, que
+ * despacha cargarEjemplo: el mismo camino que una entrada manual (R-13.2). El título ya
+ * empieza por el origen del ejemplo (R-13.1).
+ * @param {Document} documento
+ * @param {{ contenedor: HTMLElement, selector: HTMLSelectElement,
+ *   ejemplos: ReadonlyArray<{ id: string, titulo?: string }>, alElegir: (id: string) => void }} opciones
+ */
+export function prepararEjemplos(documento, { contenedor, selector, ejemplos, alElegir }) {
+  selector.replaceChildren(
+    crear(documento, 'option', { value: '', texto: 'Elija un ejemplo…' }),
+    ...ejemplos.map((ejemplo) => crear(documento, 'option', { value: ejemplo.id, texto: ejemplo.titulo ?? ejemplo.id })));
+  contenedor.hidden = false;
+  selector.addEventListener('change', () => {
+    if (selector.value !== '') alElegir(selector.value);
+  });
+}
+
+/**
+ * Si la entrada ya no coincide con el ejemplo elegido (el usuario editó un campo), el
+ * selector vuelve a «Elija un ejemplo…»: así no rotula como «simulado» un dato propio.
+ * @param {HTMLSelectElement} selector
+ * @param {ReadonlyArray<{ id: string, entrada: Record<string, string> }>} ejemplos
+ * @param {Record<string, string>} entrada
+ */
+export function sincronizarEjemplo(selector, ejemplos, entrada) {
+  if (selector.value === '') return;
+  const elegido = ejemplos.find((ejemplo) => ejemplo.id === selector.value);
+  const coincide = elegido !== undefined
+    && Object.entries(elegido.entrada).every(([campo, valor]) => entrada[campo] === valor);
+  if (!coincide) selector.value = '';
 }
 
 /**

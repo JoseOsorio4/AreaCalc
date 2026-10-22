@@ -30,6 +30,12 @@ describe('casos de referencia', () => {
     expect(valor.areaM2).toEqual({ clase: 'exacta', valor: esperado.areaM2.valor });
   });
 
+  it('CR-10: el procedimiento termina con la conversión a m² (formulario §8)', () => {
+    const { pasos } = valida(CASOS['CR-10'].entrada);
+    expect(pasos.map((p) => p.id)).toEqual(['datos', 'formula', 'sustitucion', 'resultado', 'conversion']);
+    expect(pasos.at(-1).texto).toBe('A = 20000 cm² ÷ 10 000 = 2 m²'); // 20 000 cm² = 2 m² (requirements §14)
+  });
+
   it('CR-19: triángulo 4 × 3 m → 6 m²', () => {
     const { entrada, esperado } = CASOS['CR-19'].subcasos[0];
     const valor = valida(entrada);
@@ -111,13 +117,16 @@ describe('contrato ResultadoFigura (design §10)', () => {
     ['rectangulo', { base: '4', altura: '2' }, 'A = b × h'],
     ['triangulo', { base: '4', altura: '3' }, 'A = (b × h)/2'],
     ['circulo', { radio: '5' }, 'A = π r²']
-  ])('%s: fórmula del formulario §8, dimensiones exactas y pasos pendientes de T-12', (tipo, dimensiones, formula) => {
+  ])('%s: fórmula del formulario §8, dimensiones exactas y procedimiento de design §14.2', (tipo, dimensiones, formula) => {
     const valor = valida({ tipo, unidad: 'm', ...dimensiones });
     expect(Object.keys(valor).sort())
       .toEqual(['area', 'areaM2', 'dimensiones', 'entrada', 'formula', 'pasos', 'tipo', 'unidad', 'unidadArea']);
     expect(valor.formula.texto).toBe(formula);
     expect(valor.formula.latex.length).toBeGreaterThan(0);
-    expect(valor.pasos).toBeNull();
+    // T-17: pasosFigura conectado; en m no hay paso de conversión (design §14.2).
+    expect(valor.pasos.map((p) => p.id)).toEqual(['datos', 'formula', 'sustitucion', 'resultado']);
+    expect(valor.pasos[1].texto).toBe(formula);
+    expect(Object.isFrozen(valor.pasos)).toBe(true);
     expect(valor.entrada).toEqual({ tipo, unidad: 'm', ...dimensiones });
     expect(Object.keys(valor.dimensiones)).toEqual(Object.keys(dimensiones));
     expect(Object.isFrozen(valor)).toBe(true);

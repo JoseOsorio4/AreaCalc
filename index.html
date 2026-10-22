@@ -200,6 +200,7 @@
                   <figure id="perfil-grafica" class="grafica" data-grafica aria-labelledby="perfil-grafica-titulo"></figure>
                 </section>
 
+                <div id="perfil-aviso-formulas" class="aviso-formulas" role="status"></div>
                 <div id="perfil-detalles" class="detalles"></div>
               </div>
             </div>
@@ -280,6 +281,11 @@
                   <h2 class="tarjeta__titulo">Medidas</h2>
                 </div>
 
+                <div id="figura-ejemplos" class="campo" hidden>
+                  <label class="campo__etiqueta" for="figura-ejemplo">Ejemplo</label>
+                  <select id="figura-ejemplo" class="campo__control"></select>
+                </div>
+
                 <div class="campo">
                   <label class="campo__etiqueta" for="figura-unidad">Unidad de longitud</label>
                   <select id="figura-unidad" class="campo__control" name="unidad">
@@ -312,7 +318,10 @@
                 <div id="figura-errores" class="resumen-errores" role="alert"></div>
               </form>
 
-              <div id="figura-resultados" class="resultados" aria-live="polite"></div>
+              <div class="columna">
+                <div id="figura-resultados" class="resultados" aria-live="polite"></div>
+                <div id="figura-aviso-formulas" class="aviso-formulas" role="status"></div>
+              </div>
             </div>
           </section>
 
@@ -378,12 +387,12 @@
             </div>
 
             <div id="estimacion-resultados" class="resultados" aria-live="polite"></div>
+            <div id="estimacion-aviso-formulas" class="aviso-formulas" role="status"></div>
           </section>
         </main>
 
         <footer class="pie">
           <p>Cálculo exacto con fracciones; los decimales se redondean solo al mostrarlos.</p>
-          <p><a href="./prueba-recursos.html">Página temporal de prueba de recursos</a></p>
         </footer>
       </div>
     </div>

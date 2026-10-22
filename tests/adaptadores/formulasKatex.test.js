@@ -226,9 +226,10 @@ describe('si KaTeX falla, queda el texto y se informa W-08', () => {
     const p = parrafo(TEXTO);
     expect(await adaptador.mejorar(p, LATEX)).toEqual({ estado: 'fallida', etapa: 'carga', aviso: AVISO_W08 });
     expect(p.textContent).toBe(TEXTO);
-    expect(p.hasAttribute('data-katex')).toBe(false);
+    expect(p.getAttribute('data-katex')).toBe('fallida'); // marca para el aviso de la sección (T-17)
     expect(informes).toHaveLength(1);
     expect(await adaptador.mejorar(p, LATEX)).toEqual({ estado: 'mejorada' });
+    expect(p.getAttribute('data-katex')).toBe('mejorada');
     expect(cargar).toHaveBeenCalledTimes(2);
   });
 
@@ -364,6 +365,25 @@ describe('mejorarDentro(raiz)', () => {
     const resumen = await mal.adaptador.mejorarDentro(mal.cuerpo);
     expect(resumen).toMatchObject({ total: 3, mejoradas: 0, fallidas: 3, aviso: AVISO_W08 });
     expect(mal.cuerpo.textContent).toBe('abc');
+  });
+
+  it('no vuelve a procesar fórmulas ya mejoradas, fallidas ni en curso (T-17)', async () => {
+    const carga = diferido();
+    const katex = katexFalso();
+    const { adaptador, cuerpo, parrafo } = entorno({ cargarModulo: () => carga.promesa, katex });
+    parrafo('a', 'a');
+    parrafo('malo', '\\malo{');
+    const primera = adaptador.mejorarDentro(cuerpo);
+    // Un repintado mientras la primera sigue en curso no las repite.
+    const mientras = adaptador.mejorarDentro(cuerpo);
+    carga.resolver({ default: katex });
+    expect(await mientras).toMatchObject({ total: 0, aviso: null });
+    expect(await primera).toMatchObject({ total: 2, mejoradas: 1, fallidas: 1 });
+    // Después, ni la mejorada ni la fallida se vuelven a dibujar; un elemento nuevo, sí.
+    const nuevo = parrafo('b', 'b');
+    expect(await adaptador.mejorarDentro(cuerpo)).toMatchObject({ total: 1, mejoradas: 1, aviso: null });
+    expect(nuevo.textContent).toBe('K[b]');
+    expect(katex.render).toHaveBeenCalledTimes(3);
   });
 
   it('una raíz inválida da W-08 sin rechazar', async () => {

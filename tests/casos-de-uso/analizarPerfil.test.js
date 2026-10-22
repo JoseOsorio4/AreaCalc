@@ -305,16 +305,36 @@ describe('errores internos (R-19.4, R-19.5)', () => {
 });
 
 describe('contrato ResultadoPerfil (design §10)', () => {
-  it('tiene los campos de design §10; pasos y grafica quedan para T-12 y T-15', () => {
+  it('tiene los campos de design §10, con los pasos (T-12) y la gráfica (T-15) conectados en T-17', () => {
     const resultado = perfil(CASOS['CR-01'].entrada);
     expect(Object.keys(resultado.valor).sort()).toEqual([
       'advertencias', 'analisis', 'aptitud', 'area', 'entrada', 'grafica', 'integral', 'intervalo', 'modelo',
       'pasos', 'promedio', 'rectangulo', 'unidades'
     ]);
-    expect(resultado.valor.pasos).toBeNull();
-    expect(resultado.valor.grafica).toBeNull();
     expect(resultado.advertencias).toEqual(resultado.valor.advertencias);
     expect(resultado.valor.entrada).toEqual({ ...CASOS['CR-01'].entrada });
+  });
+
+  it('CR-01: los pasos muestran el resultado del formulario §4.2 y la gráfica incluye a y b', () => {
+    const { pasos, grafica } = valido(CASOS['CR-01'].entrada);
+    expect(Object.keys(pasos).sort()).toEqual(['area', 'promedio']);
+    expect(pasos.area.find((p) => p.id === 'resultado').texto).toBe(`A = 243/4 ${CASOS['CR-01'].esperado.I.decimal} u²`);
+    expect(pasos.promedio.map((p) => p.id)).toEqual(['formula', 'sustitucion', 'integral', 'division', 'unidades', 'interpretacion']);
+    // Ningún resultado definido lleva «+C» (R-09.7).
+    expect([...pasos.area, ...pasos.promedio].some((p) => /\+ ?C\b/.test(p.texto))).toBe(false);
+    expect(grafica.curva.x).toContain(1);
+    expect(grafica.curva.x).toContain(4);
+    expect(grafica.ceros.map((c) => c.etiqueta)).toEqual(['x = 1 (exacto)']);
+  });
+
+  it('si la gráfica no se puede dibujar: grafica null, W-07 y los resultados exactos se conservan (R-10.6)', () => {
+    const resultado = perfil({ textoFuncion: '(((1000000^3)^3)^3)^3', textoA: '0', textoB: '1' });
+    expect(resultado.ok).toBe(true);
+    expect(resultado.valor.grafica).toBeNull();
+    expect(resultado.valor.integral.I).toEqual(q(10n ** 486n)); // 10⁴⁸⁶·(1 − 0)
+    expect(resultado.valor.area.area).toEqual({ clase: 'exacta', valor: q(10n ** 486n) });
+    expect(resultado.advertencias.map((a) => a.codigo)).toEqual(['W-07']);
+    expect(resultado.valor.pasos.area.length).toBeGreaterThan(0);
   });
 
   it('el resultado y sus partes están congelados', () => {
@@ -324,13 +344,26 @@ describe('contrato ResultadoPerfil (design §10)', () => {
     }
   });
 
-  it('W-02 y W-03 llevan el cero exacto; W-04, la cota exacta', () => {
+  it('W-02 y W-03 llevan el cero exacto, escrito con formato.js (T-17)', () => {
     const tangencia = valido(CASOS['CR-07'].entradas[0]).advertencias;
     expect(tangencia.map((a) => [a.codigo, a.datos.x])).toEqual([['W-02', '1']]);
     const extremo = valido(CASOS['CR-01'].entrada).advertencias;
     expect(extremo.map((a) => [a.codigo, a.datos.x])).toEqual([['W-03', '1']]);
+    // Negativos con «−» (U+2212) y fracciones: (x + 1)² en [−2, 0] y x + 1/2 en [−1/2, 1].
+    const negativa = valido({ textoFuncion: '(x+1)^2', textoA: '-2', textoB: '0' }).advertencias;
+    expect(negativa.find((a) => a.codigo === 'W-02').mensaje).toContain('x = \u22121 sin cambiar');
+    const fraccion = valido({ textoFuncion: 'x + 1/2', textoA: '-0.5', textoB: '1' }).advertencias;
+    expect(fraccion.find((a) => a.codigo === 'W-03').datos.x).toBe('\u22121/2');
+  });
+
+  it('W-04 lleva la cota con una cifra redondeada hacia arriba, que sigue acotando el error', () => {
     const { advertencias, area } = valido(CASOS['CR-15'].entrada);
     const w04 = advertencias.find((a) => a.codigo === 'W-04');
-    expect(leer(w04.datos.cota)).toEqual(area.area.cota);
+    const partes = /^(\d)·10⁻([⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/.exec(w04.datos.cota);
+    expect(partes, w04.datos.cota).not.toBeNull();
+    const exponente = BigInt([...partes[2]].map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c)).join(''));
+    const mostrada = q(BigInt(partes[1]), 10n ** exponente);
+    expect(comparar(mostrada, area.area.cota)).toBeGreaterThanOrEqual(0); // ≥ la cota exacta
+    expect(w04.mensaje).toContain(`≤ ${w04.datos.cota})`);
   });
 });

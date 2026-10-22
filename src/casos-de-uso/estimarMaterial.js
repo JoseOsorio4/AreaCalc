@@ -8,10 +8,14 @@
 //     Nunca se usa la integral con signo (R-16.4): el área útil es A_geo.
 //   - Figura válida: siempre es apta (R-16.1); su área ya está en m² (R-15.5).
 //   - Precio y adicional se validan por separado y se acumulan sus errores.
+//   - El procedimiento (`pasos`, añadido a design §10 en T-17) lo escribe
+//     presentacion/pasos.js (pasosEstimacion) con los valores ya calculados; la vista
+//     solo lo muestra y no recalcula los costos.
 // Que la fuente siga vigente lo garantiza el estado de la interfaz (T-13; D-04).
 import { crearAdvertencia, crearError } from '../nucleo/errores.js';
 import { estimarMaterial as calcularEstimacion } from '../nucleo/materiales.js';
 import { REGLAS, conCampo, leerNumero } from '../nucleo/numeros.js';
+import { pasosEstimacion } from '../presentacion/pasos.js';
 import { errorInterno, erroresDe, exito, fracaso, protegido } from './comun.js';
 
 /**
@@ -34,6 +38,8 @@ import { errorInterno, erroresDe, exito, fracaso, protegido } from './comun.js';
  * @property {Cantidad} costoBase Q.
  * @property {Cantidad} costoEstimado Q.
  * @property {ReadonlyArray<string>} supuestos Textos de W-06 y, si corresponde, W-05.
+ * @property {ReadonlyArray<import('../presentacion/pasos.js').Paso>} pasos pasosEstimacion:
+ *   areaUtil, adicional, costoBase, costoEstimado y supuestos (añadido a design §10 en T-17).
  */
 
 const REGLAS_PRECIO = conCampo(REGLAS.precio, 'precio', 'precio');
@@ -97,7 +103,7 @@ export function estimarMaterial(entrada) {
     if (errores.length > 0) return fracaso(errores);
     const estimacion = calcularEstimacion(fuente.areaUtil, precio.valor, adicional.valor);
     const avisos = [crearAdvertencia('W-06'), ...(entrada.datosSimulados === true ? [crearAdvertencia('W-05')] : [])];
-    return exito({
+    const calculado = {
       descripcionFuente: fuente.descripcion,
       areaUtilM2: estimacion.areaUtil,
       adicional: exacta(adicional.valor),
@@ -107,6 +113,7 @@ export function estimarMaterial(entrada) {
       costoBase: estimacion.costoBase,
       costoEstimado: estimacion.costoEstimado,
       supuestos: Object.freeze(avisos.map((aviso) => aviso.mensaje))
-    }, avisos);
+    };
+    return exito({ ...calculado, pasos: pasosEstimacion(calculado) }, avisos);
   });
 }

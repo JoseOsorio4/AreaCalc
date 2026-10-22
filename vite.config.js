@@ -10,11 +10,8 @@ export default defineConfig({
   base: './',
   build: {
     rollupOptions: {
-      input: {
-        principal: resolve(raiz, 'index.html'),
-        // Página temporal de T-01. Se elimina en T-17 junto con sus archivos.
-        pruebaRecursos: resolve(raiz, 'prueba-recursos.html')
-      }
+      // La página temporal de T-01 (prueba-recursos.html) se retiró en T-17.
+      input: { principal: resolve(raiz, 'index.html') }
     }
   },
   test: {

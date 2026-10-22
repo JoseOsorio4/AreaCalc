@@ -7,14 +7,13 @@
 // datos simulados, W-05).
 //
 // La vista no calcula: despacha editarEstimacion y calcularEstimacion (T-13) y escribe
-// el ResultadoEstimacion con presentacion/formato.js.
-//
-// Punto de integración (no se simula): ResultadoEstimacion no trae pasos; el
-// procedimiento de la estimación (pasosEstimacion, presentacion/pasos.js) lo conecta T-17.
+// el ResultadoEstimacion con presentacion/formato.js. El procedimiento llega hecho en
+// ResultadoEstimacion.pasos (pasosEstimacion, desde estimarMaterial; T-17): la vista
+// solo lo muestra, sin importar pasos.js ni recalcular los costos.
 import { calcularEstimacion, editarEstimacion } from './estado.js';
 import { cantidadTexto, fraccionTexto } from '../presentacion/formato.js';
 import {
-  cifra, crear, enfocar, estadoVacio, fijarValor, mostrarErrores, pendiente, porId, textoError, tituloResumen
+  cifra, crear, desplegablePasos, enfocar, estadoVacio, fijarValor, mostrarErrores, porId, textoError, tituloResumen
 } from './vistaComun.js';
 
 /** Dónde se muestra cada `error.campo` de la estimación; E-MOD-04 ('estimacion') va solo al resumen. */
@@ -70,9 +69,9 @@ export function crearVistaEstimacion({ documento, despachar }) {
       }
       if (ultimo.resultado !== estimacion.resultado || ultimo.errores !== estimacion.errores) {
         mostrarErrores(documento, { campos: CAMPOS, resumen, errores: estimacion.errores });
-        resultados.replaceChildren(estimacion.resultado === null
-          ? vacio(documento, estimacion)
-          : tarjetaResultado(documento, estimacion.resultado));
+        resultados.replaceChildren(...(estimacion.resultado === null
+          ? [vacio(documento, estimacion)]
+          : tarjetaResultado(documento, estimacion.resultado)));
       }
       ultimo = {
         fuente: estimacion.fuente, origen, perfil: estado.perfil.resultado,
@@ -161,6 +160,10 @@ function indicador(documento, termino, contenido, total = false) {
 }
 
 function tarjetaResultado(documento, resultado) {
+  return [tarjetaCostos(documento, resultado), desplegablePasos(documento, resultado.pasos, 'Procedimiento de la estimación')];
+}
+
+function tarjetaCostos(documento, resultado) {
   return crear(documento, 'section', { clase: 'tarjeta', 'aria-labelledby': ID_TITULO },
     crear(documento, 'div', { clase: 'resumen-perfil__cabecera' },
       crear(documento, 'h2', { clase: 'tarjeta__titulo', id: ID_TITULO, texto: 'Estimación' }),
@@ -175,7 +178,5 @@ function tarjetaResultado(documento, resultado) {
       crear(documento, 'li', { clase: 'etiqueta-dato', texto: `Precio = ${cantidadTexto(resultado.precio, 'Q/m²')}` })),
     crear(documento, 'h3', { clase: 'subtitulo', texto: 'Supuestos de este cálculo' }),
     crear(documento, 'ul', { clase: 'avisos' },
-      resultado.supuestos.map((texto) => crear(documento, 'li', { clase: 'aviso', texto }))),
-    // Punto de integración de T-17: pasosEstimacion.
-    pendiente(documento, 'El procedimiento de la estimación se mostrará aquí cuando se conecte en la integración final.'));
+      resultado.supuestos.map((texto) => crear(documento, 'li', { clase: 'aviso', texto }))));
 }

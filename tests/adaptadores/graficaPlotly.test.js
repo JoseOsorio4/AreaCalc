@@ -151,13 +151,14 @@ function plotlyFalso() {
   };
 }
 
-function entorno({ api = plotlyFalso(), cargarModulo } = {}) {
+function entorno({ api = plotlyFalso(), cargarModulo, ceder = () => Promise.resolve() } = {}) {
   const observadores = [];
   const marcos = [];
   const informes = [];
   const cargar = cargarModulo ?? vi.fn(async () => ({ default: api }));
   const adaptador = crearGraficaPlotly({
     cargarModulo: cargar,
+    ceder,
     crearObservador: (alCambiar) => {
       const observador = {
         alCambiar,
@@ -510,6 +511,31 @@ describe('limpiar() y dibujos pendientes', () => {
     expect(lienzoNuevo.dibujo.data).toEqual(figuraPlotly(CR03).data);
   });
 
+  it('cede un fotograma antes de Plotly.react, para que la vista pinte primero los resultados (T-17)', async () => {
+    const fotograma = diferido();
+    const api = plotlyFalso();
+    const { adaptador, contenedor } = entorno({ api, ceder: () => fotograma.promesa });
+    const promesa = adaptador.dibujar(contenedor, CR05);
+    await esperar();
+    expect(api.react).not.toHaveBeenCalled(); // Plotly ya cargó, pero espera al fotograma
+    fotograma.resolver();
+    expect(await promesa).toEqual({ estado: 'dibujada' });
+    expect(api.react).toHaveBeenCalledTimes(1);
+  });
+
+  it('limpiar mientras se espera el fotograma: no se dibuja nada', async () => {
+    const fotograma = diferido();
+    const api = plotlyFalso();
+    const { adaptador, contenedor } = entorno({ api, ceder: () => fotograma.promesa });
+    const promesa = adaptador.dibujar(contenedor, CR05);
+    await esperar();
+    adaptador.limpiar(contenedor);
+    fotograma.resolver();
+    expect(await promesa).toEqual({ estado: 'cancelada' });
+    expect(api.react).not.toHaveBeenCalled();
+    expect(contenedor.childNodes).toEqual([]);
+  });
+
   it('limpiar es idempotente y no lanza aunque Plotly.purge falle', async () => {
     const api = plotlyFalso();
     api.purge.mockImplementation(() => {
@@ -558,6 +584,17 @@ describe('ajuste al ancho del contenedor (menú lateral y ventana)', () => {
     await esperar();
     expect(api.Plots.resize).not.toHaveBeenCalled();
     observador.alCambiar(tamano(700));
+    fotograma();
+    await esperar();
+    expect(api.Plots.resize).toHaveBeenCalledTimes(1);
+  });
+
+  it('dibujada con la sección oculta (primera medida 0): al verse, se ajusta al ancho real', async () => {
+    const { adaptador, api, observadores, contenedor, fotograma } = entorno();
+    await adaptador.dibujar(contenedor, CR05);
+    const [observador] = observadores;
+    observador.alCambiar(tamano(0, 0));
+    observador.alCambiar(tamano(557));
     fotograma();
     await esperar();
     expect(api.Plots.resize).toHaveBeenCalledTimes(1);

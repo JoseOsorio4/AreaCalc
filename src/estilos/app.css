@@ -1326,16 +1326,6 @@ select.campo__control {
   padding: 0 var(--espacio-5) var(--espacio-5);
 }
 
-.insignia {
-  padding: 0.12rem 0.6rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 999px;
-  background: var(--superficie-2);
-  color: var(--texto-suave);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
 .pasos {
   display: grid;
   gap: var(--espacio-3);
@@ -1387,12 +1377,32 @@ select.campo__control {
   color: var(--marino);
 }
 
-.pendiente {
-  padding: var(--espacio-3) var(--espacio-4);
-  border: 1px dashed #b9c8de;
-  border-radius: var(--radio-medio);
-  background: var(--superficie-2);
-  color: var(--texto-suave);
+/* Aviso W-08 de la sección: uno solo, y solo mientras alguna fórmula se ve como texto (T-17). */
+.aviso-formulas:empty {
+  display: none;
+}
+
+/* Números de cientos de cifras y fórmulas largas (T-17): se parten o se desplazan dentro
+   de su tarjeta, sin perder ninguna cifra y sin desbordar la página. */
+.resultados,
+.detalles,
+.banda-fuente,
+.aviso-formulas {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.resumen-perfil__cabecera > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Una fórmula de KaTeX no se parte: si no cabe, se desplaza en horizontal dentro de su línea. */
+[data-katex="mejorada"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.2em;
 }
 
 /* Banda oscura: acceso a la estimación y fuente del área. */

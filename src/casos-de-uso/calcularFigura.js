@@ -8,10 +8,12 @@
 //
 // El trapecio es DESEABLE y queda fuera del MVP (tasks T-D1): la interfaz no lo
 // ofrece, así que un tipo 'trapecio' es un error de programación (E-SIS-02).
-// Pendiente de T-12: `pasos` vale null hasta que exista presentacion/pasos.js.
+// El procedimiento lo escribe presentacion/pasos.js (pasosFigura, T-12) con los
+// valores ya calculados (T-17).
 import { areaCirculo, areaRectangulo, areaTriangulo } from '../nucleo/geometria.js';
 import { REGLAS, conCampo, leerNumero } from '../nucleo/numeros.js';
 import { areaAMetrosCuadrados, unidadDeArea } from '../nucleo/unidades.js';
+import { pasosFigura } from '../presentacion/pasos.js';
 import { erroresDe, exito, fracaso, protegido } from './comun.js';
 
 /**
@@ -32,7 +34,7 @@ import { erroresDe, exito, fracaso, protegido } from './comun.js';
  * @property {'cm²' | 'm²'} unidadArea
  * @property {Cantidad} areaM2
  * @property {{ texto: string, latex: string }} formula
- * @property {null} pasos Pendiente de T-12.
+ * @property {ReadonlyArray<import('../presentacion/pasos.js').Paso>} pasos pasosFigura (T-12).
  */
 
 /** Dimensiones de cada figura: [campo, etiqueta del mensaje]. */
@@ -86,7 +88,7 @@ export function calcularFigura(entrada) {
     const area = figura.area(dimensiones);
     const copia = { tipo: entrada.tipo, unidad: entrada.unidad };
     for (const [campo] of figura.dimensiones) copia[campo] = entrada[campo];
-    return exito({
+    const calculado = {
       entrada: Object.freeze(copia),
       tipo: entrada.tipo,
       unidad: entrada.unidad,
@@ -94,8 +96,8 @@ export function calcularFigura(entrada) {
       area,
       unidadArea: unidadDeArea(entrada.unidad),
       areaM2: areaAMetrosCuadrados(area, entrada.unidad),
-      formula: figura.formula,
-      pasos: null // T-12
-    });
+      formula: figura.formula
+    };
+    return exito({ ...calculado, pasos: pasosFigura(calculado) });
   });
 }

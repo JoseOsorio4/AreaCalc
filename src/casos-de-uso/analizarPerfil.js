@@ -8,13 +8,14 @@
 //   3. integral, análisis de signo, área, promedio y rectángulo, en ese orden
 //      (nucleo/integral.js, ceros.js, area.js y promedio.js);
 //   4. aptitud para estimar (design §9) y advertencias W-01 a W-04 y W-09.
+//   5. procedimientos con presentacion/pasos.js y datos de la gráfica con
+//      presentacion/datosGrafica.js (design §4, pasos 8 y 9; T-17). Los dos solo
+//      formatean lo ya calculado. Si la gráfica no se puede preparar (valores no
+//      finitos), `grafica` vale null y se añade W-07; los resultados exactos se
+//      conservan (R-10.6).
 // Todas las decisiones (signo, área cero, aptitud) son exactas: no se convierte
-// ningún resultado a Number.
-//
-// Pendiente de otras tareas (design §4, pasos 8 y 9): `pasos` lo producirá
-// presentacion/pasos.js (T-12) y `grafica`, presentacion/datosGrafica.js (T-15).
-// Hasta que existan y T-17 los conecte aquí, los dos campos valen null; no se
-// inventan pasos ni puntos de la gráfica.
+// ningún resultado a Number. Las cifras de W-02, W-03 y W-04 se escriben con
+// presentacion/formato.js, el único lugar donde se redondea.
 import { analizarSigno } from '../nucleo/ceros.js';
 import { areaGeometrica } from '../nucleo/area.js';
 import { crearAdvertencia, crearError } from '../nucleo/errores.js';
@@ -24,6 +25,9 @@ import { rectanguloEquivalente, valorPromedio } from '../nucleo/promedio.js';
 import * as racional from '../nucleo/racional.js';
 import { unidadesDe } from '../nucleo/unidades.js';
 import { interpretarFuncion } from '../expresiones/normalizar.js';
+import { datosGrafica } from '../presentacion/datosGrafica.js';
+import { cotaTexto, fraccionTexto } from '../presentacion/formato.js';
+import { pasosPerfil } from '../presentacion/pasos.js';
 import { errorInterno, erroresDe, exito, fracaso, protegido } from './comun.js';
 
 /**
@@ -56,8 +60,10 @@ import { errorInterno, erroresDe, exito, fracaso, protegido } from './comun.js';
  * @property {{ longitud: Racional, fProm: Racional }} promedio
  * @property {RectanguloEquivalente} rectangulo
  * @property {Aptitud} aptitud
- * @property {null} pasos Pendiente de T-12 (pasosArea y pasosPromedio).
- * @property {null} grafica Pendiente de T-15 (datosGrafica).
+ * @property {{ area: ReadonlyArray<import('../presentacion/pasos.js').Paso>,
+ *   promedio: ReadonlyArray<import('../presentacion/pasos.js').Paso> }} pasos pasosPerfil (T-12).
+ * @property {import('../presentacion/datosGrafica.js').DatosGrafica | null} grafica datosGrafica
+ *   (T-15); null si no se puede dibujar, con W-07 en las advertencias.
  * @property {ReadonlyArray<Advertencia>} advertencias
  */
 
@@ -89,24 +95,25 @@ function aptitudEstimacion(unidades, analisis, area) {
 /**
  * Advertencias del análisis (requirements §10): W-01 si cambia de signo, W-02 por
  * cada tangencia, W-03 por cada cero en un extremo, W-04 si hay ceros aproximados
- * y W-09 si f ≡ 0. Los valores van como fracción exacta (racional.aTexto); su
- * formato decimal será trabajo de presentacion/formato.js (T-11).
+ * y W-09 si f ≡ 0. Los ceros de W-02 y W-03 son siempre racionales y se escriben como
+ * fracción exacta («x = −1/2»); la cota de W-04, con una cifra redondeada hacia arriba
+ * para que siga siendo una cota («≤ 6·10⁻²⁵»). Los dos textos son de formato.js.
  */
 function advertenciasDe(analisis, area) {
   const lista = [];
   if (analisis.cambiaSigno) lista.push(crearAdvertencia('W-01'));
   for (const cero of analisis.ceros) {
-    if (cero.tipo === 'tangencia') lista.push(crearAdvertencia('W-02', { x: racional.aTexto(cero.valor) }));
+    if (cero.tipo === 'tangencia') lista.push(crearAdvertencia('W-02', { x: fraccionTexto(cero.valor) }));
   }
   for (const cero of analisis.ceros) {
-    if (cero.tipo === 'extremo') lista.push(crearAdvertencia('W-03', { x: racional.aTexto(cero.valor) }));
+    if (cero.tipo === 'extremo') lista.push(crearAdvertencia('W-03', { x: fraccionTexto(cero.valor) }));
   }
   if (analisis.hayAproximaciones) {
     if (area.area.clase !== 'aproximada') throw errorInterno('hay ceros aproximados y el área no es aproximada');
-    lista.push(crearAdvertencia('W-04', { cota: racional.aTexto(area.area.cota) }));
+    lista.push(crearAdvertencia('W-04', { cota: cotaTexto(area.area.cota) }));
   }
   if (analisis.identicamenteCero) lista.push(crearAdvertencia('W-09'));
-  return Object.freeze(lista);
+  return lista;
 }
 
 /**
@@ -133,9 +140,8 @@ export function analizarPerfil(entrada) {
     const area = areaGeometrica(integral, analisis);
     const promedio = valorPromedio(integral.I, a, b);
     const rectangulo = rectanguloEquivalente(analisis, promedio.fProm, a, b);
-    // 4. Aptitud y advertencias.
-    const advertencias = advertenciasDe(analisis, area);
-    return exito({
+    // 4. Aptitud y advertencias del análisis.
+    const calculado = {
       entrada: Object.freeze({
         textoFuncion: entrada.textoFuncion, textoA: entrada.textoA, textoB: entrada.textoB,
         interpretacion: entrada.interpretacion
@@ -148,9 +154,15 @@ export function analizarPerfil(entrada) {
       area,
       promedio,
       rectangulo,
-      aptitud: aptitudEstimacion(unidades, analisis, area),
-      pasos: null, // T-12
-      grafica: null, // T-15
+      aptitud: aptitudEstimacion(unidades, analisis, area)
+    };
+    // 5. Procedimientos y gráfica, a partir de lo ya calculado (design §4, pasos 8 y 9).
+    const grafica = datosGrafica(calculado);
+    const advertencias = Object.freeze([...advertenciasDe(analisis, area), ...grafica.advertencias]);
+    return exito({
+      ...calculado,
+      pasos: pasosPerfil(calculado),
+      grafica: grafica.datos,
       advertencias
     }, advertencias);
   });

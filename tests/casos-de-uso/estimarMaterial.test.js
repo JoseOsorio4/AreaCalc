@@ -146,14 +146,26 @@ describe('supuestos y contrato ResultadoEstimacion (design §10; R-17.5)', () =>
     expect(simulado.valor.supuestos[1]).toBe(CATALOGO['W-05'].plantilla);
   });
 
-  it('tiene los campos de design §10, más factorAdicional, y está congelado', () => {
+  it('tiene los campos de design §10, más factorAdicional y pasos, y está congelado', () => {
     const { valor } = valida({ fuente, textoPrecio: '50', textoAdicional: '10' });
     expect(Object.keys(valor).sort()).toEqual([
       'adicional', 'areaEstimadaM2', 'areaUtilM2', 'costoBase', 'costoEstimado', 'descripcionFuente', 'factorAdicional',
-      'precio', 'supuestos'
+      'pasos', 'precio', 'supuestos'
     ]);
     expect(Object.isFrozen(valor)).toBe(true);
     expect(Object.isFrozen(valor.supuestos)).toBe(true);
+    expect(Object.isFrozen(valor.pasos)).toBe(true);
+  });
+
+  it('pasos (T-17): el procedimiento de design §14.2 con los costos de CR-03, sin recalcularlos en la vista', () => {
+    const cr03 = fuentePerfil(CASOS['CR-03'].entrada, 'fisica');
+    const { textoPrecio, textoAdicional } = CASOS['CR-03'].entrada;
+    const { pasos } = valida({ fuente: cr03, textoPrecio, textoAdicional, datosSimulados: true }).valor;
+    expect(pasos.map((p) => p.id)).toEqual(['areaUtil', 'adicional', 'costoBase', 'costoEstimado', 'supuestos']);
+    const { costoBase, costoEstimado } = CASOS['CR-03'].esperado.estimacion;
+    expect(pasos[2].texto).toMatch(new RegExp(`${costoBase.decimal}$`)); // «… ≈ Q666.67»
+    expect(pasos[3].texto).toMatch(new RegExp(`${costoEstimado.decimal}$`)); // «… ≈ Q733.33»
+    expect(pasos[4].texto).toContain(CATALOGO['W-05'].plantilla);
   });
 
   it.each([

@@ -19,6 +19,8 @@
 // Concurrencia: cada dibujo lleva una generación por contenedor. Si mientras Plotly
 // carga o dibuja llega limpiar() u otro dibujar(), el dibujo anterior se cancela y, si
 // llegó a pintar, se purga: una gráfica vieja no puede reaparecer con datos nuevos.
+// Antes de Plotly.react se cede un fotograma (T-17), para que las tarjetas y los pasos
+// que la vista ya escribió se pinten sin esperar a la gráfica.
 //
 // Ancho: Plotly con `responsive: true` solo escucha el «resize» de la ventana. Al
 // contraer o expandir el menú lateral cambia el ancho del contenido sin ese evento, así
@@ -218,6 +220,18 @@ function observadorPredeterminado(alCambiar) {
   return typeof globalThis.ResizeObserver === 'function' ? new globalThis.ResizeObserver(alCambiar) : null;
 }
 
+/**
+ * Espera a que el navegador pinte (un fotograma y una tarea): así las tarjetas y los
+ * procedimientos, que la vista escribe antes, se ven sin esperar a Plotly (T-17).
+ */
+function cederPredeterminado() {
+  return new Promise((listo) => {
+    const despues = () => globalThis.setTimeout(listo, 0);
+    if (typeof globalThis.requestAnimationFrame === 'function') globalThis.requestAnimationFrame(despues);
+    else despues();
+  });
+}
+
 /** Ejecuta la tarea en el próximo fotograma y devuelve cómo cancelarla. */
 function programarPredeterminado(tarea) {
   if (typeof globalThis.requestAnimationFrame === 'function') {
@@ -238,6 +252,7 @@ const informarPredeterminado = (mensaje, error) => console.error(mensaje, error)
  *   crearObservador?: (alCambiar: (entradas: ReadonlyArray<{ contentRect: { width: number, height: number } }>) => void)
  *     => ({ observe: (elemento: object) => void, disconnect: () => void } | null),
  *   programar?: (tarea: () => void) => () => void,
+ *   ceder?: () => Promise<void>,
  *   informar?: (mensaje: string, error: unknown) => void
  * }} [dependencias]
  */
@@ -245,6 +260,7 @@ export function crearGraficaPlotly({
   cargarModulo = () => import('plotly.js-basic-dist-min'),
   crearObservador = observadorPredeterminado,
   programar = programarPredeterminado,
+  ceder = cederPredeterminado,
   informar = informarPredeterminado
 } = {}) {
   /** @type {Promise<object> | null} */
@@ -385,7 +401,11 @@ export function crearGraficaPlotly({
       const ultima = entradas[entradas.length - 1];
       if (ultima === undefined) return;
       const { width, height } = ultima.contentRect;
-      if (width === 0 || height === 0) return; // sección oculta: se ajusta al volver a verse
+      if (width === 0 || height === 0) {
+        // Sección oculta: se ajusta cuando vuelva a verse, también si se dibujó estando oculta.
+        registro.tamano = { width: 0, height: 0 };
+        return;
+      }
       const anterior = registro.tamano;
       registro.tamano = { width, height };
       // La primera notificación es la medida inicial: Plotly ya dibujó con ese tamaño.
@@ -425,6 +445,9 @@ export function crearGraficaPlotly({
     } catch (error) {
       return vigente() ? fallar(contenedor, registro, 'carga', error) : CANCELADA;
     }
+    if (!vigente()) return CANCELADA;
+    // Plotly tarda decenas de milisegundos en dibujar: primero se deja pintar lo demás.
+    await ceder();
     if (!vigente()) return CANCELADA;
 
     let lienzo = registro.lienzo;

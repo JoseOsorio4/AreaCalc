@@ -136,7 +136,9 @@ describe('cargados con cargarEjemplo, dan los resultados de referencia (R-13.2)'
       if (esperado.aptitudEnMetros.codigo) expect(resultado.aptitud.motivo).toBe(esperado.aptitudEnMetros.codigo);
     }
     // El resultado sale del caso de uso: todavía sin pasos ni gráfica (T-17).
-    expect([resultado.pasos, resultado.grafica]).toEqual([null, null]);
+    // Con T-17, el mismo camino trae los pasos y la gráfica de los casos de uso.
+    expect(resultado.pasos.area.length).toBeGreaterThan(0);
+    expect(resultado.grafica).not.toBeNull();
   });
 
   it.each([['CR-09'], ['CR-10']])('%s: área y área en m² con calcularFigura', (id) => {
