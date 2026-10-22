@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-14.
-- Último trabajo: el commit «T-14: revisión visual de la interfaz», encima de `bd03fa0` (T-14). Para ver los SHA: `git log --oneline -n 5`.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-15.
+- Último trabajo: el commit «T-15: datos de la gráfica y adaptador de Plotly», encima de `13c6c5c` (revisión visual de T-14, **apariencia aprobada por el equipo**). Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -41,12 +41,13 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-12 Procedimientos paso a paso | Implementada y probada; aún no conectada a los casos de uso (T-17) | `ac0569c` |
 | T-13 Estado e invalidación | Implementada y probada; el catálogo de ejemplos llega como argumento hasta T-16 | `fdbb742` |
 | T-14 Vistas, HTML y CSS accesibles | Implementada; gráfica, pasos, KaTeX y ejemplos quedan como puntos de integración (§6); revisión manual pendiente (T-R3) | `bd03fa0` |
-| T-14, revisión visual | Menú lateral, nueva composición y estilos; **pendiente de aprobación visual del equipo** | commit «T-14: revisión visual…» |
-| T-15 en adelante | Sin iniciar | — |
+| T-14, revisión visual | Menú lateral expandible, fondo con trama suave, tarjetas e ilustraciones geométricas; **apariencia aprobada por el equipo** (22 de octubre), que pide conservarla en las tareas siguientes | `13c6c5c` |
+| T-15 Datos de la gráfica y adaptador de Plotly | Implementada y probada; **no conectada** a `analizarPerfil` ni a `main.js` (T-17, §6) | commit «T-15: datos de la gráfica…» |
+| T-16 en adelante | Sin iniciar | — |
 
-Última ejecución, con T-14: `npm test` dio **1155/1155** pruebas en 23 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-14 no añade pruebas automáticas: tasks T-14 pide revisión manual. Sí se recorrió el build en Chrome sin interfaz con un guion temporal (ya borrado); lo comprobado está en §7.
+Última ejecución, con T-15: `npm test` dio **1223/1223** pruebas en 25 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-15 añade 68 pruebas (27 de `datosGrafica` y 41 del adaptador). El adaptador se revisó además en Chrome sin interfaz con un montaje temporal (ya borrado); lo observado está en §7.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-14: T-R1, T-R3 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-15: T-R1, T-R3 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -98,8 +99,13 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | `formato.js` | Único lugar donde se redondea: decimales con «=» o «≈», quetzales, fracciones, sustituciones, monomios, polinomios, k·π, cotas y cantidades con unidad, en texto y LaTeX (design §14.1) |
 
 | `pasos.js` | Procedimientos (design §14.2): `pasosArea`, `pasosPromedio`, `pasosPerfil`, `pasosFigura` y `pasosEstimacion`; solo formatea los datos del núcleo con `formato.js` |
+| `datosGrafica.js` | `datosGrafica({ modelo, intervalo, analisis, promedio, rectangulo, unidades })` → `{ datos: DatosGrafica \| null, advertencias, motivo }` (T-15, §5); Number solo para dibujar; W-07 si algo no es finito |
 
-`datosGrafica.js` (T-15) todavía no existe.
+**Adaptadores** (`src/adaptadores/`, carpeta de B; solo importan `plotly.js-basic-dist-min` y `katex`, nunca `src/`):
+
+| Archivo | Contenido |
+|---|---|
+| `graficaPlotly.js` | `dibujar(contenedor, datos)`, `limpiar(contenedor)`, `precargar()` y `programarPrecarga(ventana)`; además `crearGraficaPlotly(dependencias)` para las pruebas, `figuraPlotly(datos)` (trazas y formas, pura), `sonDibujables(datos)`, `AVISO_W07` y `LEYENDA` (T-15, §5) |
 
 **Interfaz** (`src/interfaz/`, carpeta de B; importa `casos-de-uso/` y, de `presentacion/`, solo `formato.js`):
 
@@ -115,7 +121,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 **Estilos:** `src/estilos/app.css`, enlazado desde `index.html`. Variables de color con su contraste anotado, fuentes del sistema (títulos en Palatino Linotype o Georgia), foco de 3 px, consultas de contenedor sobre `.principal` para que la composición se adapte al ancho real del contenido, panel de menú por debajo de 768 px y animaciones que se anulan con `prefers-reduced-motion`.
 
-**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js` y `presentacion/pasos.test.js`, `interfaz/estado.test.js` (estado y navegación), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
+**Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js`, `presentacion/pasos.test.js` y `presentacion/datosGrafica.test.js`, `adaptadores/graficaPlotly.test.js` (Plotly, DOM, ResizeObserver y fotogramas simulados), `interfaz/estado.test.js` (estado y navegación), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
 **Otros:** `index.html` tiene los tres formularios estáticos (ids `perfil-…`, `figura-…` y `estimacion-…`) y los supuestos fijos de la estimación. `src/main.js` crea el estado, `despachar(transicion, …args)` (aplica la transición, repinta y devuelve el estado nuevo), las tres vistas y la navegación. `prueba-recursos.html` y `src/prueba-recursos.js` son temporales de T-01 y se eliminan en T-17. `scripts/verificar-dist.js` comprueba que `dist/` no use recursos externos.
 
@@ -168,34 +174,53 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 - **Navegación** (`navegacion.js`, T-13): `seccionDesdeFragmento('#figuras')` → `'figuras'` (vacío o desconocido → `'perfil'`); `fragmentoDe(seccion)`; `irA(ventana, seccion)` cambia `location.hash`, así el historial y «Atrás» funcionan; `iniciarNavegacion(ventana, alCambiar)` avisa al iniciar y en cada `hashchange`, y devuelve la función que deja de escuchar.
 - **ModeloValidado** (`interpretarFuncion(texto)`): `{ textoOriginal, polinomio, huboDesarrollo, textoNormalizado, latexNormalizado }`, congelado. `huboDesarrollo` es verdadero si un producto o una potencia tiene un factor que es una suma o resta, aunque lleve signos delante. El texto y el LaTeX salen del polinomio, al estilo de design §14.1: potencias descendentes, «−» (U+2212) en el texto, y monomios como `x²/4`, `5x/3` o `\frac{5x}{3}`. Ejemplos: «x³ − 1» y «x³ − 4x²/3 − 5x/3 + 2/3».
 
-## 6. Qué falta después de T-14 y siguiente tarea
+- **Datos de la gráfica** (`datosGrafica.js`, T-15): recibe un objeto con los campos homónimos de `ResultadoPerfil` (`modelo`, `intervalo`, `analisis`, `promedio`, `rectangulo` y `unidades`) y devuelve, congelado, `{ datos, advertencias, motivo }`:
+  - Con éxito, `datos` es `DatosGrafica` (design §10): `curva { x, y }` con 401 puntos uniformes en [a − m, b + m], m = 0.1·(b − a), más a, b y los ceros, en orden y sin repetir; `regiones [{ x, y, signo }]`, una por tramo de `analisis.tramos`, con 101 puntos más las tangencias interiores; `ceros [{ x, exacto, etiqueta }]` («x = 1/3 (exacto)», «x ≈ 1.4142»); `promedio { y, etiqueta }` («f_prom = 10/3 m»); `rectangulo { x0: a, x1: b, altura } | null`; `ejes { etiquetaX, etiquetaY }` («x (m)», «f(x) (u)»); `rango { x: [a − m, b + m], y: [mín, máx] }` (incluye y = 0 y el promedio, con 8 % de holgura; [−1, 1] si f ≡ 0) y `descripcion` (resumen textual para el `aria-label`). `advertencias` es `[]` y `motivo`, `null`.
+  - Si algún Number no es finito: `datos: null`, `advertencias: [W-07]` (`crearAdvertencia('W-07')`) y `motivo: 'no-finito'`. Cualquier excepción da lo mismo con `motivo: 'error'` y el detalle en `console.error`, para que un fallo de la gráfica nunca convierta el perfil en E-SIS-02 (R-10.6).
+  - No recalcula: signos, ceros, rectángulo y f_prom salen tal cual del núcleo; en los ceros la curva vale 0, y la región de un tramo +1 (−1) se recorta a y ≥ 0 (y ≤ 0) para quitar el ruido de coma flotante. Solo importa `aNumber`, `evaluarAprox`, `crearAdvertencia`, `aDecimal` y `fraccionTexto` (lo comprueba una prueba).
+- **Adaptador de Plotly** (`graficaPlotly.js`, T-15):
+  - `dibujar(contenedor, datos)` devuelve una promesa que **nunca se rechaza**: `{ estado: 'dibujada' }`, `{ estado: 'cancelada' }` (llegó `limpiar` u otro `dibujar` antes de terminar) o `{ estado: 'fallida', etapa: 'datos' | 'carga' | 'dibujo' | 'interna', aviso: AVISO_W07 }`. Dibuja con `Plotly.react` en un `div.grafica__lienzo` propio (`role="img"`, `aria-label` = `datos.descripcion`, ancho 100 % y alto `clamp(340px, 44vw, 400px)` en línea) que añade al contenedor; mientras carga muestra «Preparando la gráfica…» con `aria-busy`.
+  - Si falla, retira el lienzo (con `Plotly.purge`) y deja en el contenedor un `.grafica__aviso` con `role="status"`: «Gráfica no disponible» y «W-07: La gráfica no está disponible; los resultados y los pasos se conservan.» (`AVISO_W07`, igual al catálogo; lo comprueba una prueba, porque el adaptador no puede importar el núcleo). El detalle va a `console.error`. Una carga fallida no se guarda: el siguiente dibujo vuelve a intentarlo.
+  - `limpiar(contenedor)` nunca lanza: invalida la generación del contenedor, desconecta el observador, cancela el ajuste pendiente, purga y retira el lienzo y el aviso. Si un dibujo terminaba después, purga su lienzo huérfano.
+  - Ancho: un `ResizeObserver` sobre el contenedor llama a `Plotly.Plots.resize` como mucho una vez por fotograma cuando cambia su ancho o su alto (contraer o expandir el menú lateral, o la ventana); ignora la medida inicial y los tamaños 0 (sección oculta).
+  - Trazas: una por región con `fill: 'tozeroy'` (turquesa sobre el eje; rosa con trama diagonal bajo el eje), leyenda «Sobre el eje (+)» / «Bajo el eje (−)» una vez por signo, curva `f(x)` y marcadores «Ceros de f» con su etiqueta como texto flotante (el único texto flotante, para no redondear fuera de `formato.js`). Formas: recta y = f_prom discontinua en todo el ancho, con su etiqueta, y rectángulo con contorno punteado sin relleno; las dos aparecen en la leyenda. Configuración: `responsive: true`, `displaylogo: false`, `displayModeBar: false`, más `showTips`, `scrollZoom` y `doubleClick` en `false`; ejes fijos (`dragmode: false`, `fixedrange`). Fondo del papel transparente para que se vea la trama del contenedor.
+  - `precargar()` resuelve `true` o `false` y nunca se rechaza. `programarPrecarga(ventana)` espera a `load` (o actúa si `readyState` es `complete`) y precarga en `requestIdleCallback` (o `setTimeout`); devuelve cómo cancelarla.
+
+## 6. Qué falta después de T-15 y siguiente tarea
 
 El núcleo (T-02 a T-07), el analizador (T-09 y T-10) y los casos de uso (T-08) están implementados. **Lo que T-08 no puede producir todavía**, porque sus productores son de otras tareas:
 
 | Campo o texto | Hoy | Lo produce | Lo conecta |
 |---|---|---|---|
 | `ResultadoPerfil.pasos` (`{ area, promedio }`) | `null` | ya existe: `pasosPerfil` de `presentacion/pasos.js` (T-12) | T-17, en `analizarPerfil` (design §4, paso 8) |
-| `ResultadoPerfil.grafica` (`DatosGrafica`) | `null` | `presentacion/datosGrafica.js` (T-15) | T-17, en `analizarPerfil` (design §4, paso 9) |
+| `ResultadoPerfil.grafica` (`DatosGrafica`) | `null` | ya existe: `datosGrafica` de `presentacion/datosGrafica.js` (T-15) | T-17, en `analizarPerfil` (design §4, paso 9; ver «Cómo conectar la gráfica») |
 | `ResultadoFigura.pasos` | `null` | ya existe: `pasosFigura` de `pasos.js` (T-12) | T-17, en `calcularFigura` |
 | Pasos de la estimación | `ResultadoEstimacion` no tiene ese campo en design §10 | ya existe: `pasosEstimacion` de `pasos.js` (T-12) | T-17 decide si la vista lo llama o se añade el campo |
 | Cifras de W-02, W-03 y W-04 | fracción exacta (`racional.aTexto`), p. ej. la cota de W-04 | ya existe: `fraccionTexto` y `cotaTexto` de `formato.js` (T-11) | T-17, en `analizarPerfil` |
 | «Q666.67» y «Q733.33» de CR-03 | **resuelto en T-14**: la vista usa `quetzalesCantidad` | — | — |
-| Invalidación de CR-13 y CR-22 en pantalla | **resuelto en T-14** para resultados, errores y estimación: `render` vacía el panel cuando el estado retira el resultado | `graficaPlotly.limpiar` (T-15) | T-17, pasando el adaptador a `crearVistaPerfil` |
+| Invalidación de CR-13 y CR-22 en pantalla | **resuelto en T-14** para resultados, errores y estimación: `render` vacía el panel cuando el estado retira el resultado | ya existe: `graficaPlotly.limpiar` (T-15), que también cancela lo pendiente | T-17, pasando el adaptador a `crearVistaPerfil` |
 | Catálogo de ejemplos | `main.js` pasa `CATALOGO_EJEMPLOS = []`, así que `#perfil-ejemplos` sigue oculto | `ejemplos/ejemplos.js` (T-16), con `{ id, seccion, origen, entrada, estimacion?, simulado? }`; la vista muestra `titulo` si existe y, si no, `id` | T-17, en `main.js` |
 
 **Puntos de integración que dejó T-14** (la página dice que faltan; no hay datos simulados en `src/`):
 
 | Punto | Dónde | Qué hace hoy | Qué debe hacer T-17 |
 |---|---|---|---|
-| Gráfica | `<figure id="perfil-grafica" class="grafica" data-grafica>`, fija en `index.html`; la llena `pintarGrafica` de `vistaPerfil.js` | aviso «Gráfica pendiente de integración», solo con unos ejes decorativos, sin curva | llenar `resultado.grafica` (T-15) y pasar `grafica: { dibujar, limpiar }` de `graficaPlotly.js` en `crearVistaPerfil`; la vista ya llama a `limpiar` y a `dibujar(figura, datos)` cuando cambia el resultado. El CSS de `.grafica` centra su contenido; puede requerir un ajuste cuando entre Plotly |
+| Gráfica | `<figure id="perfil-grafica" class="grafica" data-grafica>`, fija en `index.html`; la llena `pintarGrafica` de `vistaPerfil.js` | aviso «Gráfica pendiente de integración», solo con unos ejes decorativos, sin curva | llenar `resultado.grafica` con `datosGrafica` y pasar el adaptador en `crearVistaPerfil`; la vista ya llama a `limpiar` y a `dibujar(figura, datos)` cuando cambia el resultado. Ajustar `pintarGrafica` para W-07 (ver abajo). El CSS de `.grafica` no necesita cambios: en el montaje de T-15 el lienzo ocupó todo el ancho con su estilo en línea |
 | Pasos del perfil y de la figura | `desplegablePasos` de `vistaPerfil.js` y `vistaFiguras.js` (un `<details>`) | cerrado, con la insignia «Pendiente de integración» y el aviso dentro | conectar `pasosPerfil` y `pasosFigura` en los casos de uso; la vista ya pinta `pasos.area`, `pasos.promedio` o el arreglo de la figura con `listaPasos` y abre el panel |
 | Pasos de la estimación | `tarjetaResultado` de `vistaEstimacion.js` | aviso fijo | decidir si la vista llama a `pasosEstimacion` (interfaz no puede importar `pasos.js`, design §2) o si se añade el campo a `ResultadoEstimacion` |
 | KaTeX | elementos con `data-latex` (`.paso__texto`, `.modelo__funcion`) | se ve el texto Unicode (R-09.8) | llamar a `formulasKatex.mejorar(elemento, latex)` (T-16) tras cada `render` |
-| Precarga de Plotly | `main.js` | no se precarga | design §14.3, carga diferida |
+| Precarga de Plotly | `main.js` | no se precarga | llamar a `graficaPlotly.programarPrecarga(window)` al iniciar (design §13 y §14.3) |
 | Página temporal de T-01 | enlace en el pie de `index.html` | sigue visible | quitarla con `prueba-recursos.*`, su entrada en `vite.config.js` y su comprobación en `verificar-dist.js` |
 | Cifras de W-02, W-03 y W-04 | `listaAdvertencias` muestra `aviso.mensaje` tal cual | fracciones exactas | ver la fila de arriba (T-17, en `analizarPerfil`) |
 
-Siguientes tareas desbloqueadas: T-15 (datos de la gráfica) y T-16 (KaTeX y ejemplos); T-17 depende de ambas. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
+**Cómo conectar la gráfica en T-17 (no se hizo en T-15):**
+
+1. `analizarPerfil` (carpeta de A; `casos-de-uso/` puede importar `presentacion/`): tras calcular el rectángulo, `const grafica = datosGrafica({ modelo, intervalo, analisis, promedio, rectangulo, unidades })`; en el resultado, `grafica: grafica.datos`, y las advertencias pasan a ser `[...advertenciasDe(analisis, area), ...grafica.advertencias]`. Así W-07 por valores no finitos llega a la lista de advertencias que ya pinta `listaAdvertencias`, y los resultados exactos se conservan. Las pruebas de T-08 que esperan `grafica: null` deben actualizarse.
+2. `main.js`: `import * as graficaPlotly from './adaptadores/graficaPlotly.js'`, `crearVistaPerfil({ …, grafica: graficaPlotly })` y `graficaPlotly.programarPrecarga(window)` después de `pintar()`.
+3. `vistaPerfil.pintarGrafica` (carpeta de B): con resultado y adaptador, vaciar la figura (ya lo hace) y llamar a `grafica.dibujar(figura, resultado.grafica)` **también cuando `resultado.grafica` es `null`**: el adaptador muestra entonces W-07 en la figura (`etapa: 'datos'`). Así W-07 se ve igual venga de valores no finitos (lista de advertencias + figura) o de un fallo de carga o dibujo de Plotly (solo figura; si el equipo lo quiere también en la lista, la vista puede usar el `aviso` que devuelve la promesa). Sin resultado, se mantiene `limpiar` y el estado vacío; el texto «Gráfica pendiente de integración» debe sustituirse por uno definitivo. La vista no debe esperar la promesa para pintar los resultados.
+4. Revisión de T-R3: con el fragmento `plotly-basic.min-*.js` bloqueado, la figura muestra W-07 y los resultados siguen visibles (comprobado en el montaje de T-15, §7).
+
+Siguientes tareas desbloqueadas: T-16 (KaTeX y ejemplos); T-17 depende de T-16 para su última hora (tasks T-17). El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
@@ -246,18 +271,38 @@ Siguientes tareas desbloqueadas: T-15 (datos de la gráfica) y T-16 (KaTeX y eje
   - T-14, cálculo de estimación sin fuente: el botón «Calcular estimación» no se deshabilita; sin fuente da E-MOD-04 en el resumen, y la tarjeta de la fuente explica el motivo (incluido el E-MOD del perfil no apto) con enlaces a Perfil y Figuras.
   - T-14, repintado: el estado es inmutable, así que cada vista solo reconstruye sus resultados cuando cambian las referencias de `resultado` o `errores`; los campos se sincronizan sin mover el cursor (`fijarValor`).
   - T-14, comprobación en Chrome sin interfaz (build servido en local, guion temporal ya borrado): CR-01 (243/4 = 60.75 u², sin distintivos, W-03, botón deshabilitado con E-MOD-01), CR-05 (0 u² y 1 u² con los dos distintivos, W-01) y CR-03 (40/3 ≈ 13.3333 m², rectángulo equivalente; estimación con Q666.67 y Q733.33); «Usar esta área» lleva a `#estimacion`; «Atrás» vuelve a Perfil; editar b retira la fuente y la estimación; errores por campo con `aria-invalid="true"` y `aria-describedby`; resumen con `role="alert"`; círculo r = 5 m da 25π ≈ 78.5398 m² y el rectángulo de 200 × 150 cm, 30000 cm² y 3 m². A 360 px, `scrollWidth` = 360 en las tres secciones y con errores. Contraste mínimo medido en los textos visibles: 5.05:1. Tabulación: saltar → 3 enlaces → función → a → b → interpretación → Calcular, todos con contorno de 3 px. No se probaron lectores de pantalla ni zoom; eso queda para T-R3.
-- **Revisión visual de T-14 (decisiones que el equipo debe aprobar):**
+- **Revisión visual de T-14 (commit `13c6c5c`; apariencia aprobada por el equipo el 22 de octubre, que pide conservarla en las tareas siguientes):**
   - Contratos sin cambios: `estado.js`, `navegacion.js`, los casos de uso, `formato.js` y los ids de los campos y de los mensajes de error se conservan. Cambios de HTML que las vistas ya siguen: el tipo de figura es un grupo de radios `name="tipo"` dentro de `<fieldset id="figura-tipo">` (antes era un `<select>`); la gráfica es `#perfil-grafica`, fija junto a los resultados; los detalles del perfil van en `#perfil-detalles`; el enlace activo ahora es `.lateral__enlace`.
   - `cifra` (en `vistaComun.js`) reparte en dos líneas el mismo texto que da `cantidadTexto`: fracción y decimal; k·π y su decimal; o el decimal aproximado y su cota. Usa solo funciones de `formato.js`, así que el redondeo sigue en un único sitio. Los costos usan `quetzalesCantidad` en una línea.
   - El panel de procedimiento queda cerrado mientras no hay pasos (insignia «Pendiente de integración»); con pasos reales se abre por defecto.
   - Tipografía: los títulos usan «Palatino Linotype» (Windows), con Georgia como respaldo; las fórmulas, «Cambria Math». No hay fuentes descargadas.
   - Movimiento: la sección entra con opacidad y 8 px de desplazamiento (240 ms), las tarjetas de resultado en 200 ms, la anchura del menú en 220 ms; las cifras no se animan. `prefers-reduced-motion` lo anula todo. Se quitó el fondo fijo (`background-attachment`) para no costar en la laptop.
   - Comprobación en Chrome sin interfaz (guion temporal ya borrado), a 1366 px y a 360 px: errores por campo y foco al resumen; CR-05 con los dos distintivos y la banda deshabilitada (E-MOD-01); CR-03 con banda habilitada, estimación con Q666.67 y Q733.33 y foco a cada encabezado; «Atrás»; figuras con flechas del teclado (rectángulo → triángulo), círculo 25π ≈ 78.5398 m² y rectángulo 200 × 150 cm = 3 m²; menú contraído a 80 px con `aria-expanded="false"`, «Expandir menú» y la etiqueta visible al enfocar; panel móvil con `aria-expanded`, `inert`, foco al enlace actual, Tab que no sale del panel, Escape y fondo que cierran y devuelven el foco, y enlace que cierra y lleva al título; `scrollWidth` = 360 en las tres secciones, con resultados y con errores; contraste mínimo medido 4.81:1. No se probaron lectores de pantalla, zoom ni la laptop de exposición.
-- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-14.
+- **T-15, decisiones que R debe confirmar** (design §10 y §14.3 no se cambiaron):
+  - Firma: `datosGrafica` recibe un objeto con los campos de `ResultadoPerfil`, no los cuatro argumentos de design §4 (`modelo, intervalo, analisis, promedio`), porque también necesita `rectangulo` (para no decidir por su cuenta si hay rectángulo) y `unidades` (ejes y etiqueta del promedio). Devuelve `{ datos, advertencias, motivo }` en vez de `DatosGrafica` a secas, para poder entregar W-07; `ResultadoPerfil.grafica` quedará `null` cuando haya W-07.
+  - Campos añadidos a `DatosGrafica`: `ceros[].etiqueta` (el texto flotante necesita `formato.js`, que el adaptador no puede importar), `descripcion` (alternativa textual, R-23) y la forma `rango: { x, y }`, que design §10 no detalla.
+  - Regiones: 101 puntos uniformes **más** las tangencias interiores del tramo (p. ej., x = 1 en CR-07 y CR-30), para que el relleno toque el eje donde lo toca la curva. Si f ≡ 0, hay una región de signo 0, que el adaptador no sombrea.
+  - La recta y = f_prom cruza todo el ancho dibujado (R-10.3 habla de «la recta»); el rectángulo va de a a b.
+  - Además de la leyenda, las regiones bajo el eje llevan trama diagonal, otra señal que no depende del color (R-10.2). No hay anotaciones «+» ni «−» (T-D3).
+  - Solo los ceros tienen texto flotante; la curva no, para no mostrar decimales redondeados por Plotly fuera de `formato.js`.
+  - El texto de W-07 está copiado en `AVISO_W07`, porque `adaptadores/` no puede importar el núcleo (design §2); una prueba lo compara con el catálogo.
+  - Colores: turquesa `--area` (sobre el eje), rosa `#be123c` con trama (bajo el eje), ámbar `--promedio` (recta), violeta `--integral` (rectángulo) y marino (curva y ejes), copiados de `app.css` porque Plotly no lee variables CSS. No se tocó `app.css`.
+- **T-15, revisión en Chrome sin interfaz** (build temporal con un montaje que repite `main.js`, pasa el adaptador a la vista y añade `datosGrafica` al resultado como hará T-17; servido con `vite preview`; montaje, guion y capturas ya borrados). Observado:
+  - Precarga correcta en 157 a 183 ms. Plotly queda en su propio fragmento (`plotly-basic.min-*.js`, 1.16 MB).
+  - CR-03 a 1366 px: región «Sobre el eje (+)» de 101 puntos, curva de 403 puntos (401 + a + b), recta «f_prom = 10/3 m» con su etiqueta, rectángulo punteado, títulos «x (m)» y «f(x) (m)», leyenda con f(x), la recta y el rectángulo; sin barra de herramientas ni enlaces; `role="img"` con la descripción.
+  - Menú lateral: al contraerlo, la figura pasó de 557 a 708 px y el SVG de Plotly de 509 a 660 px; al expandirlo volvió a 509 px. A 1000 px de ventana, 556 px. A 360 px, 261 × 340 px, área de trazado de 189 px de alto, `scrollWidth` 345 (sin desplazamiento horizontal). Con el primer alto probado (mínimo 240 px), la leyenda de cuatro filas dejaba el trazado demasiado bajo; por eso el mínimo es 340 px.
+  - CR-05, CR-14, CR-30 y CR-15: regiones por signo con la leyenda una vez por signo, trama en las regiones negativas, marcadores en x = 0; −1, 0, 1; −2, 1 (tangencia) y «x ≈ 1.4142».
+  - Al editar b, la vista llamó a `limpiar`: ningún `.js-plotly-plot` en la figura y vuelve el estado vacío.
+  - Carrera con un adaptador de carga lenta (400 ms): «Preparando la gráfica…» durante la carga; `limpiar` a los 100 ms → `cancelada`, figura vacía al terminar la carga. Sin limpiar, el mismo adaptador dibujó.
+  - `(((1000000^3)^3)^3)^3` en [0, 1]: W-07 en la lista de advertencias y resultados visibles; `dibujar(figura, null)` → `fallida`, `etapa: 'datos'`, con el aviso W-07 en la figura.
+  - Fragmento de Plotly bloqueado (`Network.setBlockedURLs`, página recargada): `precargar` → `false`; al calcular CR-03, la figura muestra «Gráfica no disponible» y «W-07: …» con `role="status"`, y las tres tarjetas de resultados siguen visibles. Un segundo cálculo (CR-05) volvió a intentar la carga y volvió a mostrar W-07. Ningún `unhandledrejection` en toda la revisión; los únicos `console.error` son los del adaptador al informar W-07.
+  - No se probó con lectores de pantalla, con zoom ni en la laptop de exposición.
+- **Observación fuera de T-15 (para T-17 o T-R3):** con `(((1000000^3)^3)^3)^3`, el número de 487 cifras desborda en horizontal la tarjeta de resultados (`.modelo__funcion` y `.valores`; `scrollWidth` 4694 a 1366 px). Es del CSS y las vistas de T-14, no de la gráfica; no se cambió.
+- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-15.
 
 ## 8. Intención visual (T-14 y su revisión visual)
 
-**Revisión visual (pendiente de aprobación del equipo).** Se tomaron como referencia de apariencia las imágenes que aportó el equipo (tarjetas azules, gráfica tipo plano técnico, navegación lateral), sin sus funciones antiguas: solo Perfil, Figuras y Estimación; sin rótulos, terrenos, áreas entre curvas, reportes ni trapecio. Composición aplicada:
+**Revisión visual (commit `13c6c5c`; aprobada por el equipo el 22 de octubre).** Hay que conservar esta apariencia en las tareas siguientes: menú lateral expandible, fondo con trama suave, tarjetas e ilustraciones geométricas. La gráfica de T-15 la respeta: papel transparente sobre la trama de `.grafica`, colores de `app.css` y fuentes del sistema. Se tomaron como referencia de apariencia las imágenes que aportó el equipo (tarjetas azules, gráfica tipo plano técnico, navegación lateral), sin sus funciones antiguas: solo Perfil, Figuras y Estimación; sin rótulos, terrenos, áreas entre curvas, reportes ni trapecio. Composición aplicada:
 - **Menú lateral** marino con marca, iconos SVG propios y las tres secciones; la activa lleva `aria-current="page"`, fondo cian translúcido y una barra cian. «Contraer menú» lo deja en una franja de iconos de 80 px (transición de la anchura de la rejilla); el nombre sigue en el DOM y aparece como etiqueta al pasar o enfocar. Por debajo de 768 px hay una barra superior con botón de menú (`aria-expanded`, `aria-controls`) que abre un panel con fondo; la página, la barra y «Saltar al contenido» quedan `inert`, el foco entra a la sección actual y vuelve al botón con Escape, con el botón de cierre o al tocar el fondo.
 - **Cabecera de sección**: etiqueta numerada («01 · Integral definida»), título con serifa del sistema, explicación breve e ilustración SVG decorativa (`aria-hidden`); la trama cuadriculada solo aparece en su mitad derecha.
 - **Perfil**: formulario fijo (sticky) a la izquierda, con la interpretación como dos tarjetas de radio y el prefijo «f(x) =» unido al campo; a la derecha, resultados, gráfica y detalles. Las tres tarjetas de valor muestran la fracción grande y el decimal debajo (`cifra` de `vistaComun.js`, con textos de `formato.js`). El procedimiento va en un `<details>` y el acceso a la estimación en una banda oscura con el botón claro.
