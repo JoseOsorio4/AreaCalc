@@ -637,6 +637,9 @@ a:hover {
 
 .tarjeta {
   display: grid;
+  /* Una sola columna que nunca crece por su contenido: una fórmula o un número de cientos
+     de cifras se parte o se desplaza dentro de la tarjeta, sin ensancharla (T-17). */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--espacio-4);
   align-content: start;
   min-width: 0;

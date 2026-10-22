@@ -16,8 +16,9 @@
 //     null, la figura muestra el W-07 que trae el resultado; sin resultado, un estado vacío.
 //     Primero se pintan los resultados y los pasos; el adaptador cede un fotograma antes
 //     de dibujar, así que la gráfica no los retrasa.
-//   - El selector de ejemplos se llena con el catálogo de ejemplos.js (T-16); vuelve a
-//     «Elija un ejemplo…» en cuanto la entrada deja de coincidir con el ejemplo elegido.
+//   - El selector de ejemplos se llena con el catálogo de ejemplos.js (T-16); debajo se
+//     ve el origen del ejemplo elegido y si sus datos son simulados (R-13.1 y R-13.4).
+//     Vuelve a «Elija un ejemplo…» en cuanto la entrada deja de coincidir con el ejemplo.
 //   - Los textos con `data-latex` los mejora formulasKatex desde main.js, tras pintar.
 import { calcularPerfil, cargarEjemplo, editarPerfil, usarComoFuente } from './estado.js';
 import { irA } from './navegacion.js';
@@ -63,6 +64,7 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
   const figura = porId(documento, 'perfil-grafica');
   const detalles = porId(documento, 'perfil-detalles');
   const selectorEjemplo = porId(documento, 'perfil-ejemplo');
+  const origenEjemplo = porId(documento, 'perfil-ejemplo-origen');
   const ejemplos = catalogo.filter((ejemplo) => ejemplo?.seccion === 'perfil');
 
   // Edición: cada cambio pasa por el estado, que retira el resultado anterior (R-12.1).
@@ -106,7 +108,7 @@ export function crearVistaPerfil({ documento, ventana, despachar, catalogo = [],
       for (const radio of radios) radio.checked = radio.value === entrada.interpretacion;
       const unidad = entrada.interpretacion === 'fisica' ? '(m)' : '(u)';
       for (const elemento of unidades) elemento.textContent = unidad;
-      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada);
+      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada, origenEjemplo);
 
       // El estado es inmutable: si el resultado y los errores no cambiaron, no se redibuja.
       if (ultimo.resultado === resultado && ultimo.errores === errores) return;

@@ -7,7 +7,8 @@
 //
 // Integración (T-17): resultado.pasos viene de calcularFigura (pasosFigura, T-12). El
 // selector de ejemplos (#figura-ejemplo) ofrece los ejemplos de figuras de ejemplos.js
-// (CR-09 y CR-10) y los carga con cargarEjemplo, como una entrada manual (R-13.2).
+// (CR-09 y CR-10), con su origen debajo (R-13.1), y los carga con cargarEjemplo, como
+// una entrada manual (R-13.2).
 import { calcularFigura, cargarEjemplo, editarFigura, usarComoFuente } from './estado.js';
 import { irA } from './navegacion.js';
 import { cantidadTexto } from '../presentacion/formato.js';
@@ -62,6 +63,7 @@ export function crearVistaFiguras({ documento, ventana, despachar, catalogo = []
   const resumen = porId(documento, 'figura-errores');
   const resultados = porId(documento, 'figura-resultados');
   const selectorEjemplo = porId(documento, 'figura-ejemplo');
+  const origenEjemplo = porId(documento, 'figura-ejemplo-origen');
   const ejemplos = catalogo.filter((ejemplo) => ejemplo?.seccion === 'figuras');
 
   if (ejemplos.length > 0) {
@@ -109,7 +111,7 @@ export function crearVistaFiguras({ documento, ventana, despachar, catalogo = []
       ayudaTriangulo.hidden = !esTriangulo;
       describir(dimensiones.altura, ID_AYUDA_ALTURA, esTriangulo);
       for (const elemento of unidades) elemento.textContent = `(${entrada.unidad})`;
-      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada);
+      sincronizarEjemplo(selectorEjemplo, ejemplos, entrada, origenEjemplo);
 
       if (ultimo.resultado === resultado && ultimo.errores === errores) return;
       ultimo = { resultado, errores };

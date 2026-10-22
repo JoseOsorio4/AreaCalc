@@ -311,7 +311,8 @@ export function desplegablePasos(documento, pasos, titulo = 'Procedimiento paso 
 /**
  * Llena y muestra un selector de ejemplos. Al elegir uno, llama a `alElegir(id)`, que
  * despacha cargarEjemplo: el mismo camino que una entrada manual (R-13.2). El título ya
- * empieza por el origen del ejemplo (R-13.1).
+ * empieza por el origen del ejemplo (R-13.1); la nota de origen la escribe
+ * sincronizarEjemplo en cada repintado.
  * @param {Document} documento
  * @param {{ contenedor: HTMLElement, selector: HTMLSelectElement,
  *   ejemplos: ReadonlyArray<{ id: string, titulo?: string }>, alElegir: (id: string) => void }} opciones
@@ -327,18 +328,43 @@ export function prepararEjemplos(documento, { contenedor, selector, ejemplos, al
 }
 
 /**
+ * Origen del ejemplo con las etiquetas del catálogo (R-13.1) y, si sus datos son
+ * simulados, el aviso de R-13.4. Solo copia textos del catálogo; no describe resultados.
+ * @param {{ origen?: string, simulado?: boolean, estimacion?: object }} ejemplo
+ * @returns {string}
+ */
+export function textoOrigenEjemplo(ejemplo) {
+  const partes = [`Origen: ${ejemplo.origen ?? 'catálogo de ejemplos'}.`];
+  if (ejemplo.simulado === true) {
+    partes.push(ejemplo.estimacion === undefined
+      ? 'Sus datos son simulados.'
+      : 'El precio y el adicional que se copian a Estimación son simulados, no son precios reales.');
+  }
+  return partes.join(' ');
+}
+
+/**
  * Si la entrada ya no coincide con el ejemplo elegido (el usuario editó un campo), el
  * selector vuelve a «Elija un ejemplo…»: así no rotula como «simulado» un dato propio.
+ * Mientras coincide, `nota` muestra su origen y se asocia al selector con aria-describedby.
  * @param {HTMLSelectElement} selector
- * @param {ReadonlyArray<{ id: string, entrada: Record<string, string> }>} ejemplos
+ * @param {ReadonlyArray<{ id: string, entrada: Record<string, string>, origen?: string, simulado?: boolean }>} ejemplos
  * @param {Record<string, string>} entrada
+ * @param {HTMLElement | null} [nota]
  */
-export function sincronizarEjemplo(selector, ejemplos, entrada) {
-  if (selector.value === '') return;
-  const elegido = ejemplos.find((ejemplo) => ejemplo.id === selector.value);
+export function sincronizarEjemplo(selector, ejemplos, entrada, nota = null) {
+  let elegido = selector.value === '' ? undefined : ejemplos.find((ejemplo) => ejemplo.id === selector.value);
   const coincide = elegido !== undefined
     && Object.entries(elegido.entrada).every(([campo, valor]) => entrada[campo] === valor);
-  if (!coincide) selector.value = '';
+  if (!coincide) {
+    if (selector.value !== '') selector.value = '';
+    elegido = undefined;
+  }
+  if (nota === null) return;
+  const texto = elegido === undefined ? '' : textoOrigenEjemplo(elegido);
+  if (nota.textContent !== texto) nota.textContent = texto;
+  nota.hidden = texto === '';
+  describir(selector, nota.id, texto !== '');
 }
 
 /**

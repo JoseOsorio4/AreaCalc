@@ -9,6 +9,7 @@ import { EJEMPLOS, ORIGENES } from '../../src/ejemplos/ejemplos.js';
 import {
   calcularEstimacion, cargarEjemplo, estadoInicial, irASeccion, usarComoFuente
 } from '../../src/interfaz/estado.js';
+import { textoOrigenEjemplo } from '../../src/interfaz/vistaComun.js';
 import { crearAdvertencia } from '../../src/nucleo/errores.js';
 import { CASOS } from '../casos-referencia.js';
 
@@ -135,8 +136,7 @@ describe('cargados con cargarEjemplo, dan los resultados de referencia (R-13.2)'
       expect(resultado.aptitud.apta).toBe(esperado.aptitudEnMetros.apta);
       if (esperado.aptitudEnMetros.codigo) expect(resultado.aptitud.motivo).toBe(esperado.aptitudEnMetros.codigo);
     }
-    // El resultado sale del caso de uso: todavía sin pasos ni gráfica (T-17).
-    // Con T-17, el mismo camino trae los pasos y la gráfica de los casos de uso.
+    // El resultado sale del caso de uso: desde T-17 trae también los pasos y la gráfica.
     expect(resultado.pasos.area.length).toBeGreaterThan(0);
     expect(resultado.grafica).not.toBeNull();
   });
@@ -187,5 +187,18 @@ describe('cargados con cargarEjemplo, dan los resultados de referencia (R-13.2)'
     const b = cargarEjemplo(estadoInicial(), 'otra', catalogo).perfil.resultado;
     expect(b.modelo.textoNormalizado).toBe(a.modelo.textoNormalizado);
     expect(b.area.area).toEqual(a.area.area);
+  });
+});
+
+describe('nota de origen bajo el selector (T-17; R-13.1 y R-13.4)', () => {
+  it.each(EJEMPLOS.map((e) => [e.id, e]))('%s: dice su origen y solo CR-03 avisa de datos simulados', (id, e) => {
+    const texto = textoOrigenEjemplo(e);
+    expect(texto.startsWith(`Origen: ${ORIGEN_ESPERADO[id]}.`)).toBe(true);
+    expect(texto.includes('simulados')).toBe(id === 'CR-03');
+  });
+
+  it('CR-03: el aviso nombra el precio y el adicional que se copian a Estimación', () => {
+    expect(textoOrigenEjemplo(ejemplo('CR-03'))).toBe('Origen: Caso práctico simulado. '
+      + 'El precio y el adicional que se copian a Estimación son simulados, no son precios reales.');
   });
 });

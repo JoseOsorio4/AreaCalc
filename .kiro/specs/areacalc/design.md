@@ -498,7 +498,7 @@ Son contratos **documentales**. En el código se expresarán con `@typedef` de J
 | `EntradaPerfil` | `textoFuncion`, `textoA`, `textoB` (cadenas sin interpretar); `interpretacion: 'abstracta' \| 'fisica'` |
 | `ModeloValidado` | `textoOriginal`; `polinomio` (grado ≤ 3); `huboDesarrollo`; `textoNormalizado` (p. ej., «x³ − 1»); `latexNormalizado` |
 | `Intervalo` | `{ a: Racional, b: Racional }` con a < b; las posiciones negativas son válidas (R-01.5) |
-| `ResultadoPerfil` | `entrada` (copia de los textos usados, para R-11.1); `modelo`; `intervalo`; `unidades`; `integral` (§7); `analisis` (§8); `area` (§9); `promedio`; `rectangulo`: `{ rectangulo: { base, altura, area } \| null, motivo: string \| null }`, como lo devuelve `rectanguloEquivalente` (§7); `aptitud: { apta, motivo: 'E-MOD-0n' \| null }`; `pasos: { area: Paso[], promedio: Paso[] }`; `grafica: DatosGrafica`; `advertencias` |
+| `ResultadoPerfil` | `entrada` (copia de los textos usados, para R-11.1); `modelo`; `intervalo`; `unidades`; `integral` (§7); `analisis` (§8); `area` (§9); `promedio`; `rectangulo`: `{ rectangulo: { base, altura, area } \| null, motivo: string \| null }`, como lo devuelve `rectanguloEquivalente` (§7); `aptitud: { apta, motivo: 'E-MOD-0n' \| null }`; `pasos: { area: Paso[], promedio: Paso[] }` (de `pasosPerfil`, T-17); `grafica: DatosGrafica \| null` (de `datosGrafica`; `null` si algún valor no es finito o falla su preparación, con W-07 añadida a `advertencias` y los resultados exactos conservados, R-10.6; T-17); `advertencias` |
 
 **Procedimiento y gráfica:**
 
@@ -512,9 +512,9 @@ Son contratos **documentales**. En el código se expresarán con `@typedef` de J
 | Contrato | Campos |
 |---|---|
 | `EntradaFigura` | `tipo: 'rectangulo' \| 'triangulo' \| 'circulo' \| 'trapecio'`; `unidad: 'cm' \| 'm'`; textos de `base`, `altura`, `radio`, `baseMayor` y `baseMenor` según el tipo |
-| `ResultadoFigura` | `entrada`; dimensiones Racionales; `area: Cantidad` en unidad²; `areaM2: Cantidad`; `formula: { texto, latex }`; `pasos: Paso[]` |
+| `ResultadoFigura` | `entrada`; dimensiones Racionales; `area: Cantidad` en unidad²; `areaM2: Cantidad`; `formula: { texto, latex }`; `pasos: Paso[]` (de `pasosFigura`, conectado en T-17) |
 | `EntradaEstimacion` | `fuente: { tipo: 'perfil' \| 'figura', resultado }` (debe estar vigente y ser apta); `textoPrecio`; `textoAdicional` |
-| `ResultadoEstimacion` | `descripcionFuente` (p. ej., «Perfil 2 + x²/4 en [0, 4] m»); `areaUtilM2`; `adicional`; `areaEstimadaM2`; `precio`; `costoBase`; `costoEstimado` (todas `Cantidad`); `supuestos` (textos de W-06 y W-05) |
+| `ResultadoEstimacion` | `descripcionFuente` (p. ej., «Perfil 2 + x²/4 en [0, 4] m»); `areaUtilM2`; `adicional`; `areaEstimadaM2`; `precio`; `costoBase`; `costoEstimado` (todas `Cantidad`); `supuestos` (textos de W-06 y W-05); `pasos: Paso[]` (añadido en T-17 por autorización del equipo: `pasosEstimacion` con `areaUtil`, `adicional`, `costoBase`, `costoEstimado` y `supuestos`, §14.2; lo escribe `estimarMaterial` con los valores ya calculados, y la vista solo lo muestra) |
 
 **Contrato futuro de centroides (R-27, POSTERIOR):**
 

@@ -4,7 +4,8 @@
 // precio en Q/m², el adicional en %, el resultado y los supuestos. Los supuestos
 // generales están fijos en index.html, así que se ven siempre, haya o no resultado
 // (R-17.5); el resultado añade los supuestos que devuelve estimarMaterial (W-06 y, con
-// datos simulados, W-05).
+// datos simulados, W-05). Si el precio y el adicional vienen de un ejemplo simulado, el
+// formulario lo rotula antes de calcular (#estimacion-simulados, R-13.4).
 //
 // La vista no calcula: despacha editarEstimacion y calcularEstimacion (T-13) y escribe
 // el ResultadoEstimacion con presentacion/formato.js. El procedimiento llega hecho en
@@ -13,7 +14,8 @@
 import { calcularEstimacion, editarEstimacion } from './estado.js';
 import { cantidadTexto, fraccionTexto } from '../presentacion/formato.js';
 import {
-  cifra, crear, desplegablePasos, enfocar, estadoVacio, fijarValor, mostrarErrores, porId, textoError, tituloResumen
+  cifra, crear, describir, desplegablePasos, enfocar, estadoVacio, fijarValor, mostrarErrores, porId, textoError,
+  tituloResumen
 } from './vistaComun.js';
 
 /** Dónde se muestra cada `error.campo` de la estimación; E-MOD-04 ('estimacion') va solo al resumen. */
@@ -40,6 +42,7 @@ export function crearVistaEstimacion({ documento, despachar }) {
   const precio = porId(documento, 'estimacion-precio');
   const adicional = porId(documento, 'estimacion-adicional');
   const fuente = porId(documento, 'estimacion-fuente');
+  const simulados = porId(documento, 'estimacion-simulados');
   const resumen = porId(documento, 'estimacion-errores');
   const resultados = porId(documento, 'estimacion-resultados');
 
@@ -61,6 +64,11 @@ export function crearVistaEstimacion({ documento, despachar }) {
       const { estimacion } = estado;
       fijarValor(precio, estimacion.entrada.textoPrecio);
       fijarValor(adicional, estimacion.entrada.textoAdicional);
+      // Precio y adicional copiados de un caso práctico simulado (R-13.4): rótulo visible
+      // y asociado a los dos campos. Editar uno lo retira, porque el estado pone
+      // datosSimulados en false.
+      simulados.hidden = !estimacion.datosSimulados;
+      for (const control of [precio, adicional]) describir(control, simulados.id, estimacion.datosSimulados);
 
       // La banda de la fuente depende de la fuente elegida y de los resultados de perfil y figura.
       const origen = estimacion.fuente === null ? null : estado[estimacion.fuente].resultado;

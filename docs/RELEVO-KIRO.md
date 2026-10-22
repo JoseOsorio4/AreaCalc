@@ -19,8 +19,8 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 ## 2. Dónde está el trabajo
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
-- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-16.
-- Último trabajo: el commit «T-16: fórmulas con KaTeX y catálogo de ejemplos», encima de `98fab65` (T-15). La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
+- Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-17.
+- Último trabajo: el commit «T-17: integración de pasos, gráfica, KaTeX y ejemplos», encima del respaldo parcial `b43108b` («WIP T-17»), que a su vez va sobre `e6b9623` (T-16). La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -34,21 +34,21 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-05 Integral y promedio | Implementada y probada | `d3bffdf` |
 | T-06 Área geométrica | Implementada y probada | `e22ec7f` |
 | T-07 Números, errores, unidades, materiales y figuras | Implementada y probada | `ea16afd` |
-| T-08 Casos de uso y pruebas globales | Implementada y probada; `pasos` y `grafica` quedan en `null` (§6) | `21f7c08` |
+| T-08 Casos de uso y pruebas globales | Implementada y probada; `pasos` y `grafica` se conectaron en T-17 | `21f7c08` |
 | T-09 Analizador léxico y sintáctico | Implementada y probada | `dac0250` |
 | T-10 Normalización al modelo validado | Implementada y probada | `bfa956e` |
 | T-11 Formato de números y fórmulas | Implementada y probada | `9efdfb9` |
-| T-12 Procedimientos paso a paso | Implementada y probada; aún no conectada a los casos de uso (T-17) | `ac0569c` |
+| T-12 Procedimientos paso a paso | Implementada y probada; conectada a los casos de uso en T-17 | `ac0569c` |
 | T-13 Estado e invalidación | Implementada y probada; el catálogo de ejemplos llega como argumento hasta T-16 | `fdbb742` |
 | T-14 Vistas, HTML y CSS accesibles | Implementada; gráfica, pasos, KaTeX y ejemplos quedan como puntos de integración (§6); revisión manual pendiente (T-R3) | `bd03fa0` |
 | T-14, revisión visual | Menú lateral expandible, fondo con trama suave, tarjetas e ilustraciones geométricas; **apariencia aprobada por el equipo** (22 de octubre), que pide conservarla en las tareas siguientes | `13c6c5c` |
-| T-15 Datos de la gráfica y adaptador de Plotly | Implementada y probada; **no conectada** a `analizarPerfil` ni a `main.js` (T-17, §6) | `98fab65` |
-| T-16 Fórmulas con KaTeX y ejemplos | Implementada y probada; **no conectada** a las vistas ni a `main.js` (T-17, §6) | commit «T-16: fórmulas con KaTeX…» |
-| T-17 Integración | Sin iniciar | — |
+| T-15 Datos de la gráfica y adaptador de Plotly | Implementada y probada; conectada en T-17 | `98fab65` |
+| T-16 Fórmulas con KaTeX y ejemplos | Implementada y probada; conectada en T-17 | `e6b9623` |
+| T-17 Integración | Implementada y probada; recorrido manual de T-R2/T-R3 y ensayo de T-R5 pendientes (§6) | `b43108b` (respaldo parcial) y commit «T-17: integración de pasos, gráfica, KaTeX y ejemplos» |
 
-Última ejecución, con T-16: `npm test` dio **1284/1284** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-16 añade 61 pruebas (21 del adaptador de KaTeX y 40 de los ejemplos). Los dos módulos se revisaron además en Chrome sin interfaz con un montaje temporal (ya borrado); lo observado está en §7.
+Última ejecución, con T-17: `npm test` dio **1304/1304** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-17 añade 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-16: T-R1, T-R3 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R2, T-R3, T-R5 y T-R6 siguen pendientes. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -121,9 +121,9 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 |---|---|
 | `estado.js` | Estado en memoria y transiciones puras, con invalidación (design §12) |
 | `navegacion.js` | Sección según el fragmento de la URL (`#perfil`, `#figuras`, `#estimacion`); la ventana se recibe como argumento |
-| `vistaComun.js` | DOM solo con `createElement`, `textContent` y `replaceChildren`: `crear`, `porId`, `enfocar`, `mostrarSeccion`, `describir`, `mostrarErrores` (mensaje bajo el campo, `aria-invalid`, `aria-describedby` y resumen con enlaces), `estadoVacio`, `listaAdvertencias`, `listaPasos` (con `data-latex`) y `pendiente` |
+| `vistaComun.js` | DOM solo con `createElement`, `textContent` y `replaceChildren`: `crear`, `porId`, `enfocar`, `mostrarSeccion`, `describir`, `mostrarErrores` (mensaje bajo el campo, `aria-invalid`, `aria-describedby` y resumen con enlaces), `estadoVacio`, `cifra`, `avisoAdvertencia`, `listaAdvertencias`, `listaPasos` (con `data-latex`), `desplegablePasos`, y para los ejemplos `prepararEjemplos`, `textoOrigenEjemplo` y `sincronizarEjemplo` (T-17; `pendiente` se retiró) |
 | `vistaPerfil.js` | `crearVistaPerfil({ documento, ventana, despachar, catalogo, grafica })` → `{ render(estado) }` |
-| `vistaFiguras.js` | `crearVistaFiguras({ documento, ventana, despachar })` → `{ render(estado) }` |
+| `vistaFiguras.js` | `crearVistaFiguras({ documento, ventana, despachar, catalogo })` → `{ render(estado) }` (selector `#figura-ejemplo`, T-17) |
 | `vistaEstimacion.js` | `crearVistaEstimacion({ documento, despachar })` → `{ render(estado) }` |
 | `menuLateral.js` | `iniciarMenuLateral({ documento, ventana })`: contraer o expandir en escritorio (preferencia en `localStorage`) y panel en pantallas estrechas; no toca el estado |
 
@@ -131,7 +131,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 **Pruebas** (`tests/`): `casos-referencia.js` (valores esperados transcritos, sin importar `src/`), `aritmetica-independiente.js` (aritmética exacta propia de las pruebas, sin importar `src/`), `arquitectura.test.js` (versión completa de T-08), `propiedades.test.js` (T-04 y T-08), `casos-de-uso/` con una prueba por caso de uso y una de robustez, `presentacion/formato.test.js`, `presentacion/pasos.test.js` y `presentacion/datosGrafica.test.js`, `adaptadores/graficaPlotly.test.js` (Plotly, DOM, ResizeObserver y fotogramas simulados), `adaptadores/formulasKatex.test.js` (KaTeX y DOM simulados, más el KaTeX real), `ejemplos/ejemplos.test.js`, `interfaz/estado.test.js` (estado y navegación), `nucleo/` con una prueba por módulo y `expresiones/` con `lexico.test.js`, `sintaxis.test.js`, `normalizar.test.js` y `tabla-gramatica.js`. Esta última es la **tabla reconstruida para pruebas** de T-10 (60 entradas válidas y 84 inválidas, cada una con su fuente); no procede del prototipo de design §0.
 
-**Otros:** `index.html` tiene los tres formularios estáticos (ids `perfil-…`, `figura-…` y `estimacion-…`) y los supuestos fijos de la estimación. `src/main.js` crea el estado, `despachar(transicion, …args)` (aplica la transición, repinta y devuelve el estado nuevo), las tres vistas y la navegación. `prueba-recursos.html` y `src/prueba-recursos.js` son temporales de T-01 y se eliminan en T-17. `scripts/verificar-dist.js` comprueba que `dist/` no use recursos externos.
+**Otros:** `index.html` tiene los tres formularios estáticos (ids `perfil-…`, `figura-…` y `estimacion-…`) y los supuestos fijos de la estimación. Desde T-17 también tiene los selectores `#perfil-ejemplo` y `#figura-ejemplo` con su nota de origen (`#…-ejemplo-origen`), el rótulo `#estimacion-simulados` y un contenedor `#…-aviso-formulas` (`role="status"`) por sección para W-08. `src/main.js` crea el estado, `despachar(transicion, …args)` (aplica la transición, repinta y devuelve el estado nuevo), las tres vistas con el catálogo `EJEMPLOS` y el adaptador de Plotly, la precarga de Plotly, la mejora con KaTeX tras cada pintado y la navegación. `prueba-recursos.html` y `src/prueba-recursos.js` (temporales de T-01) se retiraron en T-17, con su entrada en `vite.config.js` y su comprobación en `verificar-dist.js`. `scripts/verificar-dist.js` comprueba que `dist/index.html` exista, que el HTML y el CSS no usen recursos externos y que estén las fuentes de KaTeX.
 
 ## 5. Contratos clave ya implementados
 
@@ -155,11 +155,11 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 - **Normalización** (`normalizar.js`): `normalizarArbol(arbol)` devuelve `Resultado` con `{ polinomio, huboDesarrollo }`, o un solo error. Recorre el árbol de abajo arriba y de izquierda a derecha, con `racional.desdeDecimal` para los literales y las operaciones de `polinomio.js`, y comprueba cada operación **antes** de hacerla: producto con grados que suman > 3 → E-EXP-10; exponente 0 → E-EXP-07; base de grado g ≥ 1 con g·n > 3 → E-EXP-10 (sin calcular la potencia: `x^999999` es inmediato); base constante con n > 3 → E-EXP-07; divisor normalizado de grado ≥ 1 → E-EXP-08, y divisor cero → E-EXP-09. E-EXP-10 lleva `datos.grado`. No hay tope de coeficientes (D-09).
 - **Posición de esos errores:** E-EXP-07 señala el exponente; E-EXP-10, el `^` o el producto (el `*`, o el primer carácter del segundo factor si es implícito); E-EXP-08 y E-EXP-09, la `/`.
 - **Casos de uso** (T-08): devuelven siempre `Resultado` congelado y nunca lanzan. `PresupuestoAgotado` → E-SIS-01; cualquier otra excepción → E-SIS-02, con el mensaje del catálogo y sin datos técnicos (el detalle va a `console.error`).
-  - `analizarPerfil(entrada)`: valida la función (`interpretarFuncion`) y a y b (`leerIntervalo`) por separado y acumula los errores en ese orden; con errores no calcula nada. Después: `integrarDefinida`, `analizarSigno`, `areaGeometrica`, `valorPromedio` y `rectanguloEquivalente`. Devuelve `ResultadoPerfil`: `entrada`, `modelo`, `intervalo`, `unidades`, `integral`, `analisis`, `area` (`area.area` es la Cantidad A_geo), `promedio`, `rectangulo`, `aptitud`, `pasos: null`, `grafica: null` y `advertencias`.
+  - `analizarPerfil(entrada)`: valida la función (`interpretarFuncion`) y a y b (`leerIntervalo`) por separado y acumula los errores en ese orden; con errores no calcula nada. Después: `integrarDefinida`, `analizarSigno`, `areaGeometrica`, `valorPromedio` y `rectanguloEquivalente`. Devuelve `ResultadoPerfil`: `entrada`, `modelo`, `intervalo`, `unidades`, `integral`, `analisis`, `area` (`area.area` es la Cantidad A_geo), `promedio`, `rectangulo`, `aptitud`, `pasos` (`pasosPerfil`: `{ area, promedio }`, T-17), `grafica` (`datosGrafica(…).datos`, o `null` con W-07 añadida a las advertencias, T-17) y `advertencias`.
   - `aptitud` = `{ apta, motivo, error }`: abstracta → E-MOD-01; física y no `noNegativa` → E-MOD-02; física y A_geo = 0 → E-MOD-03; si no, apta (su área siempre es exacta). `error` es el `ErrorAreaCalc` del motivo.
-  - Advertencias: W-01 si cambia de signo; W-02 por tangencia y W-03 por cero en un extremo (con `datos.x`); W-04 con `datos.cota`; W-09 si f ≡ 0.
-  - `calcularFigura(entrada)`: rectángulo, triángulo y círculo en cm o m; reglas `dimensionCm` o `dimensionM`, errores acumulados por dimensión. Devuelve `entrada`, `tipo`, `unidad`, `dimensiones`, `area`, `unidadArea`, `areaM2`, `formula` (texto y LaTeX del formulario §8) y `pasos: null`.
-  - `estimarMaterial(entrada)`: sin fuente → E-MOD-04; perfil no apto → su motivo; después precio y adicional, acumulados. Devuelve `descripcionFuente`, `areaUtilM2`, `adicional`, `factorAdicional`, `areaEstimadaM2`, `precio`, `costoBase`, `costoEstimado` y `supuestos` (W-06, y W-05 si `datosSimulados`).
+  - Advertencias: W-01 si cambia de signo; W-02 por tangencia y W-03 por cero en un extremo (con `datos.x` escrito con `fraccionTexto`: «x = −1/2»); W-04 con `datos.cota` escrita con `cotaTexto` («≤ 6·10⁻²⁵»); W-09 si f ≡ 0; después, W-07 si la gráfica no se puede preparar (T-17).
+  - `calcularFigura(entrada)`: rectángulo, triángulo y círculo en cm o m; reglas `dimensionCm` o `dimensionM`, errores acumulados por dimensión. Devuelve `entrada`, `tipo`, `unidad`, `dimensiones`, `area`, `unidadArea`, `areaM2`, `formula` (texto y LaTeX del formulario §8) y `pasos` (`pasosFigura`, T-17).
+  - `estimarMaterial(entrada)`: sin fuente → E-MOD-04; perfil no apto → su motivo; después precio y adicional, acumulados. Devuelve `descripcionFuente`, `areaUtilM2`, `adicional`, `factorAdicional`, `areaEstimadaM2`, `precio`, `costoBase`, `costoEstimado`, `supuestos` (W-06, y W-05 si `datosSimulados`) y `pasos` (`pasosEstimacion`; campo añadido a design §10 en T-17 por autorización del equipo).
 - **Formato** (`formato.js`, T-11): todo con BigInt, sin `Number`. Redondeo mitad alejándose de cero sobre el racional: |p/q|·10ⁿ, cociente y resto, y +1 si 2·resto ≥ q.
   - `aDecimal(r, n = 4)` → «60.75», «13.3333», «−0.6667»; sin ceros finales si es exacto. `esDecimalExacto(r, n)` decide el símbolo. `decimalConSimbolo(r)` → «= 60.75» o «≈ 13.3333»; `decimalConSimboloLatex` usa `\approx`. Nunca «−0»: −1/10⁹ → «≈ 0.0000».
   - `quetzales(r)` → «Q666.67», «Q0.00»: siempre 2 decimales y sin «=» ni «≈».
@@ -192,6 +192,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
   - `limpiar(contenedor)` nunca lanza: invalida la generación del contenedor, desconecta el observador, cancela el ajuste pendiente, purga y retira el lienzo y el aviso. Si un dibujo terminaba después, purga su lienzo huérfano.
   - Ancho: un `ResizeObserver` sobre el contenedor llama a `Plotly.Plots.resize` como mucho una vez por fotograma cuando cambia su ancho o su alto (contraer o expandir el menú lateral, o la ventana); ignora la medida inicial y los tamaños 0 (sección oculta).
   - Trazas: una por región con `fill: 'tozeroy'` (turquesa sobre el eje; rosa con trama diagonal bajo el eje), leyenda «Sobre el eje (+)» / «Bajo el eje (−)» una vez por signo, curva `f(x)` y marcadores «Ceros de f» con su etiqueta como texto flotante (el único texto flotante, para no redondear fuera de `formato.js`). Formas: recta y = f_prom discontinua en todo el ancho, con su etiqueta, y rectángulo con contorno punteado sin relleno; las dos aparecen en la leyenda. Configuración: `responsive: true`, `displaylogo: false`, `displayModeBar: false`, más `showTips`, `scrollZoom` y `doubleClick` en `false`; ejes fijos (`dragmode: false`, `fixedrange`). Fondo del papel transparente para que se vea la trama del contenedor.
+  - T-17: antes de `Plotly.react`, `dibujar` cede un fotograma (`ceder`, inyectable en las pruebas) para que las tarjetas y los pasos se pinten sin esperar a la gráfica; un `limpiar` durante esa espera la cancela sin dibujar. Si la sección estaba oculta (medida 0), el observador guarda el tamaño 0 y ajusta la gráfica al volver a verse, aunque se dibujara oculta.
   - `precargar()` resuelve `true` o `false` y nunca se rechaza. `programarPrecarga(ventana)` espera a `load` (o actúa si `readyState` es `complete`) y precarga en `requestIdleCallback` (o `setTimeout`); devuelve cómo cancelarla.
 
 - **Fórmulas con KaTeX** (`formulasKatex.js`, T-16):
@@ -200,6 +201,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
   - Dibuja con `katex.render(latex, temporal, { throwOnError: true, trust: false, output: 'htmlAndMathml' })` en un `span` temporal; solo si no lanza reemplaza el contenido del elemento y le pone `data-katex="mejorada"`. Si KaTeX lanza (por ejemplo, `ParseError`), el elemento conserva exactamente su texto (R-09.8). El detalle va a `console.error`.
   - `mejorarDentro(raiz)` mejora cada `[data-latex]` de la raíz y devuelve `{ total, mejoradas, fallidas, canceladas, aviso }`, con `aviso: AVISO_W08` si al menos una falló y `null` si no: **un solo W-08 por raíz**, aunque fallen todas. Solo lee el atributo `data-latex`, que la aplicación escribe desde el polinomio (`latexNormalizado`, `paso.latex`, `formula.latex`); el texto del usuario nunca se pasa como LaTeX.
   - `AVISO_W08` copia el texto del catálogo, porque `adaptadores/` no puede importar el núcleo; una prueba lo compara.
+  - T-17: una mejora fallida marca el elemento con `data-katex="fallida"` (su texto no cambia), y `mejorarDentro` salta los elementos ya marcados (`mejorada` o `fallida`) y los que tienen una mejora en curso, así que un repintado no vuelve a dibujar la misma fórmula. Una vista que repinta crea elementos nuevos, sin marca, que sí se procesan (y reintentan la carga si falló).
 - **Ejemplos** (`ejemplos.js`, T-16): `EJEMPLOS` es un arreglo congelado de `{ id, seccion: 'perfil' | 'figuras', origen, titulo, entrada, estimacion?, simulado? }`, el contrato de `cargarEjemplo` (T-13) más `origen` y `titulo` («Ejercicio de clase · x³ − 1 en [1, 4]»). Solo hay textos de entrada: ningún resultado, paso ni punto de gráfica (R-13.3).
 
 | id | sección | origen | entrada |
@@ -215,52 +217,28 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | CR-09 | figuras | Caso de comprobación | rectángulo 4 × 2 m |
 | CR-10 | figuras | Caso de comprobación | rectángulo 100 × 200 cm |
 
-## 6. Qué falta después de T-16 y siguiente tarea
+## 6. Estado tras T-17 y siguiente paso
 
-El núcleo (T-02 a T-07), el analizador (T-09 y T-10) y los casos de uso (T-08) están implementados. **Lo que T-08 no puede producir todavía**, porque sus productores son de otras tareas:
+T-17 conectó lo que T-08 y T-14 dejaron como puntos de integración. Lo hizo la sesión anterior en el respaldo `b43108b` y se revisó, completó y verificó en el commit «T-17: integración de pasos, gráfica, KaTeX y ejemplos».
 
-| Campo o texto | Hoy | Lo produce | Lo conecta |
-|---|---|---|---|
-| `ResultadoPerfil.pasos` (`{ area, promedio }`) | `null` | ya existe: `pasosPerfil` de `presentacion/pasos.js` (T-12) | T-17, en `analizarPerfil` (design §4, paso 8) |
-| `ResultadoPerfil.grafica` (`DatosGrafica`) | `null` | ya existe: `datosGrafica` de `presentacion/datosGrafica.js` (T-15) | T-17, en `analizarPerfil` (design §4, paso 9; ver «Cómo conectar la gráfica») |
-| `ResultadoFigura.pasos` | `null` | ya existe: `pasosFigura` de `pasos.js` (T-12) | T-17, en `calcularFigura` |
-| Pasos de la estimación | `ResultadoEstimacion` no tiene ese campo en design §10 | ya existe: `pasosEstimacion` de `pasos.js` (T-12) | T-17 decide si la vista lo llama o se añade el campo |
-| Cifras de W-02, W-03 y W-04 | fracción exacta (`racional.aTexto`), p. ej. la cota de W-04 | ya existe: `fraccionTexto` y `cotaTexto` de `formato.js` (T-11) | T-17, en `analizarPerfil` |
-| «Q666.67» y «Q733.33» de CR-03 | **resuelto en T-14**: la vista usa `quetzalesCantidad` | — | — |
-| Invalidación de CR-13 y CR-22 en pantalla | **resuelto en T-14** para resultados, errores y estimación: `render` vacía el panel cuando el estado retira el resultado | ya existe: `graficaPlotly.limpiar` (T-15), que también cancela lo pendiente | T-17, pasando el adaptador a `crearVistaPerfil` |
-| Catálogo de ejemplos | `main.js` pasa `CATALOGO_EJEMPLOS = []`, así que `#perfil-ejemplos` sigue oculto | ya existe: `EJEMPLOS` de `ejemplos/ejemplos.js` (T-16); la vista muestra `titulo` | T-17, en `main.js` (ver «Cómo conectar KaTeX y los ejemplos») |
+| Punto | Cómo quedó |
+|---|---|
+| Pasos del perfil, de la figura y de la estimación | `analizarPerfil`, `calcularFigura` y `estimarMaterial` llaman a `pasosPerfil`, `pasosFigura` y `pasosEstimacion` con lo ya calculado. `ResultadoEstimacion.pasos` se añadió a design §10 por autorización del equipo. Las vistas solo los muestran con `desplegablePasos` (abiertos), sin importar `pasos.js` (lo comprueba la prueba de arquitectura) |
+| Datos de la gráfica | `analizarPerfil` llama a `datosGrafica(calculado)`: `grafica` es `DatosGrafica`, o `null` con W-07 al final de las advertencias; los resultados exactos y los pasos se conservan (R-10.6). Las pruebas de T-08 se actualizaron |
+| Gráfica en la vista | `main.js` pasa el adaptador a `crearVistaPerfil` y llama a `programarPrecarga(window)`. `pintarGrafica` llama a `limpiar` en cada cambio de resultado; sin resultado muestra «Todavía no hay gráfica» (con otro texto si hay errores); con `grafica: null` muestra «Gráfica no disponible» y el W-07 del resultado; con datos llama a `dibujar` sin esperar la promesa. Si Plotly falla, el adaptador muestra W-07 en la figura |
+| KaTeX | Tras cada `pintar()`, `main.js` llama a `mejorarDentro` en cada sección que tenga fórmulas sin marca, sin esperar. El W-08 de cada sección (`#perfil-aviso-formulas`, `#figura-aviso-formulas`, `#estimacion-aviso-formulas`) se decide con el DOM vigente: uno solo mientras alguna fórmula visible tenga `data-katex="fallida"`, y ninguno en otro caso. Una mejora antigua no puede dejar un aviso sobre un resultado nuevo o retirado |
+| Ejemplos | `EJEMPLOS` llega a Perfil y a Figuras (CR-09 y CR-10, selector `#figura-ejemplo` autorizado). Elegir uno despacha `cargarEjemplo`. Debajo se ve «Origen: …» y, en CR-03, que el precio y el adicional copiados son simulados. Estimación rotula «Datos simulados» mientras `datosSimulados` es verdadero. Si se edita la entrada, el selector vuelve a «Elija un ejemplo…» y la nota desaparece |
+| W-02, W-03 y W-04 | Con `fraccionTexto` (ceros, siempre racionales) y `cotaTexto` (cota redondeada hacia arriba) |
+| Valores largos | `.tarjeta` tiene una columna `minmax(0, 1fr)`: los números se parten dentro de su tarjeta (`overflow-wrap: anywhere`) y una fórmula KaTeX que no cabe se desplaza dentro de su línea. Resuelve la observación de T-15 (`scrollWidth` 4694 px) |
+| Página temporal de T-01 | Retirada con su enlace, su entrada en `vite.config.js` y su comprobación en `verificar-dist.js` |
 
-**Puntos de integración que dejó T-14** (la página dice que faltan; no hay datos simulados en `src/`):
+Verificación: `docs/verificacion-integracion.md` (comandos con sus códigos de salida y recorrido en Chrome sin interfaz sobre el build servido).
 
-| Punto | Dónde | Qué hace hoy | Qué debe hacer T-17 |
-|---|---|---|---|
-| Gráfica | `<figure id="perfil-grafica" class="grafica" data-grafica>`, fija en `index.html`; la llena `pintarGrafica` de `vistaPerfil.js` | aviso «Gráfica pendiente de integración», solo con unos ejes decorativos, sin curva | llenar `resultado.grafica` con `datosGrafica` y pasar el adaptador en `crearVistaPerfil`; la vista ya llama a `limpiar` y a `dibujar(figura, datos)` cuando cambia el resultado. Ajustar `pintarGrafica` para W-07 (ver abajo). El CSS de `.grafica` no necesita cambios: en el montaje de T-15 el lienzo ocupó todo el ancho con su estilo en línea |
-| Pasos del perfil y de la figura | `desplegablePasos` de `vistaPerfil.js` y `vistaFiguras.js` (un `<details>`) | cerrado, con la insignia «Pendiente de integración» y el aviso dentro | conectar `pasosPerfil` y `pasosFigura` en los casos de uso; la vista ya pinta `pasos.area`, `pasos.promedio` o el arreglo de la figura con `listaPasos` y abre el panel |
-| Pasos de la estimación | `tarjetaResultado` de `vistaEstimacion.js` | aviso fijo | decidir si la vista llama a `pasosEstimacion` (interfaz no puede importar `pasos.js`, design §2) o si se añade el campo a `ResultadoEstimacion` |
-| KaTeX | elementos con `data-latex` (`.paso__texto`, `.modelo__funcion`, `.resultado-figura__formula`) | se ve el texto Unicode (R-09.8) | llamar a `formulasKatex.mejorarDentro(raiz)` (T-16) tras cada repintado y mostrar un solo W-08 (ver abajo) |
-| Precarga de Plotly | `main.js` | no se precarga | llamar a `graficaPlotly.programarPrecarga(window)` al iniciar (design §13 y §14.3) |
-| Página temporal de T-01 | enlace en el pie de `index.html` | sigue visible | quitarla con `prueba-recursos.*`, su entrada en `vite.config.js` y su comprobación en `verificar-dist.js` |
-| Cifras de W-02, W-03 y W-04 | `listaAdvertencias` muestra `aviso.mensaje` tal cual | fracciones exactas | ver la fila de arriba (T-17, en `analizarPerfil`) |
-
-**Cómo conectar la gráfica en T-17 (no se hizo en T-15):**
-
-1. `analizarPerfil` (carpeta de A; `casos-de-uso/` puede importar `presentacion/`): tras calcular el rectángulo, `const grafica = datosGrafica({ modelo, intervalo, analisis, promedio, rectangulo, unidades })`; en el resultado, `grafica: grafica.datos`, y las advertencias pasan a ser `[...advertenciasDe(analisis, area), ...grafica.advertencias]`. Así W-07 por valores no finitos llega a la lista de advertencias que ya pinta `listaAdvertencias`, y los resultados exactos se conservan. Las pruebas de T-08 que esperan `grafica: null` deben actualizarse.
-2. `main.js`: `import * as graficaPlotly from './adaptadores/graficaPlotly.js'`, `crearVistaPerfil({ …, grafica: graficaPlotly })` y `graficaPlotly.programarPrecarga(window)` después de `pintar()`.
-3. `vistaPerfil.pintarGrafica` (carpeta de B): con resultado y adaptador, vaciar la figura (ya lo hace) y llamar a `grafica.dibujar(figura, resultado.grafica)` **también cuando `resultado.grafica` es `null`**: el adaptador muestra entonces W-07 en la figura (`etapa: 'datos'`). Así W-07 se ve igual venga de valores no finitos (lista de advertencias + figura) o de un fallo de carga o dibujo de Plotly (solo figura; si el equipo lo quiere también en la lista, la vista puede usar el `aviso` que devuelve la promesa). Sin resultado, se mantiene `limpiar` y el estado vacío; el texto «Gráfica pendiente de integración» debe sustituirse por uno definitivo. La vista no debe esperar la promesa para pintar los resultados.
-4. Revisión de T-R3: con el fragmento `plotly-basic.min-*.js` bloqueado, la figura muestra W-07 y los resultados siguen visibles (comprobado en el montaje de T-15, §7).
-
-**Cómo conectar KaTeX y los ejemplos en T-17 (no se hizo en T-16):**
-
-1. `main.js`: `import { EJEMPLOS } from './ejemplos/ejemplos.js'` y pasar `catalogo: EJEMPLOS` a `crearVistaPerfil` en lugar de `CATALOGO_EJEMPLOS = []`. El selector `#perfil-ejemplos` aparece solo y llama a `cargarEjemplo`. La vista filtra `seccion === 'perfil'`: CR-09 y CR-10 (figuras) no se ven hasta que T-17 decida si `vistaFiguras.js` tiene su propio selector (hoy no lo tiene; `index.html` tampoco tiene el `<select>`). `cargarEjemplo` funciona con ellos (probado).
-2. `main.js`: `import * as formulas from './adaptadores/formulasKatex.js'` y, al final de `pintar()`, `formulas.mejorarDentro(documento.getElementById('contenido'))`, sin esperar la promesa. Las fórmulas ya mejoradas no se vuelven a tocar (la vista solo recrea los elementos cuando cambia el resultado; un elemento ya marcado con `data-katex` puede saltarse si se quiere ahorrar trabajo).
-3. **W-08 sin duplicar:** con el `aviso` del resumen, mostrar **un solo** aviso por sección, por ejemplo un `.aviso` con `role="status"` encima del procedimiento, y quitarlo cuando el siguiente resumen dé `aviso: null`. No añadir un aviso por fórmula. Los avisos de `mejorar` con `estado: 'cancelada'` no cuentan, así que un paso retirado al editar no deja W-08. Como `interfaz/` no puede importar el núcleo, el texto sale de `AVISO_W08` del resumen.
-4. Revisión de T-R3: con el fragmento de KaTeX bloqueado, los pasos y la función se leen como texto y aparece W-08 (comprobado en el montaje de T-16, §7).
-
-Siguiente tarea desbloqueada: T-17 (integración). Depende de T-08 y de T-12 a T-16, todas implementadas. El equipo decide cuál se autoriza; se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
+**Siguiente paso:** las revisiones del equipo: T-R2 y T-R3 (revisión manual), T-R5 (ensayo en la laptop sin internet), T-R1 y T-R6. Los complementos T-D1 a T-D3 solo con autorización y reserva de tiempo (tasks §3). Se sigue `tasks.md` §1, **una tarea por vez y solo con instrucción del equipo**.
 
 ## 7. Asuntos pendientes (no son fallos confirmados)
 
-- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-14) y T-R3 (revisión manual de la interfaz: teclado, foco, 360 px, contraste y lectores de pantalla). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
+- **Revisión de R:** T-R1 (verificar `tests/casos-referencia.js`) y T-R6 (revisar los cambios de T-02 a T-17) y T-R3 (revisión manual de la interfaz: teclado, foco, 360 px, contraste y lectores de pantalla). R también debe verificar `tests/expresiones/tabla-gramatica.js` y las transcripciones a mano de T-08 (las antiderivadas de los CR como coeficientes y los valores calculados en las pruebas de casos de uso).
 - **Área de los 400 polinomios:** resuelto en T-08: `tests/propiedades.test.js` comprueba que los 400 dan, exacta, el área calculada con sus cortes conocidos.
 - **Tabla del prototipo para T-10:** las «33 entradas válidas y 59 inválidas del prototipo» de tasks T-10 no están en el repositorio. Por autorización del equipo, T-10 usa en su lugar una **tabla reconstruida para pruebas** (60 válidas y 84 inválidas), derivada de requirements Tabla 9.1, Tabla 9.2, §10 y §14, y de design §5.2 a §5.4 y §14.1. Las especificaciones no se cambiaron: tasks T-10 sigue citando el prototipo.
 - **Escritura de polinomios en dos capas (duplicación conocida):** `normalizar.js` (T-10) escribe `textoNormalizado` y `latexNormalizado`, y `formato.js` (T-11) tiene `polinomioTexto` y `polinomioLatex` con las mismas reglas, ampliadas a cualquier grado para la antiderivada. No se puede reutilizar una desde la otra sin romper design §2: `expresiones/` no importa `presentacion/`, y `presentacion/` no importa `expresiones/`. No se tocó T-10. Mientras tanto, `formato.test.js` comprueba que las dos dan el mismo texto y el mismo LaTeX en las 60 entradas válidas de la tabla reconstruida. Para resolverlo en la integración, el equipo puede autorizar mover la escritura de polinomios a `nucleo/` y que las dos capas la importen.
@@ -345,8 +323,16 @@ Siguiente tarea desbloqueada: T-17 (integración). Depende de T-08 y de T-12 a T
   - Una mejora sobre un párrafo retirado antes de terminar devolvió `cancelada` y el párrafo siguió con su texto, fuera del documento.
   - Con KaTeX y su CSS bloqueados (`Network.setBlockedURLs`, página recargada): CR-05 se calcula, la función se ve como texto «f(x) = x», el resumen da `fallidas: 1` y un solo W-08; el único `console.error` es el del adaptador («Unable to preload CSS…»); ningún `unhandledrejection`.
   - No se probaron los pasos con KaTeX en pantalla, porque todavía son `null` (T-17); sí se comprobó en Node que todo su LaTeX es válido para KaTeX. Tampoco lectores de pantalla, zoom ni la laptop.
-- **Observación fuera de T-15 (para T-17 o T-R3):** con `(((1000000^3)^3)^3)^3`, el número de 487 cifras desborda en horizontal la tarjeta de resultados (`.modelo__funcion` y `.valores`; `scrollWidth` 4694 a 1366 px). Es del CSS y las vistas de T-14, no de la gráfica; no se cambió.
-- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06»; hoy contiene T-01 a T-16.
+- **Observación de T-15, resuelta en T-17:** con `(((1000000^3)^3)^3)^3`, el número de 487 cifras desbordaba en horizontal la tarjeta de resultados. Ahora `.tarjeta` usa una columna `minmax(0, 1fr)`: ancho de página igual al visible a 1366 y a 360 px, sin perder cifras (`docs/verificacion-integracion.md`).
+- **T-17, decisiones que R debe confirmar** (contratos de design §10 actualizados por autorización del equipo):
+  - `ResultadoEstimacion.pasos` lo genera `estimarMaterial` con `pasosEstimacion`; la interfaz no puede importar `pasos.js` (design §2). `ResultadoPerfil.grafica` es `null` cuando `datosGrafica` da W-07, y esa W-07 va al final de `advertencias`.
+  - Con `grafica: null`, la vista escribe en la figura «Gráfica no disponible» y el W-07 del resultado, en lugar de llamar a `dibujar(figura, null)` como proponía el relevo de T-15; el aviso es el mismo. Si Plotly falla al cargar o dibujar, el adaptador escribe «W-07: …» en la figura y la lista de advertencias no cambia.
+  - El W-08 se muestra una sola vez por sección, en un contenedor `role="status"` encima del procedimiento (Perfil) o debajo de los resultados (Figuras y Estimación), y se decide con el DOM vigente (`data-katex="fallida"`), no con el resumen de una mejora anterior.
+  - Las cifras de W-02 y W-03 se escriben como fracción exacta («x = −1/2», con «−» U+2212) y no como decimal: los ceros de tangencia y de extremo siempre son racionales, y así coinciden con la nota «Ceros de f en [a, b]». La cota de W-04 usa `cotaTexto`, redondeada hacia arriba.
+  - Ejemplos: la nota de origen solo copia `origen` y `simulado` del catálogo. El rótulo «Datos simulados» de Estimación depende de `estado.estimacion.datosSimulados`, así que sigue visible si se edita el perfil (el precio y el adicional siguen siendo los del ejemplo) y desaparece al editar el precio o el adicional. El selector vuelve a «Elija un ejemplo…» en cuanto la entrada deja de coincidir con el ejemplo.
+  - `dibujar` cede un fotograma antes de `Plotly.react` para que las tarjetas y los pasos aparezcan primero; en Chrome sin interfaz, la gráfica tardó de 56 a 183 ms y las fórmulas hasta 260 ms tras calcular.
+  - Las fórmulas KaTeX que no caben se desplazan en horizontal dentro de su línea (`overflow-x: auto`); no se añadió `tabindex` a esos contenedores.
+- **Textos desactualizados no autorizados para cambio:** `design.md` §18, regla 8, y `requirements.md` §0 («Estado del repositorio») describen el estado anterior a los commits. `AGENTS.md` ya recoge la regla vigente, aunque dice que la rama «ya contiene T-01 a T-06» (hoy contiene T-01 a T-17) y que `prueba-recursos.*` existen (se retiraron en T-17). No se tocó `AGENTS.md` sin autorización.
 
 ## 8. Intención visual (T-14 y su revisión visual)
 
