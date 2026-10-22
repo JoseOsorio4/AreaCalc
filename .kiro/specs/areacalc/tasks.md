@@ -1,6 +1,6 @@
 # ÁreaCalc — Plan de tareas (Etapa C)
 
-> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-12 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). Los casos de uso de T-08 siguen devolviendo `pasos` y `grafica` en `null` hasta T-15 y T-17. T-13 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
+> **Estado:** v0.3, con el registro de avance actualizado. **Plan de la Etapa C en ejecución:** T-01 está completada; T-02 a T-13 están implementadas y probadas, con la revisión de R pendiente (T-R1 y T-R6). Los casos de uso de T-08 siguen devolviendo `pasos` y `grafica` en `null` hasta T-15 y T-17. T-14 en adelante no se han iniciado. · **Fecha del plan:** 19 de octubre de 2026
 > **Cambios de la v0.3:** D-09 decidida sin tope de coeficientes (requirements C-11), con las pruebas CR-32 a CR-36. T-01 se verifica en el entorno de Kiro Web y la prueba en la laptop pasa a T-R5, sin bloquear T-02 (C-12).
 > **Base:** `requirements.md` v0.5, `design.md` v0.5 (Etapa B cerrada) y `docs/formulario-matematico.md` v0.4.
 > Este plan **no autoriza implementar** por sí solo. Cada tarea necesita autorización explícita del equipo antes de que Codex la ejecute. El estado para continuar en otro chat está en `docs/RELEVO-KIRO.md`.
@@ -209,7 +209,8 @@ El calendario no tiene holgura. Si una tarea se retrasa más de medio día, se a
   - _Requisitos: R-09._
   - **Explicar:** cada paso de los ejercicios de clase de x³ − 1 y 1 + x².
 
-- [ ] **T-13 · Estado e invalidación** · B · 3 h · MVP
+- [x] **T-13 · Estado e invalidación** · B · 3 h · MVP
+  - **Estado: implementada y probada; revisión de R pendiente (T-R6).** Commit «T-13: estado e invalidación con pruebas» en `avance-t04`. `tests/interfaz/estado.test.js` tiene 42 pruebas sin DOM, también las de `navegacion.js`, sobre una ventana simulada con historial. Cubren CR-22 (tras calcular CR-03 y cambiar b a 5 no quedan resultado, pasos, gráfica ni estimación), un error tras un resultado válido, la invalidación de la estimación, `cargarEjemplo` con un catálogo de prueba y el botón Atrás. `ejemplos.js` (T-16) todavía no existe: `cargarEjemplo` recibe el catálogo como argumento. Con T-13, `npm test` da 1155/1155 en 23 archivos y `npm run build` es correcto, ambos con código de salida 0. Las decisiones de contrato están en `docs/RELEVO-KIRO.md` §7.
   - **Depende de:** los contratos de design §10 y §12.
   - **Archivos:** `src/interfaz/estado.js`, `navegacion.js` y `tests/interfaz/estado.test.js`.
   - **Aceptación:** transiciones puras de design §12; al editar se retiran el resultado y la estimación que depende de él (D-04); `cargarEjemplo` sigue el mismo camino que una entrada manual.
