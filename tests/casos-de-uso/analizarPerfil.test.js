@@ -304,6 +304,23 @@ describe('errores internos (R-19.4, R-19.5)', () => {
   });
 });
 
+describe('E-MOD-02: explicación general, sin sugerir g(x) = −f(x) (R-16.2)', () => {
+  const MENSAJE = 'El perfil toma valores negativos y no representa una altura no negativa en todo el intervalo.';
+  const SUGERENCIA = 'Revise el modelo físico y el intervalo antes de estimar material.';
+
+  it.each([
+    ['f(x) = x en [−1, 1], que cambia de signo', { textoFuncion: 'x', textoA: '-1', textoB: '1' }],
+    ['f(x) = −2 en [0, 3], negativa en todo el intervalo', { textoFuncion: '-2', textoA: '0', textoB: '3' }]
+  ])('%s', (_, entrada) => {
+    const { aptitud } = valido(entrada, 'fisica');
+    expect([aptitud.apta, aptitud.motivo]).toEqual([false, 'E-MOD-02']);
+    expect(aptitud.error.codigo).toBe('E-MOD-02');
+    expect(aptitud.error.mensaje).toBe(MENSAJE);
+    expect(aptitud.error.sugerencia).toBe(SUGERENCIA);
+    expect(`${aptitud.error.mensaje} ${aptitud.error.sugerencia}`).not.toMatch(/g\(x\)/);
+  });
+});
+
 describe('contrato ResultadoPerfil (design §10)', () => {
   it('tiene los campos de design §10, con los pasos (T-12) y la gráfica (T-15) conectados en T-17', () => {
     const resultado = perfil(CASOS['CR-01'].entrada);

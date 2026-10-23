@@ -136,7 +136,24 @@ describe('CR-05: integral con signo frente a área por tramos (formulario §2)',
   it('el promedio usa I y no muestra el rectángulo equivalente', () => {
     const promedio = pasosPromedio(resultado);
     expect(buscar(promedio, 'division').texto).toBe('f_prom = (1/2) · 0 = 0');
-    expect(buscar(promedio, 'interpretacion').texto).toMatch(/no se muestra el rectángulo equivalente: esa igualdad requiere f ≥ 0/);
+    // (b − a)·f_prom = I se cumple siempre; lo que falla con valores negativos es que sea el área (R-08).
+    expect(buscar(promedio, 'interpretacion').texto).toBe(
+      `El valor promedio de f en [${MENOS}1, 1] es 0 u. La base multiplicada por el valor promedio coincide con la `
+      + `integral con signo: (b ${MENOS} a)·f_prom = I. Como la función toma valores negativos, ese producto no `
+      + 'representa el área geométrica y no se muestra el rectángulo equivalente.');
+  });
+});
+
+describe('CR-06: perfil completamente negativo, interpretación del promedio', () => {
+  const entrada = CASOS['CR-06'].entrada ?? CASOS['CR-06'].entradas[0];
+  const interpretacion = buscar(pasosPromedio(perfil(entrada)), 'interpretacion').texto;
+
+  it('dice que (b − a)·f_prom coincide con I y que no es el área, sin afirmar que la igualdad requiere f ≥ 0', () => {
+    expect(interpretacion).toBe(
+      `El valor promedio de f en [0, 3] es ${MENOS}2 u. La base multiplicada por el valor promedio coincide con la `
+      + `integral con signo: (b ${MENOS} a)·f_prom = I. Como la función toma valores negativos, ese producto no `
+      + 'representa el área geométrica y no se muestra el rectángulo equivalente.');
+    expect(interpretacion).not.toMatch(/requiere f ≥ 0/);
   });
 });
 

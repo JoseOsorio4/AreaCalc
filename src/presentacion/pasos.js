@@ -443,8 +443,10 @@ export function pasosPromedio(resultado) {
     ? `El valor promedio de f en ${intervaloTexto(intervalo)} es ${cantidadTexto(fProm, unidades.y)}. El rectángulo equivalente, de base `
       + `${cantidadTexto(exacta(rect.base), unidades.x)} y altura ${cantidadTexto(exacta(rect.altura), unidades.y)}, tiene área `
       + `${cantidadTexto(exacta(rect.area), unidades.area)}, la misma que la región.`
-    : `El valor promedio de f en ${intervaloTexto(intervalo)} es ${cantidadTexto(fProm, unidades.y)}. Como f no es ≥ 0 en todo el `
-      + 'intervalo, (b − a)·f_prom = I no es el área y no se muestra el rectángulo equivalente: esa igualdad requiere f ≥ 0.';
+    // (b − a)·f_prom = I se cumple siempre; lo que exige f ≥ 0 es que ese producto sea A_geo (R-08).
+    : `El valor promedio de f en ${intervaloTexto(intervalo)} es ${cantidadTexto(fProm, unidades.y)}. La base multiplicada por el `
+      + 'valor promedio coincide con la integral con signo: (b − a)·f_prom = I. Como la función toma valores negativos, ese '
+      + 'producto no representa el área geométrica y no se muestra el rectángulo equivalente.';
   pasos.push(paso('interpretacion', 'Interpretación', interpretacion));
   return Object.freeze(pasos);
 }

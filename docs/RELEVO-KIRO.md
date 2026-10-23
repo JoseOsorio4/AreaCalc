@@ -20,7 +20,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
 - Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-17.
-- Último trabajo: el commit documental «T-R2: lista de revisión manual» (`docs/revision-manual.md`), encima de `20f470a` («T-17: integración de pasos, gráfica, KaTeX y ejemplos»), que va sobre el respaldo parcial `b43108b` y `e6b9623` (T-16). Después de T-17 no se cambió código. La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
+- Último trabajo: el commit «T-R3: revisión parcial y corrección de dos textos», encima de `c88e0f8` («T-R2: lista de revisión manual»), `20f470a` (T-17), el respaldo parcial `b43108b` y `e6b9623` (T-16). Después de T-17 solo cambiaron dos textos (§7, «Correcciones de textos tras la revisión parcial»); los cálculos y contratos no. La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -45,11 +45,12 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-15 Datos de la gráfica y adaptador de Plotly | Implementada y probada; conectada en T-17 | `98fab65` |
 | T-16 Fórmulas con KaTeX y ejemplos | Implementada y probada; conectada en T-17 | `e6b9623` |
 | T-17 Integración | Implementada y probada; revisión manual (T-R3) y ensayo sin internet (T-R5) pendientes (§6) | `b43108b` (respaldo parcial) y `20f470a` |
-| T-R2 Lista de revisión manual | Redactada en `docs/revision-manual.md`; 40 puntos, todos pendientes de ejecutar | commit «T-R2: lista de revisión manual» |
+| T-R2 Lista de revisión manual | Redactada en `docs/revision-manual.md`; 41 puntos (se añadió ACC-07, contraste) | `c88e0f8` y commit «T-R3: revisión parcial…» |
+| T-R3 Revisión manual | **En curso, parcial:** primera revisión del equipo el 22 de octubre; 1 punto aprobado (FIG-02) y evidencia parcial en MR-01 a MR-04, FIG-03, FIG-04, EST-01, EST-02, EST-04 e INV-01; el resto sin ejecutar | commit «T-R3: revisión parcial…» |
 
-Última ejecución, con T-17: `npm test` dio **1304/1304** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0 (solo el aviso esperado por el tamaño de Plotly, design §13); `npm run verificar-dist` también dio 0. T-17 añade 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`.
+Última ejecución, tras corregir los dos textos: `npm test` dio **1307/1307** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0. Con T-17 eran 1304/1304 y `npm run verificar-dist` dio 0; la corrección añade 3 pruebas y ajusta 1. T-17 había añadido 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`.
 
-**La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R3, T-R5 y T-R6 siguen pendientes. T-R2 (la lista) está redactada en `docs/revision-manual.md` con sus 40 puntos en «Pendiente»; el equipo solo registró, como antecedente, que vio CR-03 en Estimación con 40/3 m², 44/3 m², Q666.67 y Q733.33. Implementada no equivale a revisada (tasks.md §0).
+**La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R3, T-R5 y T-R6 siguen pendientes. T-R2 (la lista) está redactada en `docs/revision-manual.md`. T-R3 está en curso: la primera revisión parcial del equipo (§0.2 de esa lista) aprobó solo FIG-02, porque es el único punto con todos sus criterios cubiertos; los demás conservan «Pendiente» con la evidencia anotada. Documentar un fallo no aprueba la aplicación. Implementada no equivale a revisada (tasks.md §0).
 
 ## 4. Mapa de archivos
 
@@ -326,6 +327,10 @@ Verificación: `docs/verificacion-integracion.md` (comandos con sus códigos de 
   - Con KaTeX y su CSS bloqueados (`Network.setBlockedURLs`, página recargada): CR-05 se calcula, la función se ve como texto «f(x) = x», el resumen da `fallidas: 1` y un solo W-08; el único `console.error` es el del adaptador («Unable to preload CSS…»); ningún `unhandledrejection`.
   - No se probaron los pasos con KaTeX en pantalla, porque todavía son `null` (T-17); sí se comprobó en Node que todo su LaTeX es válido para KaTeX. Tampoco lectores de pantalla, zoom ni la laptop.
 - **Observación de T-15, resuelta en T-17:** con `(((1000000^3)^3)^3)^3`, el número de 487 cifras desbordaba en horizontal la tarjeta de resultados. Ahora `.tarjeta` usa una columna `minmax(0, 1fr)`: ancho de página igual al visible a 1366 y a 360 px, sin perder cifras (`docs/verificacion-integracion.md`).
+- **Correcciones de textos tras la revisión parcial (22 de octubre, autorizadas por el equipo):**
+  - `presentacion/pasos.js`, paso «Interpretación» del promedio sin rectángulo: decía que «(b − a)·f_prom = I … esa igualdad requiere f ≥ 0», pero esa igualdad se cumple siempre. Ahora dice que la base por el promedio coincide con la integral con signo y que, como la función toma valores negativos, ese producto no es el área geométrica y no se muestra el rectángulo. Sigue cumpliendo R-08.2, cuya «igualdad» es (b − a)·f_prom = A_geo, la que sí requiere f ≥ 0.
+  - `nucleo/errores.js`, E-MOD-02: la sugerencia «g(x) = −f(x)» no sirve cuando f cambia de signo. Ahora: «El perfil toma valores negativos y no representa una altura no negativa en todo el intervalo.» y «Revise el modelo físico y el intervalo antes de estimar material.». Mismo código y misma condición. R-16.2 solo dice que el sistema «PODRÁ» sugerir g(x) = −f(x), así que no se cambiaron las especificaciones (requirements §10 conserva su descripción orientativa).
+  - Pruebas: `tests/presentacion/pasos.test.js` comprueba el texto completo para x en [−1, 1] y para −2 en [0, 3] (perfil completamente negativo); `tests/casos-de-uso/analizarPerfil.test.js` comprueba el mensaje y la sugerencia de E-MOD-02 en los dos casos y que no mencionen g(x).
 - **T-17, decisiones que R debe confirmar** (contratos de design §10 actualizados por autorización del equipo):
   - `ResultadoEstimacion.pasos` lo genera `estimarMaterial` con `pasosEstimacion`; la interfaz no puede importar `pasos.js` (design §2). `ResultadoPerfil.grafica` es `null` cuando `datosGrafica` da W-07, y esa W-07 va al final de `advertencias`.
   - Con `grafica: null`, la vista escribe en la figura «Gráfica no disponible» y el W-07 del resultado, en lugar de llamar a `dibujar(figura, null)` como proponía el relevo de T-15; el aviso es el mismo. Si Plotly falla al cargar o dibujar, el adaptador escribe «W-07: …» en la figura y la lista de advertencias no cambia.

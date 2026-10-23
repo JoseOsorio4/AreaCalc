@@ -1,8 +1,8 @@
 # Revisión manual de ÁreaCalc (T-R2)
 
-Lista de comprobación de la interfaz para T-R3 (revisión manual) y T-R5 (ensayo en la laptop sin internet), según requirements R-25.4 y §15, punto 4. La redactó Kiro el 22 de octubre de 2026 a pedido del equipo. R puede ajustarla antes de usarla.
+Lista de comprobación de la interfaz (41 puntos) para T-R3 (revisión manual) y T-R5 (ensayo en la laptop sin internet), según requirements R-25.4 y §15, punto 4. La redactó Kiro el 22 de octubre de 2026 a pedido del equipo. R puede ajustarla antes de usarla.
 
-**Estado de la lista:** redactada. **Ninguna comprobación manual se ha ejecutado todavía:** todas están en «Pendiente». T-R3 y T-R5 no están terminadas.
+**Estado de la lista:** redactada y en ejecución. El 22 de octubre el equipo hizo una primera revisión parcial en el navegador (§0.2). Solo FIG-02 cubre todos sus criterios y está **Aprobado**; los demás puntos siguen en «Pendiente», algunos con evidencia parcial anotada. T-R3 y T-R5 no están terminadas.
 
 ## 0. Cómo usar esta lista
 
@@ -12,6 +12,8 @@ Lista de comprobación de la interfaz para T-R3 (revisión manual) y T-R5 (ensay
   - **Pendiente:** todavía no se hizo.
   - **Aprobado:** todo lo de «Resultado esperado» se vio igual.
   - **Fallido:** algo no coincide, falta o da error. Anote qué vio, con una captura si puede, y siga con el punto siguiente. No intente corregir la aplicación durante la revisión.
+- **Documentar un fallo no aprueba la aplicación.** Un punto «Fallido» bien anotado cuenta como comprobación ejecutada, pero el defecto sigue abierto: el equipo decide si se corrige (y entonces el punto se repite) o si se acepta como limitación conocida. La aplicación solo se considera aprobada cuando no quedan fallos sin resolver o aceptar.
+- Si solo se comprobó una parte de un punto, déjelo en «Pendiente» y anote en «Observaciones» qué se vio y qué falta.
 - En **Observaciones y evidencia** anote quién revisó, la fecha, el navegador y el nombre de la captura (por ejemplo `MR-01-cr01.png`).
 - «Recargar» significa pulsar F5. Recargar borra todos los datos escritos (R-12.3); varios puntos empiezan así para partir de una página limpia.
 - Los decimales usan punto: `0.5`, no `0,5`.
@@ -21,6 +23,33 @@ Lista de comprobación de la interfaz para T-R3 (revisión manual) y T-R5 (ensay
 `docs/verificacion-integracion.md` registra un recorrido automático en Chrome sin interfaz, sobre el build servido en la computadora de trabajo: CR-01, CR-02, CR-03, CR-05, figuras, errores, invalidación, Plotly y KaTeX bloqueados, 360 px, teclado y ausencia de solicitudes externas. También registra `npm test` (1304/1304), `npm run build` y `npm run verificar-dist`, todos con código de salida 0. Esa comprobación **no sustituye** la revisión de personas: no usó lectores de pantalla, no probó el zoom ni la laptop de exposición, y no apagó el Wi-Fi.
 
 **Antecedente del equipo:** el equipo comprobó visualmente CR-03 en Estimación: 40/3 m², 44/3 m², Q666.67 y Q733.33. Es un antecedente de MR-03 y de EST-01; esos puntos siguen en «Pendiente» hasta recorrerlos completos.
+
+### 0.2 Primera revisión parcial del equipo (22 de octubre)
+
+El equipo informó estas observaciones en el navegador. No se registraron nombres de capturas, tiempos ni comprobaciones de teclado. Cada observación está copiada también en el punto que le corresponde.
+
+| Observación del equipo | Punto | Efecto |
+|---|---|---|
+| CR-01: I = A_geo = 243/4 = 60.75 u², promedio 81/4 = 20.25 u, gráfica, procedimiento, W-03 y bloqueo E-MOD-01 | MR-01 | Parcial: falta Intro en b, foco y los textos concretos de los pasos |
+| CR-02: I = A_geo = 6 m², promedio 2 m, gráfica y procedimientos; estimación habilitada | MR-02 | Parcial: faltan la función mostrada, las notas, la ausencia de advertencias y la equivalencia con la pizarra |
+| CR-03 desde el selector: carga y cálculo automáticos, 40/3 m², 10/3 m; estimación con 50 y 10: 44/3 m², Q666.67 y Q733.33 | EST-01 y MR-03 | Parcial: faltan la nota de origen, el recuadro «Datos simulados» y W-05; MR-03 pide la entrada a mano |
+| CR-05: I = 0, A_geo = 1 m², promedio 0; gráfica con ambas regiones, W-01, integrales −1/2 y 1/2, bloqueo E-MOD-02 | MR-04 | Parcial: faltan distintivos, notas, leyendas y rayas; además, el texto de E-MOD-02 y la interpretación del promedio cambiaron después (§0.3) |
+| Tras CR-03 y su estimación, cambiar b de 4 a 5 sin recalcular retiró resultados, gráfica y la estimación anterior; precio 50 y adicional 10 permanecieron. No se comprobó todo el contenido inferior de pasos | INV-01 | Parcial: faltan la retirada del procedimiento y la banda, y la banda «Sin fuente del área» en Estimación |
+| Rectángulo 100 × 200 cm: 20000 cm² = 2 m² y procedimiento de conversión correcto | FIG-02 | **Aprobado** |
+| Al usarlo como fuente: 2.2 m² con adicional, Q100.00 y Q110.00 | EST-02 | Parcial: faltan la banda de la fuente y el área útil |
+| Círculo r = 50 cm: 2500π cm² ≈ 7853.9816 cm² y π/4 m² ≈ 0.7854 m² | FIG-03 | Parcial: falta el círculo de radio 5 m |
+| Triángulo de base 4 m y altura perpendicular 3 m: 6 m², procedimiento correcto | FIG-03 | Parte del mismo punto |
+| Estimación del círculo de 50 cm con 50 y 10: 11π/40 m² ≈ 0.8639 m², Q39.27 y Q43.20 | EST-03 (relacionada) | No cubre EST-03, que usa otro caso; se anota como evidencia adicional |
+| Estimación del triángulo con 50 y 10: 6.6 m², Q300.00 y Q330.00 | EST-02 (relacionada) | Evidencia adicional |
+| Radio −1 y Calcular área: E-NUM-06 y se retiró el resultado | FIG-04 | Parcial: FIG-04 prueba el rectángulo con 0, −3 y vacío |
+| Después, en Estimación, Calcular: E-MOD-04 y «Sin estimación» | EST-04 | Parcial: cubre la idea del paso 1, pero falta la banda «Sin fuente del área» y los pasos 2 a 4 |
+
+### 0.3 Textos corregidos después de la revisión parcial
+
+Tras la revisión del 22 de octubre se corrigieron dos textos; los puntos que los muestran deben comprobarse con la versión nueva:
+
+- **Interpretación del promedio** cuando f toma valores negativos (MR-04): ahora dice que (b − a)·f_prom = I siempre se cumple y que, por los valores negativos, ese producto no es el área geométrica y no se muestra el rectángulo equivalente.
+- **E-MOD-02** (MR-04): ya no sugiere g(x) = −f(x); ahora dice «El perfil toma valores negativos y no representa una altura no negativa en todo el intervalo. Revise el modelo físico y el intervalo antes de estimar material.»
 
 ## 1. Preparación general
 
@@ -66,8 +95,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   - Gráfica: curva, región sombreada con la leyenda «Sobre el eje (+)», un marcador en x = 1, una recta discontinua «f_prom = 81/4 u» y el contorno del «Rectángulo equivalente». Ejes «x (u)» y «f(x) (u)».
   - Procedimiento paso a paso (abierto): incluye «F(4) = 4⁴/4 − 4 = 64 − 4 = 60», «F(1) = 1⁴/4 − 1 = 1/4 − 1 = −3/4» y «A = 243/4 = 60.75 u²». Ningún resultado lleva «+C».
   - Banda «Área no apta»: botón «Usar esta área para estimar material» deshabilitado y el motivo «E-MOD-01: Un ejercicio abstracto no tiene escala física…».
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: I = A_geo = 243/4 = 60.75 u², promedio 81/4 = 20.25 u, gráfica, procedimiento, W-03 y bloqueo E-MOD-01 vistos. Falta: calcular con Intro en b, comprobar el foco en «Resultados», los textos de F(4), F(1) y A, la ausencia de «+C» y los elementos concretos de la gráfica.
 
 ### MR-02 · CR-02: 1 + x² en [−1, 2], perfil físico
 
@@ -81,8 +110,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   - Sin advertencias.
   - En «Valor promedio», paso «División entre b − a», la explicación dice «Equivalencia con la pizarra… (1/3)·(14/3) − (1/3)·(−4/3) = (1/3)·[14/3 − (−4/3)] = (1/3)·6 = 2».
   - Banda «Área apta» con el botón habilitado.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: I = A_geo = 6 m², promedio 2 m, gráfica y procedimientos; estimación habilitada. Falta: f(x) = x² + 1 mostrada, las notas (sin ceros, rectángulo 3 m × 2 m), que no haya advertencias y la equivalencia con la pizarra en el paso de división.
 
 ### MR-03 · CR-03: 2 + x²/4 en [0, 4] m, con estimación
 
@@ -99,8 +128,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   - «Supuestos de este cálculo» muestra el texto de W-06. Como el precio se escribió a mano, **no** aparece «Los precios y datos de este ejemplo son simulados.»
   - «Procedimiento de la estimación»: «… = 2000/3 ≈ Q666.67» y «… = 2200/3 ≈ Q733.33».
 - **Antecedente:** el equipo ya vio 40/3 m², 44/3 m², Q666.67 y Q733.33 en Estimación. Falta recorrer el punto completo.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: CR-03 se cargó **desde el selector** (no a mano): 40/3 m², 10/3 m; con 50 y 10, 44/3 m², Q666.67 y Q733.33. Falta: escribir los datos a mano, la banda de la fuente, el rectángulo, que no aparezca W-05 y el procedimiento de la estimación.
 
 ### MR-04 · CR-05: x en [−1, 1] m, integral frente a área
 
@@ -113,9 +142,10 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   - Advertencia «W-01 f cambia de signo: la integral con signo y el área geométrica son distintas.»
   - Gráfica: dos regiones, «Bajo el eje (−)» (rosa, con rayas diagonales) y «Sobre el eje (+)» (turquesa). La diferencia no depende solo del color: hay leyenda y rayas.
   - Procedimiento: tramos «I₁ = F(0) − F(−1) = −1/2, |I₁| = 1/2» e «I₂ = F(1) − F(0) = 1/2, |I₂| = 1/2», y la suma 1 m².
-  - Banda «Área no apta» con el botón deshabilitado: «E-MOD-02: El perfil cambia de signo o es negativo…».
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+  - En «Valor promedio», paso «Interpretación»: «El valor promedio de f en [−1, 1] es 0 m. La base multiplicada por el valor promedio coincide con la integral con signo: (b − a)·f_prom = I. Como la función toma valores negativos, ese producto no representa el área geométrica y no se muestra el rectángulo equivalente.»
+  - Banda «Área no apta» con el botón deshabilitado: «E-MOD-02: El perfil toma valores negativos y no representa una altura no negativa en todo el intervalo. Revise el modelo físico y el intervalo antes de estimar material.» No sugiere g(x) = −f(x).
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: I = 0, A_geo = 1 m², promedio 0; gráfica con ambas regiones, W-01, procedimiento con integrales −1/2 y 1/2 y bloqueo E-MOD-02, vistos **antes** de corregir los textos de §0.3. Falta: los distintivos, las notas, las leyendas y las rayas de la gráfica, la suma 1 m², y ver la interpretación del promedio y el texto de E-MOD-02 nuevos.
 
 ## 3. Figuras y conversión de unidades
 
@@ -134,8 +164,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Entrada:** Rectángulo; Unidad **cm (centímetros)**; Base b `100`; Altura h `200`.
 - **Pasos:** cambie la unidad, escriba las medidas y pulse **Calcular área**.
 - **Resultado esperado:** dos tarjetas: «Área en cm²» **20000 cm²** y «Área en m²» **2 m²** («1 m² = 10 000 cm²…»). El último paso, «Conversión a m²», muestra 20000/10 000 m² = 2 m² y explica que el área se divide entre el cuadrado del factor (100² = 10 000).
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Aprobado
+- **Observaciones y evidencia:** 22 oct, equipo, en el navegador: 20000 cm² = 2 m² y procedimiento de conversión correcto. Sin captura registrada.
 
 ### FIG-03 · Triángulo y círculo
 
@@ -147,17 +177,17 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Resultado esperado:**
   1. Triángulo: **6 m²**, fórmula A = (b × h)/2. Mientras está elegido el triángulo, bajo la altura se lee «Perpendicular a la base.»
   2. Círculo: **25π m²** y debajo **≈ 78.5398 m²**; solo se ve el campo Radio.
-  3. Círculo de 50 cm: **2500π cm²** y en m² **π/4 m²** (≈ 0.7854 m²).
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+  3. Círculo de 50 cm: **2500π cm²** (≈ 7853.9816 cm²) y en m² **π/4 m²** (≈ 0.7854 m²).
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: triángulo de base 4 m y altura perpendicular 3 m → 6 m², procedimiento correcto; círculo de radio 50 cm → 2500π cm² ≈ 7853.9816 cm² y π/4 m² ≈ 0.7854 m². Falta: el círculo de radio 5 m (25π m² ≈ 78.5398 m²) y que solo se vea el campo Radio.
 
 ### FIG-04 · Medidas no válidas en figuras
 
 - **Preparación:** Figuras; Rectángulo; unidad m.
 - **Entrada y pasos:** pruebe por separado, pulsando **Calcular área** cada vez: Base `0` y Altura `2`; Base `-3` y Altura `2`; Base vacía y Altura `2`.
 - **Resultado esperado:** con 0 y con −3, «E-NUM-06 «Base b» debe ser mayor que cero…»; vacío, «E-NUM-01 El campo «Base b» está vacío…». El mensaje aparece bajo el campo y en el resumen «Hay 1 dato por corregir». No queda ningún resultado anterior.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo, caso relacionado: círculo con radio `-1` → E-NUM-06 y se retiró el resultado anterior. Falta: los tres casos del rectángulo (0, −3 y vacío).
 
 ## 4. Estimación, adicional y redondeo final
 
@@ -173,8 +203,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   - Paso 2: en Estimación, el precio ya dice 50 y el adicional 10, y sobre el botón se ve el recuadro «Datos simulados El precio y el adicional vienen del caso práctico simulado…».
   - Paso 3: Q666.67 y Q733.33, como en MR-03, y además en los supuestos «Los precios y datos de este ejemplo son simulados.»
 - **Antecedente:** ver MR-03.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: carga y cálculo automáticos desde el selector; 40/3 m² y 10/3 m; estimación con 50 y 10: 44/3 m², Q666.67 y Q733.33. Falta: la nota de origen bajo el selector, el recuadro «Datos simulados» antes de calcular y W-05 en los supuestos.
 
 ### EST-02 · Estimación desde una figura en cm
 
@@ -182,8 +212,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Entrada:** Rectángulo, cm, Base `100`, Altura `200`; en Estimación, Precio `50`, Adicional `10`.
 - **Pasos:** calcule el área, pulse **Usar esta área para estimar material**, escriba el precio y el adicional y pulse **Calcular estimación**.
 - **Resultado esperado:** «Fuente activa · figura», «Rectángulo medido en cm», «A = 2 m²». Área útil **2 m²**, Área con adicional **11/5 m²** (= 2.2 m²), Costo base **Q100.00**, Costo estimado **Q110.00**. El precio se aplica al área en m², no a 20000 cm².
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: con el rectángulo de 100 × 200 cm como fuente, 2.2 m² con adicional, Q100.00 y Q110.00. Falta: la banda «Fuente activa · figura» con «Rectángulo medido en cm» y «A = 2 m²», y el área útil 2 m². Evidencia relacionada: el triángulo de 4 m × 3 m con 50 y 10 dio 6.6 m², Q300.00 y Q330.00.
 
 ### EST-03 · Adicional 0, círculo y redondeo una sola vez
 
@@ -192,7 +222,7 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Pasos:** pulse **Calcular estimación**.
 - **Resultado esperado:** Área útil 25π m² (≈ 78.5398 m²); Área con adicional igual; Costo base y Costo estimado **Q250π ≈ Q785.40**. El adicional 0 es válido. Los quetzales llevan siempre 2 decimales.
 - **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Observaciones y evidencia:** evidencia relacionada (no cubre este punto, que usa r = 5 m, precio 10 y adicional 0): 22 oct, equipo, círculo de radio 50 cm con 50 y 10 → 11π/40 m² ≈ 0.8639 m², Q39.27 y Q43.20.
 
 ### EST-04 · Errores de la estimación
 
@@ -208,8 +238,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
   3. E-NUM-04 bajo el adicional (entre 0 % y 100 %).
   4. E-NUM-04 bajo el precio (2 decimales como máximo).
   En ningún caso queda una estimación anterior visible. Los supuestos generales de la derecha siempre están visibles.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: después de que el círculo con radio −1 diera E-NUM-06, calcular en Estimación mostró E-MOD-04 y «Sin estimación». Falta: el paso 1 tal como está escrito (sin calcular nada antes) con la banda «Sin fuente del área», y los pasos 2 a 4.
 
 ## 5. Edición sin recalcular (invalidación, R-12.1)
 
@@ -223,8 +253,8 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Resultado esperado:**
   - Perfil: «Todavía no hay resultados», la gráfica dice «Todavía no hay gráfica», no hay procedimiento ni banda de estimación, y no quedan cifras antiguas (ni 40/3).
   - Estimación: banda «Sin fuente del área» y «Todavía no hay estimación». El precio 50 y el adicional 10 escritos se conservan.
-- **Estado:** Pendiente
-- **Observaciones y evidencia:**
+- **Estado:** Pendiente (evidencia parcial)
+- **Observaciones y evidencia:** 22 oct, equipo: tras CR-03 y su estimación, cambiar b de 4 a 5 sin recalcular retiró los resultados y la gráfica del perfil y la estimación anterior; precio 50 y adicional 10 permanecieron. No se comprobó expresamente todo el contenido inferior (procedimiento y banda de estimación) ni la banda «Sin fuente del área» en Estimación.
 
 ### INV-02 · Cambiar la interpretación o la función
 
@@ -409,6 +439,34 @@ Para los cuatro casos: recargue, quédese en **Perfil**, escriba los datos a man
 - **Estado:** Pendiente
 - **Observaciones y evidencia:**
 
+### ACC-07 · Contraste del texto (R-23.4: mínimo 4.5:1)
+
+- **Requisito vigente:** R-23.4 exige un contraste mínimo de **4.5:1** para el texto (nivel AA de WCAG 2.1). Aplíquelo a todo texto visible, también al grande; los controles deshabilitados se anotan aparte.
+- **Preparación:** ventana de escritorio, zoom al 100 %; CR-01 calculado (para ver la banda «Área no apta») y, en otra pasada, CR-03 con su estimación y un error de ERR-01.
+- **Pasos:**
+  1. F12 y pulse **Ctrl + Shift + C** (seleccionar elemento).
+  2. Pase el puntero sobre cada texto de la tabla. La ventanita muestra «Contraste» con un número (por ejemplo «Contraste 5.05») y una marca verde si pasa. Si no aparece, haga clic en el texto, y en el panel **Estilos** haga clic en el cuadrito de color de `color`: el selector muestra «Relación de contraste».
+  3. Anote el número de cada fila.
+
+| Texto que medir | Dónde | Medido |
+|---|---|---|
+| Texto normal de párrafos y etiquetas de los campos | formulario de Perfil | |
+| Ayudas grises («Polinomios en x de grado ≤ 3…», «Origen: …») | bajo los campos y el selector | |
+| Nombres y detalles del menú lateral (texto claro sobre azul oscuro) | menú | |
+| Texto de los botones (blanco sobre azul) | Calcular, Calcular área | |
+| Cifra secundaria y notas de las tarjetas («= 60.75 u²», «Suma con signo…») | tarjetas de resultados | |
+| Distintivos «Distinta de A_geo» / «Distinta de I» | CR-05 | |
+| Avisos W-01, W-03, W-08 (texto ámbar sobre fondo claro) | lista de advertencias | |
+| Mensajes de error en rojo bajo un campo y en el resumen | ERR-01 | |
+| Banda oscura (etiqueta turquesa y texto claro) | «Área apta» / «Área no apta», «Fuente activa» | |
+| Etiquetas de la gráfica (ejes, leyenda, «f_prom = …») | tarjeta Gráfica | |
+| Indicadores de Estimación, incluido «Costo estimado» sobre azul | resultados de la estimación | |
+
+- **Resultado esperado:** todas las filas miden **4.5 o más**. Una fila por debajo de 4.5 es **Fallido** (anote el elemento, el color y el número).
+- **Antecedente (no aprueba este punto):** en T-14 una medición automática dio un mínimo de 4.81:1 en los textos visibles de entonces; no se repitió con los elementos añadidos después.
+- **Estado:** Pendiente
+- **Observaciones y evidencia:**
+
 ## 9. Fallos de Plotly y KaTeX
 
 Las bibliotecas se bloquean desde las herramientas de desarrollo; la aplicación no se modifica. **Haga un solo bloqueo a la vez** y restaure antes del siguiente.
@@ -502,19 +560,19 @@ Actualice esta tabla al terminar cada sesión. Un punto «Fallido» se informa a
 |---|---|---|---|
 | PREP-01 | Servir la versión construida | Pendiente | |
 | PREP-02 | Navegador para la revisión | Pendiente | |
-| MR-01 | CR-01 | Pendiente | |
-| MR-02 | CR-02 | Pendiente | |
-| MR-03 | CR-03 con estimación (antecedente visual del equipo) | Pendiente | |
-| MR-04 | CR-05 | Pendiente | |
+| MR-01 | CR-01 | Pendiente (parcial) | equipo, 22 oct |
+| MR-02 | CR-02 | Pendiente (parcial) | equipo, 22 oct |
+| MR-03 | CR-03 con estimación | Pendiente (parcial, vía selector) | equipo, 22 oct |
+| MR-04 | CR-05 (textos corregidos después) | Pendiente (parcial) | equipo, 22 oct |
 | FIG-01 | Rectángulo en m (CR-09) | Pendiente | |
-| FIG-02 | Rectángulo en cm (CR-10) | Pendiente | |
-| FIG-03 | Triángulo y círculo | Pendiente | |
-| FIG-04 | Medidas no válidas | Pendiente | |
-| EST-01 | Estimación con el ejemplo simulado | Pendiente | |
-| EST-02 | Estimación desde figura en cm | Pendiente | |
-| EST-03 | Adicional 0 y círculo | Pendiente | |
-| EST-04 | Errores de la estimación | Pendiente | |
-| INV-01 | Editar perfil retira todo | Pendiente | |
+| FIG-02 | Rectángulo en cm (CR-10) | **Aprobado** | equipo, 22 oct |
+| FIG-03 | Triángulo y círculo | Pendiente (parcial) | equipo, 22 oct |
+| FIG-04 | Medidas no válidas | Pendiente (parcial) | equipo, 22 oct |
+| EST-01 | Estimación con el ejemplo simulado | Pendiente (parcial) | equipo, 22 oct |
+| EST-02 | Estimación desde figura en cm | Pendiente (parcial) | equipo, 22 oct |
+| EST-03 | Adicional 0 y círculo | Pendiente (evidencia relacionada) | |
+| EST-04 | Errores de la estimación | Pendiente (parcial) | equipo, 22 oct |
+| INV-01 | Editar perfil retira todo | Pendiente (parcial) | equipo, 22 oct |
 | INV-02 | Interpretación y función | Pendiente | |
 | INV-03 | Editar la figura fuente | Pendiente | |
 | INV-04 | Editar precio o adicional | Pendiente | |
@@ -533,6 +591,7 @@ Actualice esta tabla al terminar cada sesión. Un punto «Fallido» se informa a
 | ACC-04 | 360 px | Pendiente | |
 | ACC-05 | No solo color | Pendiente | |
 | ACC-06 | Lector de pantalla (opcional) | Pendiente | |
+| ACC-07 | Contraste ≥ 4.5:1 (R-23.4) | Pendiente | |
 | FAL-01 | Plotly bloqueado | Pendiente | |
 | FAL-02 | KaTeX bloqueado | Pendiente | |
 | FAL-03 | Restauración | Pendiente | |
@@ -541,4 +600,4 @@ Actualice esta tabla al terminar cada sesión. Un punto «Fallido» se informa a
 | OFF-03 | Recorrido sin Wi-Fi (T-R5) | Pendiente | |
 | OFF-04 | Cierre y contingencia (T-R5) | Pendiente | |
 
-T-R3 termina cuando PREP-01 a FAL-03 tienen estado Aprobado o Fallido documentado; T-R5, cuando OFF-01 a OFF-04 lo tienen. Ninguna de las dos está terminada hoy.
+T-R3 queda ejecutada cuando PREP-01 a FAL-03 tienen estado Aprobado o Fallido documentado; T-R5, cuando OFF-01 a OFF-04 lo tienen. Ejecutar no es aprobar: cada Fallido sigue abierto hasta que el equipo lo corrija (y se repita el punto) o lo acepte como limitación. Ninguna de las dos está terminada hoy: hay 1 punto aprobado de 41.
