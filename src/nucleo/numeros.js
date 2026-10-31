@@ -12,6 +12,9 @@ import { crearError } from './errores.js';
  * @typedef {import('./racional.js').Racional} Racional
  * @typedef {import('./errores.js').ErrorAreaCalc} ErrorAreaCalc
  * @typedef {import('./errores.js').Advertencia} Advertencia
+ * @typedef {Object} Intervalo Contrato de design §10, tras validar ambos límites.
+ * @property {Racional} a Posición inferior; puede ser negativa.
+ * @property {Racional} b Posición superior, con a < b; nunca se intercambian.
  * @typedef {{ ok: true, valor: any, advertencias: ReadonlyArray<Advertencia> }
  *   | { ok: false, errores: ReadonlyArray<ErrorAreaCalc> }} Resultado design §10.
  * @typedef {Object} ReglasCampo Tabla 9.3 de requirements.
@@ -113,7 +116,7 @@ export function leerNumero(texto, reglasCampo) {
  * válidos comprueba a = b (E-INT-01) y a > b (E-INT-02). Nunca los intercambia.
  * @param {string} textoA
  * @param {string} textoB
- * @returns {Readonly<Resultado>} Con `valor` { a, b } si es válido.
+ * @returns {Readonly<Resultado>} Con `valor` Intervalo si es válido.
  */
 export function leerIntervalo(textoA, textoB) {
   const a = leerNumero(textoA, REGLAS_A);

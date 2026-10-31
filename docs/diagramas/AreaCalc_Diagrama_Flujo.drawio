@@ -1,0 +1,239 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="ChatGPT" version="24.7.17" type="device">
+  <diagram id="areacalc-flow" name="Flujo ÁreaCalc">
+    <mxGraphModel page="1" pageWidth="1950" pageHeight="1500" grid="1" gridSize="10" arrows="1" connect="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="ÁREACALC — DIAGRAMA DE FLUJO (VERSIÓN REVISADA)" style="text;html=1;fontSize=20;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="500" y="20" width="950" height="40" />
+        </mxCell>
+        <mxCell id="start" value="Inicio" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="850" y="80" width="180" height="40" />
+        </mxCell>
+        <mxCell id="load" value="index.html carga src/main.js" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="790" y="140" width="300" height="50" />
+        </mxCell>
+        <mxCell id="init" value="Crear estado inicial, vistas y navegación; mostrar sección activa" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="740" y="210" width="400" height="60" />
+        </mxCell>
+        <mxCell id="menu" value="Usuario elige Perfil, Figuras o Estimación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="760" y="300" width="360" height="55" />
+        </mxCell>
+        <mxCell id="choice" value="¿Qué sección?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="860" y="380" width="160" height="70" />
+        </mxCell>
+        <mxCell id="profile" value="PERFIL: introducir f(x), límites a y b e interpretación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="25" y="490" width="310" height="65" />
+        </mxCell>
+        <mxCell id="pval" value="analizarPerfil valida función y límites" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="25" y="580" width="310" height="55" />
+        </mxCell>
+        <mxCell id="perr" value="¿Hay errores?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="100" y="655" width="165" height="65" />
+        </mxCell>
+        <mxCell id="pbad" value="Mostrar errores; corregir los datos de entrada" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="15" y="755" width="235" height="60" />
+        </mxCell>
+        <mxCell id="pcalc" value="Interpretar polinomio; calcular integral, ceros/signos, área geométrica, promedio y rectángulo equivalente" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="285" y="750" width="360" height="90" />
+        </mxCell>
+        <mxCell id="pfit" value="¿El perfil es apto para estimar?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="325" y="870" width="280" height="75" />
+        </mxCell>
+        <mxCell id="penable" value="Sí: habilitar «Usar para estimar»" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="650" y="865" width="245" height="70" />
+        </mxCell>
+        <mxCell id="pnotfit" value="No: mostrar el motivo y bloquear la estimación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="300" y="985" width="325" height="70" />
+        </mxCell>
+        <mxCell id="pout" value="Preparar pasos; mostrar resultados y advertencias; mejorar fórmulas con KaTeX" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="650" y="985" width="375" height="70" />
+        </mxCell>
+        <mxCell id="plot" value="Plotly dibuja la gráfica; si falla, mostrar W-07 y conservar los resultados" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="650" y="1080" width="375" height="70" />
+        </mxCell>
+        <mxCell id="fig" value="FIGURAS: elegir rectángulo, triángulo o círculo; unidad y dimensiones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="690" y="490" width="330" height="70" />
+        </mxCell>
+        <mxCell id="fval" value="calcularFigura valida las dimensiones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="690" y="590" width="330" height="55" />
+        </mxCell>
+        <mxCell id="ferr" value="¿Hay errores?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="770" y="665" width="165" height="65" />
+        </mxCell>
+        <mxCell id="fbad" value="Mostrar errores; corregir las dimensiones" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="625" y="760" width="240" height="60" />
+        </mxCell>
+        <mxCell id="fcalc" value="Calcular área geométrica y convertir a m²" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="930" y="760" width="310" height="60" />
+        </mxCell>
+        <mxCell id="fout" value="Mostrar fórmula, área y procedimiento; mejorar fórmulas con KaTeX" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="930" y="850" width="310" height="70" />
+        </mxCell>
+        <mxCell id="est" value="ESTIMACIÓN: seleccionar un resultado de Perfil/Figuras; ingresar precio y adicional" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1300" y="490" width="390" height="75" />
+        </mxCell>
+        <mxCell id="esrc" value="¿Hay una fuente vigente y apta?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1405" y="590" width="190" height="75" />
+        </mxCell>
+        <mxCell id="ebadsrc" value="Mostrar motivo; bloquear la estimación hasta elegir una fuente válida" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1125" y="700" width="255" height="75" />
+        </mxCell>
+        <mxCell id="eval" value="Validar precio y porcentaje adicional" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1450" y="700" width="300" height="65" />
+        </mxCell>
+        <mxCell id="eerr" value="¿Hay errores?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1515" y="790" width="170" height="75" />
+        </mxCell>
+        <mxCell id="ebad" value="Mostrar errores; corregir precio o adicional" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1350" y="895" width="235" height="65" />
+        </mxCell>
+        <mxCell id="ecalc" value="Calcular área estimada y costos" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1620" y="895" width="230" height="65" />
+        </mxCell>
+        <mxCell id="eout" value="Mostrar costos, supuestos y pasos; mejorar fórmulas con KaTeX" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="1620" y="990" width="230" height="75" />
+        </mxCell>
+        <mxCell id="nav" value="Continuar o cambiar de sección: conservar los resultados vigentes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="870" y="1190" width="470" height="70" />
+        </mxCell>
+        <mxCell id="invalid" value="INVALIDACIÓN DE RESULTADOS (estado.js)&#10;• Editar perfil o figura: retirar el resultado y errores de esa sección.&#10;• Si era la fuente de la estimación, retirar también esa fuente y la estimación dependiente.&#10;• Editar precio o adicional: retirar solo la estimación.&#10;• Recalcular perfil/figura reemplaza el resultado anterior y reinicia una estimación basada en él.&#10;• Cambiar de sección no modifica datos ni resultados." style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacing=8;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="25" y="1275" width="800" height="155" />
+        </mxCell>
+        <mxCell id="katex" value="KATEX (las tres secciones)&#10;Primero se muestran las fórmulas en texto; después se intenta mejorarlas de forma asíncrona. Si falla la carga de KaTeX/CSS o el renderizado de una fórmula: W-08. La fórmula se conserva en texto y el aviso se retira cuando la mejora se recupera." style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;align=left;spacing=8;" parent="1" vertex="1">
+          <mxGeometry as="geometry" x="860" y="1275" width="990" height="115" />
+        </mxCell>
+        <mxCell id="a1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="start" target="load">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="load" target="init">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="init" target="menu">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="menu" target="choice">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a5" value="Perfil" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="choice" target="profile">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a6" value="Figuras" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="choice" target="fig">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a7" value="Estimación" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="choice" target="est">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="profile" target="pval">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pval" target="perr">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a10" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="perr" target="pbad">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a11" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="perr" target="pcalc">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pcalc" target="pfit">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a13" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pfit" target="penable">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a14" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pfit" target="pnotfit">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="penable" target="pout">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pnotfit" target="pout">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pout" target="plot">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a18" value="Corregir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="pbad" target="profile">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="plot" target="nav">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="fig" target="fval">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="fval" target="ferr">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a22" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="ferr" target="fbad">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a23" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="ferr" target="fcalc">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="fcalc" target="fout">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a25" value="Corregir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="fbad" target="fig">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="fout" target="nav">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="est" target="esrc">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a28" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="esrc" target="ebadsrc">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a29" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="esrc" target="eval">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="eval" target="eerr">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a31" value="Sí" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="eerr" target="ebad">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a32" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="eerr" target="ecalc">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="ebadsrc" target="menu">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a34" value="Corregir" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="ebad" target="est">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="ecalc" target="eout">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="eout" target="nav">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="a37" value="Elegir sección" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=1.5;" parent="1" edge="1" source="nav" target="menu">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n1" value="al editar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="profile" target="invalid">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n2" value="al editar" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="fig" target="invalid">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n3" value="al editar precio/adicional" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="est" target="invalid">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="pout" target="katex">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="fout" target="katex">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="n6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=none;dashed=1;dashPattern=4 4;strokeColor=#999999;" parent="1" edge="1" source="eout" target="katex">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

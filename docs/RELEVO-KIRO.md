@@ -2,35 +2,25 @@
 
 Este documento permite continuar sin el historial anterior. Si algo de aquí contradice las especificaciones, prevalecen las especificaciones y hay que avisar al equipo.
 
-## 0. Arranque rápido para una sesión o cuenta nueva (relevo del 22 de octubre de 2026)
+## 0. Cierre desde Codex (30 de octubre de 2026)
 
-**Comprobado al preparar este relevo** (sin cambiar código ni repetir pruebas): rama `avance-t04`, `HEAD` = `origin/avance-t04` = `24b7d9f` («T-R3: revisión parcial y corrección de dos textos»), `git status -sb` sin cambios locales. Si al empezar aparece un commit posterior a este relevo, consérvelo y contrástelo con lo que dice aquí.
+Fuente de verdad: los archivos de este proyecto; no se presupone acceso a chats de Kiro. Al iniciar se comprobó la ruta `C:\Users\Brianita\Proyectos\AreaCalc-1`, rama `avance-t04`, HEAD `ca61cd9dff470c72aa61457a850321be4a67e687` y árbol limpio, coincidente con la referencia local `origin/avance-t04`. No había avances posteriores ni cambios locales que preservar. Los apartados siguientes conservan el historial de implementación.
 
-**Implementación:** T-01 a T-17 están implementadas y probadas. Las revisiones del equipo siguen pendientes según `tasks.md`: T-R1, T-R3 (en curso), T-R4, T-R5 y T-R6. T-R2 (la lista) está redactada.
+**Autorización de cierre:** el equipo pidió revisar comentarios, documentar el estado real, preparar un ZIP fuera del repositorio, ejecutar las tres comprobaciones y hacer commit y push normal a `origin/avance-t04`, sin esperar más reportes de compañeros. No autoriza nuevas funcionalidades ni completar revisiones humanas por inferencia.
 
-**Comprobaciones, separadas por momento:**
+**Hecho:** se revisaron los comentarios y JSDoc existentes; se aclararon dos decisiones de `ceros.js`, se añadió el contrato documental `Intervalo` en `numeros.js` y se explicó la actualización de las vistas de Figuras y Estimación. Solo cambian comentarios en `src/`; se conservan cálculos, comportamiento y apariencia. Los tres diagramas adjuntos se copiaron desde el Escritorio a `docs/diagramas/`, con procedencia documentada. Guía y resultados: [entrega.md](entrega.md).
 
-| Momento | Qué se comprobó | Resultado | Dónde consta |
-|---|---|---|---|
-| Cierre de T-17 (`20f470a`) | `npm test`, `npm run build`, `npm run verificar-dist` y recorrido automático en Chrome sin interfaz sobre el build servido | 1304/1304; los tres comandos con código 0; recorrido sin fallos ni solicitudes externas | `docs/verificacion-integracion.md` |
-| Revisión parcial del equipo (22 oct) | CR-01, CR-02, CR-03 (vía selector), CR-05, invalidación del perfil, figuras en cm y círculo, triángulo, errores de radio y de estimación | Solo FIG-02 cubre todos sus criterios (**Aprobado**); el resto queda «Pendiente» con evidencia parcial | `docs/revision-manual.md` §0.2 |
-| Corrección de dos textos (`24b7d9f`) | `npm test` y `npm run build` tras corregir la interpretación del promedio con valores negativos y el texto de E-MOD-02 (§7) | 1307/1307 en 27 archivos; build correcto; los dos con código 0. `verificar-dist` no se repitió | este relevo §3 y §7 |
-| Relevo (este cambio) | Solo estado de Git | Árbol limpio y sincronizado | — |
+| Comprobación del cierre | Resultado | Código de salida |
+|---|---|---|
+| `npm test` (`npm.cmd test` en PowerShell) | 1307/1307, 27 archivos, incluida arquitectura | 0 |
+| `npm run build` | Build correcto; aviso esperado por tamaño de Plotly | 0 |
+| `npm run verificar-dist` | 65 archivos, 59 fuentes KaTeX; sin recursos externos en HTML ni CSS | 0 |
 
-**Evidencia todavía no incorporada:** después de `24b7d9f` los compañeros recogieron nuevos reportes de revisión y diagramas que **no están en el repositorio** (no hay ningún diagrama en `docs/` ni en las especificaciones). Por eso `docs/revision-manual.md` **no representa toda la evidencia recogida**: sus estados reflejan solo la revisión parcial del 22 de octubre. No marque puntos como aprobados por lo que diga este relevo.
+**Información verbal sin evidencia:** según el equipo, los compañeros dijeron que la aplicación les funcionó. No se entregaron capturas ni un reporte completo de accesibilidad ni del ensayo sin internet en la laptop. Ese comentario no permite aprobar puntos nuevos. Se conserva la revisión parcial del 22 de octubre en `revision-manual.md`: FIG-02 aprobado, el resto pendiente o parcial. ACC-01 a ACC-07 y OFF-01 a OFF-04 siguen pendientes. Las comprobaciones automáticas anteriores y actuales no equivalen al ensayo físico.
 
-**Próximo paso:**
+**Entrega:** `C:\Users\Brianita\Proyectos\AreaCalc-entrega-2026-10-30\AreaCalc-entrega.zip`, exportada del commit de cierre, con una carpeta raíz `AreaCalc/`. Fuera del repositorio quedan el ZIP y el registro de su contenido, extracción e integridad; el SHA del commit se consulta con `git log -1` y en ese registro. No se incluyen `node_modules/`, `dist/`, `.git/`, registros, temporales ni credenciales.
 
-1. Pedir al equipo esos reportes y diagramas.
-2. Registrar en `docs/revision-manual.md`, punto por punto, qué criterios cubre realmente cada evidencia: «Aprobado» solo si cubre todos; si no, «Pendiente» con lo visto y lo que falta; «Fallido» con lo observado.
-3. Atender únicamente fallos concretos, con autorización del equipo para cada cambio.
-
-**Prioridades:**
-
-1. **Corregir las relaciones de los diagramas** que entregue el equipo, contrastándolas con la arquitectura real: dependencias de design §2 (las comprueba `tests/arquitectura.test.js`), flujo de design §4 y los archivos de §4 de este relevo. Por ejemplo, `casos-de-uso/` importa `presentacion/` (pasos y datos de la gráfica), `interfaz/` no importa `pasos.js` ni el núcleo, y `adaptadores/` no importa `src/`.
-2. **Comprobar el funcionamiento sin internet en la laptop de exposición** (T-R5): puntos OFF-01 a OFF-04 de `docs/revision-manual.md`.
-
-**Restricciones que siguen vigentes:** mantener el alcance del MVP, los cálculos exactos y la apariencia aprobada (`13c6c5c`, §8); no añadir dependencias; seguir `AGENTS.md` (una tarea por vez, commits y push normal solo cuando el equipo los pida, sin PR, merge ni force push).
+**Pendientes humanos:** completar T-R1 y T-R6; terminar el recorrido manual T-R3 (incluida accesibilidad); realizar T-R5 en la laptop con Wi-Fi apagado, capturas, tiempos y contingencia; completar el documento académico T-R4 y ensayar los cuatro casos con el proyector. Estos criterios permanecen abiertos; el cierre del paquete no declara aprobado todo el MVP.
 
 ## 1. Qué es ÁreaCalc
 
@@ -50,7 +40,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 
 - Repositorio: `https://github.com/JoseOsorio4/AreaCalc`.
 - Rama: **`avance-t04`**. El nombre es histórico: empezó como respaldo de T-04 y ya contiene T-01 a T-17.
-- Último trabajo con código: `24b7d9f` «T-R3: revisión parcial y corrección de dos textos»; después solo se actualizó este relevo (§0). Va encima de `c88e0f8` («T-R2: lista de revisión manual»), `20f470a` (T-17), el respaldo parcial `b43108b` y `e6b9623` (T-16). Después de T-17 solo cambiaron dos textos (§7, «Correcciones de textos tras la revisión parcial»); los cálculos y contratos no. La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
+- Antecedente de implementación (el cierre actual está en §0): `24b7d9f` «T-R3: revisión parcial y corrección de dos textos»; después solo se actualizó este relevo (§0). Va encima de `c88e0f8` («T-R2: lista de revisión manual»), `20f470a` (T-17), el respaldo parcial `b43108b` y `e6b9623` (T-16). Después de T-17 solo cambiaron dos textos (§7, «Correcciones de textos tras la revisión parcial»); los cálculos y contratos no. La apariencia de `13c6c5c` (revisión visual de T-14) está **aprobada por el equipo** y se conserva. Para ver los SHA: `git log --oneline -n 5`.
 - `main` solo tiene el primer commit; no se ha hecho merge.
 
 ## 3. Estado de las tareas
@@ -78,7 +68,7 @@ Aplicación web estática para el curso de Cálculo Integral. Analiza un perfil 
 | T-R2 Lista de revisión manual | Redactada en `docs/revision-manual.md`; 41 puntos (se añadió ACC-07, contraste) | `c88e0f8` y commit «T-R3: revisión parcial…» |
 | T-R3 Revisión manual | **En curso, parcial:** primera revisión del equipo el 22 de octubre; 1 punto aprobado (FIG-02) y evidencia parcial en MR-01 a MR-04, FIG-03, FIG-04, EST-01, EST-02, EST-04 e INV-01; el resto sin ejecutar | commit «T-R3: revisión parcial…» |
 
-Última ejecución, tras corregir los dos textos: `npm test` dio **1307/1307** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0. Con T-17 eran 1304/1304 y `npm run verificar-dist` dio 0; la corrección añade 3 pruebas y ajusta 1. T-17 había añadido 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`.
+Antecedente del 22 de octubre, tras corregir los dos textos: `npm test` dio **1307/1307** pruebas en 27 archivos, con código de salida 0, y `npm run build` fue correcto, también con código 0. Con T-17 eran 1304/1304 y `npm run verificar-dist` dio 0; la corrección añade 3 pruebas y ajusta 1. T-17 había añadido 20 pruebas al total de T-16 (9 en el respaldo y 11 de la nota de origen de los ejemplos). El recorrido en Chrome sin interfaz sobre el build servido está en `docs/verificacion-integracion.md`. Las tres comprobaciones del cierre del 30 de octubre están en §0.
 
 **La revisión independiente de R no se ha hecho** para T-02 a T-17: T-R1, T-R3, T-R5 y T-R6 siguen pendientes. T-R2 (la lista) está redactada en `docs/revision-manual.md`. T-R3 está en curso: la primera revisión parcial del equipo (§0.2 de esa lista) aprobó solo FIG-02, porque es el único punto con todos sus criterios cubiertos; los demás conservan «Pendiente» con la evidencia anotada. Documentar un fallo no aprueba la aplicación. Implementada no equivale a revisada (tasks.md §0).
 

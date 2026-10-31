@@ -19,6 +19,15 @@
 - **Estado y revisión, por separado:** la casilla `[x]` de una tarea T indica que está implementada, con `npm test` y `npm run build` correctos. **No** significa que R la haya revisado. La revisión de R solo se registra en T-R1 (casos de referencia) y T-R6 (revisión de cambios), y únicamente cuando R la hace.
 - **Explicación matemática:** cada tarea indica qué debe poder explicar el equipo en la exposición.
 
+### 0.1 Registro de cierre autorizado (30 de octubre de 2026)
+
+El equipo autorizó el cierre desde esta carpeta, sin esperar más reportes: revisión de comentarios, documentación honesta, diagramas, ZIP externo y commit/push normal a `avance-t04`. No se amplía el MVP ni se modifican requisitos, diseño o formulario.
+
+- Se revisaron los comentarios y JSDoc; solo se añadieron explicaciones de decisiones de ceros y vistas y el contrato `Intervalo`. Sin cambios de lógica ni apariencia.
+- Comprobaciones: `npm test` 1307/1307 en 27 archivos, `npm run build` correcto y `npm run verificar-dist` correcto (65 archivos, 59 fuentes KaTeX); las tres con código 0.
+- Se incorporaron los diagramas aportados y las instrucciones de instalación y demostración en `docs/entrega.md`; el ZIP se prepara fuera del repositorio con fuentes, pruebas, especificaciones y documentación.
+- Los compañeros comunicaron verbalmente que la aplicación funcionó, sin capturas ni reporte completo. No se aprueba ningún criterio adicional: T-R3 sigue parcial, ACC-01 a ACC-07 y OFF-01 a OFF-04 pendientes; no se hizo un ensayo físico sin internet en este cierre. T-R1, T-R4 y T-R6 conservan sus pendientes humanos.
+
 ## 1. Orden y calendario
 
 ```

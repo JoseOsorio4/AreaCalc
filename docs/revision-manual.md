@@ -51,6 +51,14 @@ Tras la revisión del 22 de octubre se corrigieron dos textos; los puntos que lo
 - **Interpretación del promedio** cuando f toma valores negativos (MR-04): ahora dice que (b − a)·f_prom = I siempre se cumple y que, por los valores negativos, ese producto no es el área geométrica y no se muestra el rectángulo equivalente.
 - **E-MOD-02** (MR-04): ya no sugiere g(x) = −f(x); ahora dice «El perfil toma valores negativos y no representa una altura no negativa en todo el intervalo. Revise el modelo físico y el intervalo antes de estimar material.»
 
+### 0.4 Información verbal comunicada para el cierre (30 de octubre de 2026)
+
+El equipo informa que los compañeros dijeron verbalmente que la aplicación les funcionó. **Información verbal sin evidencia adicional:** no se recibieron capturas, identificación de casos comprobados, condiciones del ensayo ni reporte completo de accesibilidad o del funcionamiento sin internet en la laptop de exposición. No se atribuye una fecha de ejecución a ese comentario.
+
+No se cambian estados de la lista por ese informe: FIG-02 conserva la aprobación histórica del 22 de octubre; los demás siguen pendientes o parciales. **ACC-01 a ACC-07 y OFF-01 a OFF-04 permanecen pendientes.** No se ha probado físicamente la laptop sin internet en este cierre.
+
+Las comprobaciones automáticas del cierre (1307/1307 pruebas, build y verificar-dist; códigos 0) se registran en [entrega.md](entrega.md). No ejecutan esta revisión manual ni prueban el equipo de exposición.
+
 ## 1. Preparación general
 
 ### PREP-01 · Servir la versión construida

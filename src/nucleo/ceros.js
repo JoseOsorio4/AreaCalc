@@ -201,6 +201,8 @@ function resolverIntervalo(q, f, A, l0, h0, profundidad0) {
     return null;
   };
   // 5.4: prueba de racionalidad. Se biseca hasta que h − l < 1/A.
+  // A sigue siendo el de f: al retirar factores, las raíces de q son un subconjunto
+  // de las de f, así que la garantía A·r entero se conserva sin recalcularlo.
   const umbral = racional.fraccion(1n, A);
   while (racional.comparar(racional.restar(h, l), umbral) >= 0) {
     if (profundidad >= PROFUNDIDAD_MAXIMA) throw new PresupuestoAgotado('la prueba de racionalidad');
@@ -355,6 +357,7 @@ export function analizarSigno(f, a, b) {
     const r = gradoG === 1 ? racional.negar(g.coef[0]) : racional.dividir(racional.negar(g.coef[1]), DOS);
     const multiplicidad = gradoG + 1;
     if (racional.comparar(a, r) <= 0 && racional.comparar(r, b) <= 0) registro.registrar(r, multiplicidad);
+    // También se retira si queda fuera de [a, b]: Sturm recibe q sin raíces repetidas.
     q = dividirExacta(q, polinomio.potencia(lineal(r), multiplicidad));
   }
   // Paso 4: ceros simples en los extremos (W-03); después q(a) ≠ 0 y q(b) ≠ 0.

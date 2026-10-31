@@ -72,6 +72,8 @@ export function crearVistaEstimacion({ documento, despachar }) {
 
       // La banda de la fuente depende de la fuente elegida y de los resultados de perfil y figura.
       const origen = estimacion.fuente === null ? null : estado[estimacion.fuente].resultado;
+      // Sin fuente activa, un perfil nuevo puede cambiar el motivo E-MOD de la banda;
+      // por eso también se observa el resultado del perfil por separado.
       if (ultimo.fuente !== estimacion.fuente || ultimo.origen !== origen || ultimo.perfil !== estado.perfil.resultado) {
         fuente.replaceChildren(bandaFuente(documento, estado));
       }

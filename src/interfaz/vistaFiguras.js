@@ -113,6 +113,8 @@ export function crearVistaFiguras({ documento, ventana, despachar, catalogo = []
       for (const elemento of unidades) elemento.textContent = `(${entrada.unidad})`;
       sincronizarEjemplo(selectorEjemplo, ejemplos, entrada, origenEjemplo);
 
+      // La identidad del estado inmutable evita recrear el procedimiento al navegar:
+      // conserva su apertura y las fórmulas que KaTeX ya mejoró.
       if (ultimo.resultado === resultado && ultimo.errores === errores) return;
       ultimo = { resultado, errores };
       mostrarErrores(documento, { campos: CAMPOS, resumen, errores });
